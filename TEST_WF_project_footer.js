@@ -1,5 +1,11 @@
 // Checking Inventory
 console.log('starting remote script');
+
+// Bug reporting
+Bugfender.init({
+    appKey: '0uUOrpOZnAme6ed1SspNWsmiO93Rfu9Y',
+});
+
 const datePickerButtonArray = document.querySelectorAll('.delivery-date-picker-link');
 console.log('datePickerButtonArray:', datePickerButtonArray);
 
