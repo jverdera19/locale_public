@@ -225,6 +225,11 @@
           li.innerText = current.name;
           unavailableItemsList.appendChild(li);
           console.log("items not avail:", current.name);
+        } else if (currentInventory <= 0) {
+          let li = document.createElement("li");
+          li.innerText = current.name;
+          unavailableItemsList.appendChild(li);
+          console.log("items not avail:", current.name);
         }
       }
     }
@@ -233,7 +238,6 @@
       document.querySelector('.date_switch_modal').style.display = 'none'
       document.querySelector('.clear_cart_modal').style.display = 'flex'
     }
-
   }
 
   function removeItemsNotAvailable() {
@@ -243,6 +247,11 @@
     for (var i = 0; i < FC.json.items.length; i++) {
       const current = cartItems[i];
 
+      const deliveryDateIndex = current.options.findIndex(object => object.value === date);
+      const deliveryDate = current.options[deliveryDateIndex].class;
+      const inventoryIndex = current.options.findIndex(object => object.class === `${deliveryDate}_inventory`);
+      let currentInventory = current.options[inventoryIndex].value;
+
       const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
       if (current.name !== "Tip" && current.name !== "Small Order Fee") {
         if (deliveryDayIndex == -1) {
@@ -251,6 +260,11 @@
             console.log("items deleted:", current.name);
           });
         } else if (current.options[deliveryDayIndex].value === 'false') {
+          FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
+            FC.cart.updateItemQuantity();
+            console.log("items deleted:", current.name);
+          });
+        } else if (currentInventory <= 0) {
           FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
             FC.cart.updateItemQuantity();
             console.log("items deleted:", current.name);
