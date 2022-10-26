@@ -7,12 +7,32 @@
 
   // Good code
   $(".delivery-date-picker-link").click(function () {
-    var date = $(this).attr("data-date");
+    // get Inventory date and weekday
+    let iSODate = new Date(this.innerText);
+    let date = formatDate(iSODate, 'inventoryDate');
+    let shortDate = iSODate.toLocaleString('en-us', { weekday: 'short', month: 'numeric', day: '2-digit' })
+    let longDate = formatDate(iSODate, 'long');
+
+    let day = formatDate(iSODate, 'weekday');
+    console.log('updated date');
+    console.log(date, shortDate, longDate, day);
+    
+    previousDate = localStorage.getItem("longDate");
+    localStorage.setItem("previousDate", previousDate);
+
+    localStorage.setItem("date", date);
+    localStorage.setItem("day", day);
+    localStorage.setItem("shortDate", shortDate);
+    localStorage.setItem("longDate", longDate);
+
     console.log(date);
-    console.log(`${date} got clicked (Smart)!`);
+    console.log(`${date} got clicked NEW (Smart)!`);
 
     $(".delivery-date-picker-link").removeClass("active")
     this.classList.add('active');
+
+    // Update date
+    dateChangeProject();
 
     chosenDate = date;
     updateFCDate();
@@ -66,19 +86,31 @@
     $(".products-item-date-unavailable-value").text(date);
 
     // Update date button
-    document.querySelector('.current_date').innerText = shortDate;
+    let currentDateDiv = document.querySelector('.current_date')
 
+    if (currentDateDiv) {
+      document.querySelector('.current_date').innerText = shortDate;
+    } else {
+        console.log('it doesnt exist!')
+    }
+    
     // Check items not delivered on new date
     canShipOnDeliveryDay();
 
     // Update date modal text
-    if (['Wednesday', 'Tuesday'].includes(day)) {
-      document.querySelector('.disclaimer-date-midweek').style.display = 'flex';
-      document.querySelector('.disclaimer-date-weekend').style.display = 'none';
-    } else {
-      document.querySelector('.disclaimer-date-weekend').style.display = 'flex';
-      document.querySelector('.disclaimer-date-midweek').style.display = 'none';
+    let discMidweek = document.querySelector('.disclaimer-date-midweek')
+    let discWeekend = document.querySelector('.disclaimer-date-weekend');
+
+    if (discMidweek) {
+      if (['Wednesday', 'Tuesday'].includes(day)) {
+        discMidweek.style.display = 'flex';
+        discWeekend.style.display = 'none';
+      } else {
+        discWeekend.style.display = 'flex';
+        discMidweek.style.display = 'none';
+      }
     }
+    
 
     $(".products-item").each(function () {
       $(this).show();
@@ -191,9 +223,16 @@
     revertSelectedDate();
   });
 
+
+
+
+
   function revertSelectedDate() {
     previousDate = localStorage.getItem("previousDate");
     $(`.delivery-date-button:contains(${previousDate})`).click();
+
+    previousInvDate = new Date(previousDate)
+    $(`.delivery-date-picker-link:contains(${formatDate(previousInvDate)})`).click();
   }
 
   function canShipOnDeliveryDay() {
@@ -235,7 +274,9 @@
     }
 
     if (unavailableItemsList.innerHTML != '') {
-      document.querySelector('.date_switch_modal').style.display = 'none'
+      if (document.querySelector('.date_switch_modal')) {
+        document.querySelector('.date_switch_modal').style.display = 'none'
+      }
       document.querySelector('.clear_cart_modal').style.display = 'flex'
     }
   }
@@ -258,20 +299,40 @@
           FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
             FC.cart.updateItemQuantity();
             console.log("items deleted:", current.name);
+            if (window.location.pathname.match(/review-order/)) {
+              console.log('clearing items in review page');
+              createCartItems();
+              removeDuplicates();
+              updateProgressBar();
+            }
           });
         } else if (current.options[deliveryDayIndex].value === 'false') {
           FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
             FC.cart.updateItemQuantity();
             console.log("items deleted:", current.name);
+            if (window.location.pathname.match(/review-order/)) {
+              console.log('clearing items in review page');
+              createCartItems();
+              removeDuplicates();
+              updateProgressBar();
+            }
           });
         } else if (currentInventory <= 0) {
           FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
             FC.cart.updateItemQuantity();
             console.log("items deleted:", current.name);
+            if (window.location.pathname.match(/review-order/)) {
+              console.log('clearing items in review page');
+              createCartItems();
+              removeDuplicates();
+              updateProgressBar();
+            }
           });
         }
       }
     }
 
     document.querySelector('.clear_cart_modal').style.display = 'none'
+    
+    
   }
