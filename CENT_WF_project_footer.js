@@ -116,7 +116,7 @@
       $(this).show();
       $(this).find(".products-item-add-to-cart").hide();
       $(this).find(".products-item-out-of-stock").hide();
-      var dayAvailable = $(this).find(".delivery-" + day.toLowerCase()).text();
+      
       var deliveryDate1 = $(this).find(".delivery-date-1").text();
       var deliveryDate2 = $(this).find(".delivery-date-2").text();
       var deliveryDate3 = $(this).find(".delivery-date-3").text();
@@ -126,6 +126,13 @@
       var deliveryDate3Inventory = $(this).find(".delivery-date-3-inventory").text();
       var deliveryDate4Inventory = $(this).find(".delivery-date-4-inventory").text();
       var addToCartHref = $(this).find(".products-item-add-to-cart a").attr("href");
+
+      if (deliveryDate1Inventory >= 0) {
+        var dayAvailable = "true";
+        console.log('delivers today');
+      } else {
+        var dayAvailable = $(this).find(".delivery-" + day.toLowerCase()).text();
+      }
 
       if (deliveryDate1 == date) {
         var inventory = deliveryDate1Inventory;
