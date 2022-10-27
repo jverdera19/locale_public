@@ -127,12 +127,7 @@
       var deliveryDate4Inventory = $(this).find(".delivery-date-4-inventory").text();
       var addToCartHref = $(this).find(".products-item-add-to-cart a").attr("href");
 
-      if (deliveryDate1Inventory >= 0) {
-        var dayAvailable = "true";
-        console.log('delivers today');
-      } else {
-        var dayAvailable = $(this).find(".delivery-" + day.toLowerCase()).text();
-      }
+      
 
       if (deliveryDate1 == date) {
         var inventory = deliveryDate1Inventory;
@@ -144,6 +139,15 @@
         var inventory = deliveryDate4Inventory;
       }
 
+      if (inventory >= 0) {
+        var dayAvailable = "true";
+        console.log('Inventory:', inventory);
+      } else {
+        var dayAvailable = "false";
+        console.log('Inventory:', inventory);
+        console.log('not delivers today');
+      }
+
       if (dayAvailable == "true") {
         if (inventory > "0") {
           $(this).find(".products-item-add-to-cart").show();
@@ -152,7 +156,11 @@
           $(this).find(".products-item-out-of-stock").show();
         }
       } else if (dayAvailable == "false") {
-        $(this).hide();
+        if (window.location.pathname.match(/all-vendors/) || window.location.pathname.match(/find/) || window.location.pathname.match(/product/)) {
+          $(this).find(".products-item-day-unavailable").show();
+        } else {
+          $(this).hide();
+        }
       }
     });
   }
