@@ -41,9 +41,52 @@
   });
 
   // Refactoring date buttons event listener
-  $('.delivery-date-button').click(function () {
+  const deliveryDateButtons = document.querySelectorAll('.delivery-date-btn');
+
+  for (const button of deliveryDateButtons) {
+    button.addEventListener('click', function() {
+      
+      let dateText = button.firstChild.innerText;
+      console.log(`clicked on ${dateText}`);
+
+      // // get Inventory date and weekday
+      let iSODate = new Date(dateText + ', 2022');
+      console.log(iSODate);
+      
+      let date = formatDate(iSODate, 'inventoryDate');
+      let shortDate = iSODate.toLocaleString('en-us', { weekday: 'short', month: 'numeric', day: '2-digit' })
+      let longDate = formatDate(iSODate, 'long');
+
+      let day = formatDate(iSODate, 'weekday');
+      console.log('updated date');
+      console.log(date, shortDate, longDate, day);
+      
+      previousDate = localStorage.getItem("longDate");
+      localStorage.setItem("previousDate", previousDate);
+
+      localStorage.setItem("date", date);
+      localStorage.setItem("day", day);
+      localStorage.setItem("shortDate", shortDate);
+      localStorage.setItem("longDate", longDate);
+
+      // Select active button when clicking
+      $(".delivery-date-btn").removeClass("active");
+      $(this).addClass("active");
+
+      // Update date
+      dateChangeProject();
+
+      chosenDate = date;
+      updateFCDate();
+      cartAvailability('check');
+    })
+  }
+  
+
+  /* $('.delivery-date-btn').click(function () {
     // get Inventory date and weekday
     let iSODate = new Date(this.innerText);
+    //let iSODate = new Date(document.querySelector('.delivery-date-btn .date-numbers').innerText + ', 2022');
     let date = formatDate(iSODate, 'inventoryDate');
     let shortDate = iSODate.toLocaleString('en-us', { weekday: 'short', month: 'numeric', day: '2-digit' })
     let longDate = formatDate(iSODate, 'long');
@@ -70,7 +113,7 @@
     chosenDate = date;
     updateFCDate();
     cartAvailability('check');
-  });
+  }); */
 
   function cartAvailability(action) {
     console.log('starting cartAvailability for action: ', action);
@@ -111,11 +154,11 @@
       }
     }
     
-
     $(".products-item").each(function () {
       $(this).show();
       $(this).find(".products-item-add-to-cart").hide();
       $(this).find(".products-item-out-of-stock").hide();
+      $(this).find(".products-item-day-unavailable").hide();
       
       var deliveryDate1 = $(this).find(".delivery-date-1").text();
       var deliveryDate2 = $(this).find(".delivery-date-2").text();
