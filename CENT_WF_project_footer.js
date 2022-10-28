@@ -185,11 +185,9 @@
 
       if (inventory >= 0) {
         var dayAvailable = "true";
-        console.log('Inventory:', inventory);
       } else {
         var dayAvailable = "false";
-        console.log('Inventory:', inventory);
-        console.log('not delivers today');
+        console.log(`Inventory: for ${$(this).find(".pc_name").text()}`, inventory);
       }
 
       if (dayAvailable == "true") {
