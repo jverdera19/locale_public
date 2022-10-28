@@ -17,7 +17,7 @@
     console.log('updated date');
     console.log(date, shortDate, longDate, day);
     
-    previousDate = localStorage.getItem("longDate");
+    previousDate = localStorage.getItem("date");
     localStorage.setItem("previousDate", previousDate);
 
     localStorage.setItem("date", date);
@@ -52,6 +52,10 @@
       // // get Inventory date and weekday
       let iSODate = new Date(dateText + ', 2022');
       console.log(iSODate);
+
+      previousDate = localStorage.getItem("date");
+      localStorage.setItem("previousDate", previousDate);
+      console.log('previous date:', previousDate)
       
       let date = formatDate(iSODate, 'inventoryDate');
       let shortDate = iSODate.toLocaleString('en-us', { weekday: 'short', month: 'numeric', day: '2-digit' })
@@ -61,9 +65,6 @@
       console.log('updated date');
       console.log(date, shortDate, longDate, day);
       
-      previousDate = localStorage.getItem("longDate");
-      localStorage.setItem("previousDate", previousDate);
-
       localStorage.setItem("date", date);
       localStorage.setItem("day", day);
       localStorage.setItem("shortDate", shortDate);
@@ -286,11 +287,61 @@
 
 
   function revertSelectedDate() {
-    previousDate = localStorage.getItem("previousDate");
-    $(`.delivery-date-button:contains(${previousDate})`).click();
+    previousDate = localStorage.getItem("previousDate")
+    console.log('previousDate', previousDate);
+    // $(`.delivery-date-btn:contains(${previousDate})`).click();
+    //const deliveryDateButtons = document.querySelectorAll('.delivery-date-btn');
 
-    previousInvDate = new Date(previousDate)
-    $(`.delivery-date-picker-link:contains(${formatDate(previousInvDate)})`).click();
+    for (const button of deliveryDateButtons) {
+      let dateText = button.firstChild.innerText;
+      let dateTextFormatted = new Date(dateText + ', 2022');
+      let goodDate = formatDate(dateTextFormatted);
+      console.log('goodDate:', goodDate);
+
+
+      if (goodDate == previousDate) {
+        //button.click()
+        
+        // // get Inventory date and weekday
+        let iSODate = new Date(dateText + ', 2022');
+        
+
+        previousDate = localStorage.getItem("date");
+        console.log('previousDate', previousDate);
+        localStorage.setItem("previousDate", previousDate);
+        
+        let date = formatDate(iSODate, 'inventoryDate');
+        let shortDate = iSODate.toLocaleString('en-us', { weekday: 'short', month: 'numeric', day: '2-digit' })
+        let longDate = formatDate(iSODate, 'long');
+
+        let day = formatDate(iSODate, 'weekday');
+        console.log('updated date');
+        console.log(date, shortDate, longDate, day);
+        
+        
+
+        localStorage.setItem("date", date);
+        localStorage.setItem("day", day);
+        localStorage.setItem("shortDate", shortDate);
+        localStorage.setItem("longDate", longDate);
+
+        // Select active button when clicking
+        $(".delivery-date-btn").removeClass("active");
+        button.classList.add('active');
+
+        // Update date
+        dateChangeProject();
+
+        chosenDate = date;
+        updateFCDate();
+        cartAvailability('check');
+
+        return;
+      } 
+    }
+
+    // previousInvDate = new Date(previousDate)
+    // $(`.delivery-date-picker-link:contains(${formatDate(previousInvDate)})`).click();
   }
 
   function canShipOnDeliveryDay() {
@@ -302,7 +353,7 @@
 
     for (var i = 0; i < FC.json.items.length; i++) {
       const current = cartItems[i];
-      const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
+      //const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
 
       const deliveryDateIndex = current.options.findIndex(object => object.value === date);
       const deliveryDate = current.options[deliveryDateIndex].class;
@@ -312,17 +363,7 @@
       console.log(`inventory for ${current.name}: `, currentInventory);
 
       if (current.name !== "Tip" && current.name !== "Small Order Fee") {
-        if (deliveryDayIndex == -1) {
-          let li = document.createElement("li");
-          li.innerText = current.name;
-          unavailableItemsList.appendChild(li);
-          console.log("items not avail:", current.name);
-        } else if (current.options[deliveryDayIndex].value === 'false') {
-          let li = document.createElement("li");
-          li.innerText = current.name;
-          unavailableItemsList.appendChild(li);
-          console.log("items not avail:", current.name);
-        } else if (currentInventory <= 0) {
+        if (currentInventory <= 0) {
           let li = document.createElement("li");
           li.innerText = current.name;
           unavailableItemsList.appendChild(li);
@@ -341,7 +382,7 @@
 
   function removeItemsNotAvailable() {
     const cartItems = FC.json.items;
-    const lowerCaseDay = day.toLowerCase();
+    
 
     for (var i = 0; i < FC.json.items.length; i++) {
       const current = cartItems[i];
@@ -351,31 +392,9 @@
       const inventoryIndex = current.options.findIndex(object => object.class === `${deliveryDate}_inventory`);
       let currentInventory = current.options[inventoryIndex].value;
 
-      const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
+      
       if (current.name !== "Tip" && current.name !== "Small Order Fee") {
-        if (deliveryDayIndex == -1) {
-          FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
-            FC.cart.updateItemQuantity();
-            console.log("items deleted:", current.name);
-            if (window.location.pathname.match(/review-order/)) {
-              console.log('clearing items in review page');
-              createCartItems();
-              removeDuplicates();
-              updateProgressBar();
-            }
-          });
-        } else if (current.options[deliveryDayIndex].value === 'false') {
-          FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
-            FC.cart.updateItemQuantity();
-            console.log("items deleted:", current.name);
-            if (window.location.pathname.match(/review-order/)) {
-              console.log('clearing items in review page');
-              createCartItems();
-              removeDuplicates();
-              updateProgressBar();
-            }
-          });
-        } else if (currentInventory <= 0) {
+        if (currentInventory <= 0) {
           FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
             FC.cart.updateItemQuantity();
             console.log("items deleted:", current.name);
