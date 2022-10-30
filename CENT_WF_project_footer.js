@@ -354,9 +354,9 @@
       //const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
 
       const deliveryDateIndex = current.options.findIndex(object => object.value === date);
-      const deliveryDate = current.options[deliveryDateIndex].class;
+      const deliveryDate = current.options[deliveryDateIndex]?.class;
       const inventoryIndex = current.options.findIndex(object => object.class === `${deliveryDate}_inventory`);
-      let currentInventory = current.options[inventoryIndex].value;
+      let currentInventory = current.options[inventoryIndex]?.value;
 
       console.log(`inventory for ${current.name}: `, currentInventory);
 
@@ -370,12 +370,12 @@
       }
     }
 
-    if (unavailableItemsList.innerHTML != '') {
-      if (document.querySelector('.date_switch_modal')) {
-        document.querySelector('.date_switch_modal').style.display = 'none'
-      }
-      document.querySelector('.clear_cart_modal').style.display = 'flex'
-    }
+    // if (unavailableItemsList.innerHTML != '') {
+    //   if (document.querySelector('.date_switch_modal')) {
+    //     document.querySelector('.date_switch_modal').style.display = 'none'
+    //   }
+    //   document.querySelector('.clear_cart_modal').style.display = 'flex'
+    // }
   }
 
   function removeItemsNotAvailable() {
@@ -386,9 +386,9 @@
       const current = cartItems[i];
 
       const deliveryDateIndex = current.options.findIndex(object => object.value === date);
-      const deliveryDate = current.options[deliveryDateIndex].class;
+      const deliveryDate = current.options[deliveryDateIndex]?.class;
       const inventoryIndex = current.options.findIndex(object => object.class === `${deliveryDate}_inventory`);
-      let currentInventory = current.options[inventoryIndex].value;
+      let currentInventory = current.options[inventoryIndex]?.value;
 
       
       if (current.name !== "Tip" && current.name !== "Small Order Fee") {
