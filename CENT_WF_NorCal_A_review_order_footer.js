@@ -139,6 +139,7 @@ function createCartItems() {
   reviewItemContainer.addEventListener("click", handleQuantityChange);
 
   addSubtotal();
+  updateprogressBar();
 }
 
 function cartItemTemplate(id, name, vendorName, imageURL, price, price_each, quantity) {
@@ -169,6 +170,7 @@ function handleQuantityChange(event) {
       if (!itemToUpdate) {
         itemContainer.remove();
         addSubtotal();
+        updateprogressBar();
         return;
       }
       const { id, name, image, price, price_each, quantity, options } = itemToUpdate;
@@ -193,6 +195,7 @@ function handleQuantityChange(event) {
         size
       );
       addSubtotal();
+      updateprogressBar();
     });
   };
   if (event.target.classList.contains("quantity-decrement")) {
