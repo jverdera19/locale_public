@@ -400,13 +400,7 @@
       console.log(`inventory for ${current.name}: `, currentInventory);
 
       if (current.name !== "Tip" && current.name !== "Small Order Fee") {
-        if (deliveryDateIndex == -1) {
-          let li = document.createElement("li");
-          li.innerText = current.name;
-          unavailableItemsList.appendChild(li);
-          console.log("items not avail:", current.name);
-        }
-        else if (currentInventory <= 0) {
+        if (deliveryDateIndex == -1 || currentInventory <= 0) {
           let li = document.createElement("li");
           li.innerText = current.name;
           unavailableItemsList.appendChild(li);
@@ -437,7 +431,7 @@
 
       
       if (current.name !== "Tip" && current.name !== "Small Order Fee") {
-        if (currentInventory <= 0) {
+        if (currentInventory <= 0 || deliveryDateIndex == -1 ) {
           FC.client.request('https://' + FC.settings.storedomain + '/cart?&cart=update&quantity=0&id=' + current.id).done(function (dataJSON) {
             FC.cart.updateItemQuantity();
             console.log("items deleted:", current.name);
