@@ -139,7 +139,7 @@ function createCartItems() {
   reviewItemContainer.addEventListener("click", handleQuantityChange);
 
   addSubtotal();
-  updateprogressBar();
+  updateProgressBar();
 }
 
 function cartItemTemplate(id, name, vendorName, imageURL, price, price_each, quantity) {
@@ -170,7 +170,7 @@ function handleQuantityChange(event) {
       if (!itemToUpdate) {
         itemContainer.remove();
         addSubtotal();
-        updateprogressBar();
+        updateProgressBar();
         return;
       }
       const { id, name, image, price, price_each, quantity, options } = itemToUpdate;
@@ -195,7 +195,7 @@ function handleQuantityChange(event) {
         size
       );
       addSubtotal();
-      updateprogressBar();
+      updateProgressBar();
     });
   };
   if (event.target.classList.contains("quantity-decrement")) {
