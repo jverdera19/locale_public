@@ -140,20 +140,6 @@
     
     // Check items not delivered on new date
     canShipOnDeliveryDay();
-
-    // Update date modal text
-    let discMidweek = document.querySelector('.disclaimer-date-midweek')
-    let discWeekend = document.querySelector('.disclaimer-date-weekend');
-
-    if (discMidweek) {
-      if (['Wednesday', 'Tuesday'].includes(day)) {
-        discMidweek.style.display = 'flex';
-        discWeekend.style.display = 'none';
-      } else {
-        discWeekend.style.display = 'flex';
-        discMidweek.style.display = 'none';
-      }
-    }
     
     $(".products-item").each(function () {
       $(this).show();
@@ -165,22 +151,75 @@
       var deliveryDate2 = $(this).find(".delivery-date-2").text();
       var deliveryDate3 = $(this).find(".delivery-date-3").text();
       var deliveryDate4 = $(this).find(".delivery-date-4").text();
-      var deliveryDate1Inventory = $(this).find(".delivery-date-1-inventory").text();
-      var deliveryDate2Inventory = $(this).find(".delivery-date-2-inventory").text();
-      var deliveryDate3Inventory = $(this).find(".delivery-date-3-inventory").text();
-      var deliveryDate4Inventory = $(this).find(".delivery-date-4-inventory").text();
+      var deliveryDate5 = $(this).find(".delivery-date-5").text();
+      var deliveryDate6 = $(this).find(".delivery-date-6").text();
+      var deliveryDate7 = $(this).find(".delivery-date-7").text();
+      var deliveryDate8 = $(this).find(".delivery-date-8").text();
+      var deliveryDate9 = $(this).find(".delivery-date-9").text();
+      var deliveryDate10 = $(this).find(".delivery-date-10").text();
+      var deliveryDate11 = $(this).find(".delivery-date-11").text();
+
+      var deliveryDate1Inventory = $(this)
+      .find(".delivery-date-1-inventory")
+      .text();
+    var deliveryDate2Inventory = $(this)
+      .find(".delivery-date-2-inventory")
+      .text();
+    var deliveryDate3Inventory = $(this)
+      .find(".delivery-date-3-inventory")
+      .text();
+    var deliveryDate4Inventory = $(this)
+      .find(".delivery-date-4-inventory")
+      .text();
+    var deliveryDate5Inventory = $(this)
+      .find(".delivery-date-5-inventory")
+      .text();
+    var deliveryDate6Inventory = $(this)
+      .find(".delivery-date-6-inventory")
+      .text();
+    var deliveryDate7Inventory = $(this)
+      .find(".delivery-date-7-inventory")
+      .text();
+    var deliveryDate8Inventory = $(this)
+      .find(".delivery-date-8-inventory")
+      .text();
+    var deliveryDate9Inventory = $(this)
+      .find(".delivery-date-9-inventory")
+      .text();
+    var deliveryDate10Inventory = $(this)
+      .find(".delivery-date-10-inventory")
+      .text();
+    var deliveryDate11Inventory = $(this)
+      .find(".delivery-date-11-inventory")
+      .text();
       var addToCartHref = $(this).find(".products-item-add-to-cart a").attr("href");
 
       
 
       if (deliveryDate1 == date) {
         var inventory = deliveryDate1Inventory;
+        console.log('deliveryDate1 inventory:', inventory)
       } else if (deliveryDate2 == date) {
         var inventory = deliveryDate2Inventory;
+        console.log('deliveryDate2 inventory:', inventory)
       } else if (deliveryDate3 == date) {
         var inventory = deliveryDate3Inventory;
       } else if (deliveryDate4 == date) {
         var inventory = deliveryDate4Inventory;
+      } else if (deliveryDate5 == date) {
+        var inventory = deliveryDate5Inventory;
+      } else if (deliveryDate6 == date) {
+        var inventory = deliveryDate6Inventory;
+      } else if (deliveryDate7 == date) {
+        var inventory = deliveryDate7Inventory;
+      } else if (deliveryDate8 == date) {
+        var inventory = deliveryDate8Inventory;
+      } else if (deliveryDate9 == date) {
+        var inventory = deliveryDate9Inventory;
+      } else if (deliveryDate10 == date) {
+        var inventory = deliveryDate10Inventory;
+      } else if (deliveryDate11 == date) {
+        var inventory = deliveryDate11Inventory;
       }
 
       if (inventory >= 0) {
@@ -361,7 +400,13 @@
       console.log(`inventory for ${current.name}: `, currentInventory);
 
       if (current.name !== "Tip" && current.name !== "Small Order Fee") {
-        if (currentInventory <= 0) {
+        if (deliveryDateIndex == -1) {
+          let li = document.createElement("li");
+          li.innerText = current.name;
+          unavailableItemsList.appendChild(li);
+          console.log("items not avail:", current.name);
+        }
+        else if (currentInventory <= 0) {
           let li = document.createElement("li");
           li.innerText = current.name;
           unavailableItemsList.appendChild(li);
@@ -370,12 +415,12 @@
       }
     }
 
-    // if (unavailableItemsList.innerHTML != '') {
-    //   if (document.querySelector('.date_switch_modal')) {
-    //     document.querySelector('.date_switch_modal').style.display = 'none'
-    //   }
-    //   document.querySelector('.clear_cart_modal').style.display = 'flex'
-    // }
+    if (unavailableItemsList.innerHTML != '') {
+      if (document.querySelector('.date_switch_modal')) {
+        document.querySelector('.date_switch_modal').style.display = 'none'
+      }
+      document.querySelector('.clear_cart_modal').style.display = 'flex'
+    }
   }
 
   function removeItemsNotAvailable() {
