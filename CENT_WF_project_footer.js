@@ -52,15 +52,13 @@ const deliveryDateButtons = document.querySelectorAll(".delivery-date-btn");
 for (const button of deliveryDateButtons) {
   button.addEventListener("click", function () {
     let dateText = button.firstChild.innerText;
-    console.log(`clicked on ${dateText}`);
+    
 
     // // get Inventory date and weekday
     let iSODate = new Date(dateText + ", 2022");
-    console.log(iSODate);
 
     previousDate = localStorage.getItem("date");
     localStorage.setItem("previousDate", previousDate);
-    console.log("previous date:", previousDate);
 
     let date = formatDate(iSODate, "inventoryDate");
     let shortDate = iSODate.toLocaleString("en-us", {
@@ -71,8 +69,6 @@ for (const button of deliveryDateButtons) {
     let longDate = formatDate(iSODate, "long");
 
     let day = formatDate(iSODate, "weekday");
-    console.log("updated date");
-    console.log(date, shortDate, longDate, day);
 
     localStorage.setItem("date", date);
     localStorage.setItem("day", day);
@@ -206,10 +202,8 @@ function dateChangeProject() {
 
     if (deliveryDate1 == date) {
       var inventory = deliveryDate1Inventory;
-      console.log("deliveryDate1 inventory:", inventory);
     } else if (deliveryDate2 == date) {
       var inventory = deliveryDate2Inventory;
-      console.log("deliveryDate2 inventory:", inventory);
     } else if (deliveryDate3 == date) {
       var inventory = deliveryDate3Inventory;
     } else if (deliveryDate4 == date) {
@@ -232,6 +226,10 @@ function dateChangeProject() {
 
     if (inventory >= 0) {
       var dayAvailable = "true";
+      console.log(
+        `Inventory: for ${$(this).find(".pc_name").text()}`,
+        inventory
+      );
     } else {
       var dayAvailable = "false";
       console.log(
@@ -321,10 +319,8 @@ function dateChangeProject() {
 
     if (deliveryDate1 == date) {
       var inventory = deliveryDate1Inventory;
-      console.log("deliveryDate1 inventory:", inventory);
     } else if (deliveryDate2 == date) {
       var inventory = deliveryDate2Inventory;
-      console.log("deliveryDate2 inventory:", inventory);
     } else if (deliveryDate3 == date) {
       var inventory = deliveryDate3Inventory;
     } else if (deliveryDate4 == date) {
@@ -349,10 +345,6 @@ function dateChangeProject() {
       var dayAvailable = "true";
     } else {
       var dayAvailable = "false";
-      console.log(
-        `Inventory: for ${$(this).find(".pc_name").text()}`,
-        inventory
-      );
     }
 
     if (dayAvailable == "true") {
@@ -366,7 +358,7 @@ function dateChangeProject() {
       }
     } else if (dayAvailable == "false") {
       //if (window.location.pathname.match(/all-vendors/) || window.location.pathname.match(/find/) || window.location.pathname.match(/product/)) {
-      console.log("day available false, NOT hiding product");
+      console.log("collection-item-24 day available false, NOT hiding product");
       $(this).find(".products-item-day-unavailable").show();
       // } else {
       //   console.log('day available false, hiding product');
@@ -589,37 +581,9 @@ function removeItemsNotAvailable() {
   document.querySelector(".clear_cart_modal").style.display = "none";
 }
 
-/**
- * Jetboost calls this function each time the items in a collection list have changed
- * collectionList is the Webflow Collection List element (.w-dyn-items). It's child elements are the Collection Items.
- * @param {HTMLDivElement} collectionList
- */
- window.JetboostListUpdated = function (collectionList) {
+window.JetboostListUpdated = function (collectionList) {
   // Loop through all collection items in the list that are currently on the page
   for (var collectionItem of collectionList.children) {
-    // You can check to see if this is the first time Jetboost has added this collection item to the page.
-    // This is useful for code that should only be run once per item, like adding event handlers.
-    //   if (collectionItem.jetboostData.firstDisplay) {
-    //     // Example: Add a click handler to a button inside each collection item
-    //     collectionItem
-    //       .querySelector(".products-item")
-    //       /* .addEventListener("click", function (e) {
-    //         // Do something when the button is clicked
-    //         console.log("Button clicked!");
-    //       }); */
-    //   }
-
-    // If there are actions you want to perform every time the items in the collection list change,
-    // then you do not need to worry about the "firstDisplay" property that Jetboost provides.
-
-    // Example: Get the item's slug
-    var slug = collectionItem.querySelector(".jetboost-list-item").value;
-
-    // Do something with the slug
-    console.log(slug);
-    console.log(collectionItem);
-    console.log(`Jetboost for`, $(collectionItem));
-
     inventory = "";
 
     $(collectionItem).show();
@@ -678,10 +642,8 @@ function removeItemsNotAvailable() {
 
     if (deliveryDate1 == date) {
       var inventory = deliveryDate1Inventory;
-      console.log("deliveryDate1 inventory:", inventory);
     } else if (deliveryDate2 == date) {
       var inventory = deliveryDate2Inventory;
-      console.log("deliveryDate2 inventory:", inventory);
     } else if (deliveryDate3 == date) {
       var inventory = deliveryDate3Inventory;
     } else if (deliveryDate4 == date) {
@@ -703,17 +665,9 @@ function removeItemsNotAvailable() {
     }
 
     if (inventory == "") {
-        var dayAvailable = "false";
-        console.log(
-          `Inventory UNDEFINED for ${$(collectionItem).find(".pc_name").text()}`,
-          inventory
-        );
+      var dayAvailable = "false";
     } else {
-        var dayAvailable = "true";
-        console.log(
-          `Inventory: for ${$(collectionItem).find(".pc_name").text()}`,
-          inventory
-        );;
+      var dayAvailable = "true";
     }
 
     if (dayAvailable == "true") {
@@ -726,17 +680,7 @@ function removeItemsNotAvailable() {
         $(collectionItem).find(".products-item-out-of-stock").show();
       }
     } else if (dayAvailable == "false") {
-      //if (window.location.pathname.match(/all-vendors/) || window.location.pathname.match(/find/) || window.location.pathname.match(/product/)) {
-      console.log("day available false, NOT hiding product");
-      console.log(
-        `Inventory: for ${$(collectionItem).find(".pc_name").text()}`,
-        inventory
-      );
-      $(collectionItem).find(".products-item-day-unavailable").show();
-      // } else {
-      //   console.log('day available false, hiding product');
-      //   $(collectionItem).hide();
-      // }
+      $(collectionItem).hide();
     }
   }
 };
