@@ -531,27 +531,13 @@ function canShipOnDeliveryDay() {
     }
   }
   
-  checkInv("https://inventory-nine-nu.vercel.app/api/hello").then((e) => {
-    console.log("data:", currentInv = e)
-    //console.log('records[i].value', e.records[0].value);
-    for (var i = 0; i < e.length; i++) {
-      console.log('e[i].value', e[i].value);
-      if (e[i].value <= 0) {
-        let li = document.createElement("li");
-        li.innerText = e.records[i].key;
-        unavailableItemsList.appendChild(li);
-        console.log("items not avail:", e[i].key);
-      }
-    }
-  });
-
-  // Disabled for testing
-  /* if (unavailableItemsList.innerHTML != "") {
+  
+  if (unavailableItemsList.innerHTML != "") {
     if (document.querySelector(".date_switch_modal")) {
       document.querySelector(".date_switch_modal").style.display = "none";
     }
     document.querySelector(".clear_cart_modal").style.display = "flex";
-  } */
+  }
 }
 
 function removeItemsNotAvailable() {
