@@ -52,7 +52,6 @@ const deliveryDateButtons = document.querySelectorAll(".delivery-date-btn");
 for (const button of deliveryDateButtons) {
   button.addEventListener("click", function () {
     let dateText = button.firstChild.innerText;
-    
 
     // // get Inventory date and weekday
     let iSODate = new Date(dateText + ", 2022");
@@ -531,13 +530,28 @@ function canShipOnDeliveryDay() {
       }
     }
   }
+  
+  checkInv("https://inventory-nine-nu.vercel.app/api/hello").then((e) => {
+    console.log("data:", currentInv = e)
+    //console.log('records[i].value', e.records[0].value);
+    for (var i = 0; i < e.length; i++) {
+      console.log('e[i].value', e[i].value);
+      if (e[i].value <= 0) {
+        let li = document.createElement("li");
+        li.innerText = e.records[i].key;
+        unavailableItemsList.appendChild(li);
+        console.log("items not avail:", e[i].key);
+      }
+    }
+  });
 
-  if (unavailableItemsList.innerHTML != "") {
+  // Disabled for testing
+  /* if (unavailableItemsList.innerHTML != "") {
     if (document.querySelector(".date_switch_modal")) {
       document.querySelector(".date_switch_modal").style.display = "none";
     }
     document.querySelector(".clear_cart_modal").style.display = "flex";
-  }
+  } */
 }
 
 function removeItemsNotAvailable() {
@@ -581,106 +595,108 @@ function removeItemsNotAvailable() {
   document.querySelector(".clear_cart_modal").style.display = "none";
 }
 
-window.JetboostListUpdated = function (collectionList) {
-  // Loop through all collection items in the list that are currently on the page
-  for (var collectionItem of collectionList.children) {
-    inventory = "";
+if (!window.location.pathname.match(/all-vendors/)) {
+  window.JetboostListUpdated = function (collectionList) {
+    // Loop through all collection items in the list that are currently on the page
+    for (var collectionItem of collectionList.children) {
+      inventory = "";
 
-    $(collectionItem).show();
-    $(collectionItem).find(".products-item-add-to-cart").hide();
-    $(collectionItem).find(".products-item-out-of-stock").hide();
-    $(collectionItem).find(".products-item-day-unavailable").hide();
+      $(collectionItem).show();
+      $(collectionItem).find(".products-item-add-to-cart").hide();
+      $(collectionItem).find(".products-item-out-of-stock").hide();
+      $(collectionItem).find(".products-item-day-unavailable").hide();
 
-    var deliveryDate1 = $(collectionItem).find(".delivery-date-1").text();
-    var deliveryDate2 = $(collectionItem).find(".delivery-date-2").text();
-    var deliveryDate3 = $(collectionItem).find(".delivery-date-3").text();
-    var deliveryDate4 = $(collectionItem).find(".delivery-date-4").text();
-    var deliveryDate5 = $(collectionItem).find(".delivery-date-5").text();
-    var deliveryDate6 = $(collectionItem).find(".delivery-date-6").text();
-    var deliveryDate7 = $(collectionItem).find(".delivery-date-7").text();
-    var deliveryDate8 = $(collectionItem).find(".delivery-date-8").text();
-    var deliveryDate9 = $(collectionItem).find(".delivery-date-9").text();
-    var deliveryDate10 = $(collectionItem).find(".delivery-date-10").text();
-    var deliveryDate11 = $(collectionItem).find(".delivery-date-11").text();
+      var deliveryDate1 = $(collectionItem).find(".delivery-date-1").text();
+      var deliveryDate2 = $(collectionItem).find(".delivery-date-2").text();
+      var deliveryDate3 = $(collectionItem).find(".delivery-date-3").text();
+      var deliveryDate4 = $(collectionItem).find(".delivery-date-4").text();
+      var deliveryDate5 = $(collectionItem).find(".delivery-date-5").text();
+      var deliveryDate6 = $(collectionItem).find(".delivery-date-6").text();
+      var deliveryDate7 = $(collectionItem).find(".delivery-date-7").text();
+      var deliveryDate8 = $(collectionItem).find(".delivery-date-8").text();
+      var deliveryDate9 = $(collectionItem).find(".delivery-date-9").text();
+      var deliveryDate10 = $(collectionItem).find(".delivery-date-10").text();
+      var deliveryDate11 = $(collectionItem).find(".delivery-date-11").text();
 
-    var deliveryDate1Inventory = $(collectionItem)
-      .find(".delivery-date-1-inventory")
-      .text();
-    var deliveryDate2Inventory = $(collectionItem)
-      .find(".delivery-date-2-inventory")
-      .text();
-    var deliveryDate3Inventory = $(collectionItem)
-      .find(".delivery-date-3-inventory")
-      .text();
-    var deliveryDate4Inventory = $(collectionItem)
-      .find(".delivery-date-4-inventory")
-      .text();
-    var deliveryDate5Inventory = $(collectionItem)
-      .find(".delivery-date-5-inventory")
-      .text();
-    var deliveryDate6Inventory = $(collectionItem)
-      .find(".delivery-date-6-inventory")
-      .text();
-    var deliveryDate7Inventory = $(collectionItem)
-      .find(".delivery-date-7-inventory")
-      .text();
-    var deliveryDate8Inventory = $(collectionItem)
-      .find(".delivery-date-8-inventory")
-      .text();
-    var deliveryDate9Inventory = $(collectionItem)
-      .find(".delivery-date-9-inventory")
-      .text();
-    var deliveryDate10Inventory = $(collectionItem)
-      .find(".delivery-date-10-inventory")
-      .text();
-    var deliveryDate11Inventory = $(collectionItem)
-      .find(".delivery-date-11-inventory")
-      .text();
-    var addToCartHref = $(collectionItem)
-      .find(".products-item-add-to-cart a")
-      .attr("href");
+      var deliveryDate1Inventory = $(collectionItem)
+        .find(".delivery-date-1-inventory")
+        .text();
+      var deliveryDate2Inventory = $(collectionItem)
+        .find(".delivery-date-2-inventory")
+        .text();
+      var deliveryDate3Inventory = $(collectionItem)
+        .find(".delivery-date-3-inventory")
+        .text();
+      var deliveryDate4Inventory = $(collectionItem)
+        .find(".delivery-date-4-inventory")
+        .text();
+      var deliveryDate5Inventory = $(collectionItem)
+        .find(".delivery-date-5-inventory")
+        .text();
+      var deliveryDate6Inventory = $(collectionItem)
+        .find(".delivery-date-6-inventory")
+        .text();
+      var deliveryDate7Inventory = $(collectionItem)
+        .find(".delivery-date-7-inventory")
+        .text();
+      var deliveryDate8Inventory = $(collectionItem)
+        .find(".delivery-date-8-inventory")
+        .text();
+      var deliveryDate9Inventory = $(collectionItem)
+        .find(".delivery-date-9-inventory")
+        .text();
+      var deliveryDate10Inventory = $(collectionItem)
+        .find(".delivery-date-10-inventory")
+        .text();
+      var deliveryDate11Inventory = $(collectionItem)
+        .find(".delivery-date-11-inventory")
+        .text();
+      var addToCartHref = $(collectionItem)
+        .find(".products-item-add-to-cart a")
+        .attr("href");
 
-    if (deliveryDate1 == date) {
-      var inventory = deliveryDate1Inventory;
-    } else if (deliveryDate2 == date) {
-      var inventory = deliveryDate2Inventory;
-    } else if (deliveryDate3 == date) {
-      var inventory = deliveryDate3Inventory;
-    } else if (deliveryDate4 == date) {
-      var inventory = deliveryDate4Inventory;
-    } else if (deliveryDate5 == date) {
-      var inventory = deliveryDate5Inventory;
-    } else if (deliveryDate6 == date) {
-      var inventory = deliveryDate6Inventory;
-    } else if (deliveryDate7 == date) {
-      var inventory = deliveryDate7Inventory;
-    } else if (deliveryDate8 == date) {
-      var inventory = deliveryDate8Inventory;
-    } else if (deliveryDate9 == date) {
-      var inventory = deliveryDate9Inventory;
-    } else if (deliveryDate10 == date) {
-      var inventory = deliveryDate10Inventory;
-    } else if (deliveryDate11 == date) {
-      var inventory = deliveryDate11Inventory;
-    }
-
-    if (inventory == "") {
-      var dayAvailable = "false";
-    } else {
-      var dayAvailable = "true";
-    }
-
-    if (dayAvailable == "true") {
-      if (inventory > "0") {
-        $(collectionItem).find(".products-item-add-to-cart").show();
-        $(collectionItem)
-          .find(".products-item-add-to-cart a")
-          .attr("href", addToCartHref + "&quantity_max=" + inventory);
-      } else {
-        $(collectionItem).find(".products-item-out-of-stock").show();
+      if (deliveryDate1 == date) {
+        var inventory = deliveryDate1Inventory;
+      } else if (deliveryDate2 == date) {
+        var inventory = deliveryDate2Inventory;
+      } else if (deliveryDate3 == date) {
+        var inventory = deliveryDate3Inventory;
+      } else if (deliveryDate4 == date) {
+        var inventory = deliveryDate4Inventory;
+      } else if (deliveryDate5 == date) {
+        var inventory = deliveryDate5Inventory;
+      } else if (deliveryDate6 == date) {
+        var inventory = deliveryDate6Inventory;
+      } else if (deliveryDate7 == date) {
+        var inventory = deliveryDate7Inventory;
+      } else if (deliveryDate8 == date) {
+        var inventory = deliveryDate8Inventory;
+      } else if (deliveryDate9 == date) {
+        var inventory = deliveryDate9Inventory;
+      } else if (deliveryDate10 == date) {
+        var inventory = deliveryDate10Inventory;
+      } else if (deliveryDate11 == date) {
+        var inventory = deliveryDate11Inventory;
       }
-    } else if (dayAvailable == "false") {
-      $(collectionItem).hide();
+
+      if (inventory == "") {
+        var dayAvailable = "false";
+      } else {
+        var dayAvailable = "true";
+      }
+
+      if (dayAvailable == "true") {
+        if (inventory > "0") {
+          $(collectionItem).find(".products-item-add-to-cart").show();
+          $(collectionItem)
+            .find(".products-item-add-to-cart a")
+            .attr("href", addToCartHref + "&quantity_max=" + inventory);
+        } else {
+          $(collectionItem).find(".products-item-out-of-stock").show();
+        }
+      } else if (dayAvailable == "false") {
+        $(collectionItem).hide();
+      }
     }
-  }
-};
+  };
+}
