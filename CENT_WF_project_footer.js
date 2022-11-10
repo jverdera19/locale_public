@@ -371,17 +371,21 @@ function formatDate(date, format) {
   const weekday = date.toLocaleString("en-us", { weekday: "long" });
   const shortMonth = date.toLocaleString("en-us", { month: "short" });
   const longMonth = date.toLocaleString("en-us", { month: "long" });
+  const numericMonth = date.toLocaleString("en-us", { month: "numeric" });
   const year = date.getFullYear();
   const monthdayshort = date.toLocaleString("en-us", { day: "numeric" });
   const monthdaylong = date.toLocaleString("en-us", { day: "2-digit" });
 
   const long = `${weekday}, ${longMonth} ${monthdayshort}, ${year}`;
   const inventoryDate = `${shortMonth} ${monthdaylong}, ${year}`;
+  const yymmdd = `${year}-${numericMonth}-${monthdaylong}`;
 
   if (format == "long") {
     return long;
   } else if (format == "weekday") {
     return weekday;
+  } else if (format == "yymmdd") {
+    return yymmdd;
   } else {
     return inventoryDate;
   }
@@ -435,8 +439,7 @@ clearCartButton.addEventListener("click", function () {
   removeItemsNotAvailable();
 });
 
-const continueShoppingOnClearCart =
-  document.querySelectorAll(".next-button")[0];
+let continueShoppingOnClearCart = document.querySelectorAll(".next-button")[0];
 continueShoppingOnClearCart.addEventListener("click", function () {
   revertSelectedDate();
 });
@@ -503,41 +506,149 @@ function canShipOnDeliveryDay() {
   const cartItems = FC.json.items;
   const lowerCaseDay = day.toLowerCase();
 
-  let unavailableItemsList = document.querySelector("#clear_cart_list");
+  let unavailableItemsList = document.querySelector("#clear_cart_list_review");
   unavailableItemsList.innerHTML = "";
 
-  for (var i = 0; i < FC.json.items.length; i++) {
-    const current = cartItems[i];
-    //const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
+  if (!window.location.pathname.match(/nationwide\/review-order/)) {
+    for (var i = 0; i < FC.json.items.length; i++) {
+      const current = cartItems[i];
+      //const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
 
-    const deliveryDateIndex = current.options.findIndex(
-      (object) => object.value === date
-    );
-    const deliveryDate = current.options[deliveryDateIndex]?.class;
-    const inventoryIndex = current.options.findIndex(
-      (object) => object.class === `${deliveryDate}_inventory`
-    );
-    let currentInventory = current.options[inventoryIndex]?.value;
+      const deliveryDateIndex = current.options.findIndex(
+        (object) => object.value === date
+      );
+      const deliveryDate = current.options[deliveryDateIndex]?.class;
+      const inventoryIndex = current.options.findIndex(
+        (object) => object.class === `${deliveryDate}_inventory`
+      );
+      let currentInventory = current.options[inventoryIndex]?.value;
 
-    console.log(`inventory for ${current.name}: `, currentInventory);
+      //console.log(`inventory for ${current.name}: `, currentInventory);
 
-    if (current.name !== "Tip" && current.name !== "Small Order Fee") {
-      if (deliveryDateIndex == -1 || currentInventory <= 0) {
-        let li = document.createElement("li");
-        li.innerText = current.name;
-        unavailableItemsList.appendChild(li);
-        console.log("items not avail:", current.name);
+      if (current.name !== "Tip" && current.name !== "Small Order Fee") {
+        if (deliveryDateIndex == -1 || currentInventory <= 0) {
+          let li = document.createElement("li");
+          li.innerText = current.name;
+          unavailableItemsList.appendChild(li);
+          //console.log("items not avail:", current.name);
+        }
       }
     }
-  }
-  
-  
-  if (unavailableItemsList.innerHTML != "") {
-    if (document.querySelector(".date_switch_modal")) {
-      document.querySelector(".date_switch_modal").style.display = "none";
+
+    if (unavailableItemsList.innerHTML != "") {
+      if (document.querySelector(".date_switch_modal")) {
+        document.querySelector(".date_switch_modal").style.display = "none";
+      }
+      document.querySelector(".clear_cart_modal").style.display = "flex";
     }
-    document.querySelector(".clear_cart_modal").style.display = "flex";
+  } else {
+    checkInv("http://127.0.0.1:3000/api/inventory").then((e) => {
+      console.log("data:", (currentInv = e));
+      //console.log('records[i].value', e.records[0].value);
+      //console.log('currentInv.length', currentInv.length)
+      let iSODate = new Date(date);
+      let selectedDate = formatDate(iSODate, "yymmdd");
+      console.log("selectedDate: ", selectedDate);
+
+      for (var i = 0; i < currentInv.length; i++) {
+        let deliveryDateKey = Object.keys(currentInv[i]).find(
+          (key) => currentInv[i][key] === selectedDate
+        );
+        let deliveryDateInvKey = deliveryDateKey + "Inv";
+        console.log("deliveryDateInvKey", deliveryDateInvKey);
+
+        // MARK: If date is missing, need to mark it as unavailable as well (test with a Turkey item)
+
+        if (currentInv[i][deliveryDateInvKey] <= 0 || !deliveryDateKey) {
+          console.log(
+            "currentInv is less than X for",
+            currentInv[i][deliveryDateKey]
+          );
+          let li = document.createElement("li");
+          li.innerText = currentInv[i].name;
+          unavailableItemsList.appendChild(li);
+          console.log("items not avail on Airtable:", currentInv[i].name);
+        }
+
+        // console.log("stock.value", currentInv[i].deliveryDate10Inventory);
+        // if (currentInv[i].stock <= 0) {
+        //   let li = document.createElement("li");
+        //   li.innerText = currentInv[i].name + "Airtable";
+        //   unavailableItemsList.appendChild(li);
+        //   console.log("items not avail on Airtable:", currentInv[i].name);
+        // }
+      }
+
+      if (unavailableItemsList.innerHTML != "") {
+        if (document.querySelector(".date_switch_modal")) {
+          document.querySelector(".date_switch_modal").style.display = "none";
+        }
+        //document.querySelectorAll(".heading.sub")[0].innerText =
+        //"We’re sorry, the following items from your cart are no longer available and will be removed from your cart\n";
+        document.querySelector(".clear_cart_modal_review").style.display =
+          "flex";
+        //document.querySelector("#clear_cart_button").style.display = "none";
+
+        continueShoppingOnClearCart =
+          document.querySelector("#continue_to_clear_review");
+        continueShoppingOnClearCart.addEventListener("click", function () {
+          removeItemsNotAvailableReviewOrder();
+          // MARK: need to unbind previous event
+        });
+      }
+    });
   }
+}
+
+function checkInv(url) {
+  const cartItems = FC.json.items;
+
+  // Out of Stock items array
+  let recordsToQuery = [];
+  let currentInventory = {};
+
+  for (var i = 0; i < FC.json.items.length; i++) {
+    var current = cartItems[i];
+    const currentID = cartItems[i].id;
+
+    if (current.name !== "Tip" && current.name !== "Small Order Fee") {
+      let obj = {
+        name: current.name,
+        quantity: current.quantity,
+        code: current.code,
+      };
+
+      recordsToQuery.push(obj);
+    }
+  }
+
+  var cartItemsJSON = JSON.stringify(recordsToQuery);
+
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    redirect: "follow",
+    credentials: "same-origin",
+    body: cartItemsJSON,
+  };
+
+  return fetch(url, requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+      return result;
+      //currentInventory = result;
+      //return result;
+      // Need to make this work
+      //const data = await response.json();
+      //return data;
+    })
+    .catch((error) => console.log("error", error));
+
+  console.log(cartItems);
 }
 
 function removeItemsNotAvailable() {
@@ -579,6 +690,59 @@ function removeItemsNotAvailable() {
   }
 
   document.querySelector(".clear_cart_modal").style.display = "none";
+}
+
+function removeItemsNotAvailableReviewOrder() {
+  const cartItems = FC.json.items;
+  let iSODate = new Date(date);
+  let selectedDate = formatDate(iSODate, "yymmdd");
+  console.log("selectedDate: ", selectedDate);
+
+  for (var i = 0; i < currentInv.length; i++) {
+    let deliveryDateKey = Object.keys(currentInv[i]).find(
+      (key) => currentInv[i][key] === selectedDate
+    );
+    let deliveryDateInvKey = deliveryDateKey + "Inv";
+    console.log("deliveryDateInvKey", deliveryDateInvKey);
+
+    if (currentInv[i][deliveryDateInvKey] <= 0 || !deliveryDateKey) {
+      for (var j = 0; j < FC.json.items.length; j++) {
+        const current = cartItems[j];
+
+        if (current.code === currentInv[i].code) {
+          FC.client
+            .request(
+              "https://" +
+                FC.settings.storedomain +
+                "/cart?&cart=update&quantity=0&id=" +
+                current.id
+            )
+            .done(function (dataJSON) {
+              FC.cart.updateItemQuantity();
+              console.log("items deleted:", current.name);
+              if (window.location.pathname.match(/review-order/)) {
+                console.log("clearing items in review page");
+                createCartItems();
+                removeDuplicates();
+                addSubtotal();
+                updateProgressBar();
+              }
+            });
+        }
+      }
+    }
+  }
+
+  console.log("removed items");
+
+  document.querySelector(".clear_cart_modal_review").style.display = "none";
+  setTimeout(() => {
+    console.log("Delayed for o second.");
+    createCartItems();
+    removeDuplicates();
+    addSubtotal();
+    updateProgressBar();
+  }, "1000");
 }
 
 if (!window.location.pathname.match(/all-vendors/)) {
