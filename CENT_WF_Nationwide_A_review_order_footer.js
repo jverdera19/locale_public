@@ -214,15 +214,18 @@ function addSubtotal() {
 }
 
 function disableCheckoutButton() {
+  let checkoutHeaderBtn = document.querySelector('#checkout_header_link');
   let checkoutBtn = document.querySelector("#continue-button");
   let checkoutBtnMob = document.querySelector("#continue-button-mobile");
 
-  if (FC.json.total_item_price < 60) {
+  if (FC.json.total_item_price < 80) {
+    checkoutHeaderBtn.href = "#";
     checkoutBtn.classList.add("inactive");
     checkoutBtn.href = "#";
     checkoutBtnMob.classList.add("inactive");
     checkoutBtnMob.href = "#";
   } else {
+    checkoutHeaderBtn.href = "https://secure.shoplocale.com/checkout";
     checkoutBtn.classList.remove("inactive");
     checkoutBtn.href = "https://secure.shoplocale.com/checkout";
     checkoutBtnMob.classList.remove("inactive");
