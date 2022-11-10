@@ -549,7 +549,7 @@ function canShipOnDeliveryDayReview() {
   let unavailableItemsList = document.querySelector("#clear_cart_list_review");
   unavailableItemsList.innerHTML = "";
 
-  checkInv("http://127.0.0.1:3000/api/inventory").then((e) => {
+  checkInv("https://inventory-checker-one.vercel.app/api/inventory").then((e) => {
     console.log("data:", (currentInv = e));
     //console.log('records[i].value', e.records[0].value);
     //console.log('currentInv.length', currentInv.length)
