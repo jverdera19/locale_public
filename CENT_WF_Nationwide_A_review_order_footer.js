@@ -11,6 +11,10 @@ FC.onLoad = function () {
     if (window.location.pathname.match(/review-order/)) {
       createCartItems();
       removeDuplicates();
+      // MARK: triggering availability check
+      if (window.location.pathname.match(/nationwide\/review-order/)) {
+        canShipOnDeliveryDay();
+      }
     }
   });
 };
