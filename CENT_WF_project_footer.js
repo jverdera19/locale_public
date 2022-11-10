@@ -506,98 +506,104 @@ function canShipOnDeliveryDay() {
   const cartItems = FC.json.items;
   const lowerCaseDay = day.toLowerCase();
 
+  let unavailableItemsList = document.querySelector("#clear_cart_list");
+  unavailableItemsList.innerHTML = "";
+
+  for (var i = 0; i < FC.json.items.length; i++) {
+    const current = cartItems[i];
+    //const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
+
+    const deliveryDateIndex = current.options.findIndex(
+      (object) => object.value === date
+    );
+    const deliveryDate = current.options[deliveryDateIndex]?.class;
+    const inventoryIndex = current.options.findIndex(
+      (object) => object.class === `${deliveryDate}_inventory`
+    );
+    let currentInventory = current.options[inventoryIndex]?.value;
+
+    //console.log(`inventory for ${current.name}: `, currentInventory);
+
+    if (current.name !== "Tip" && current.name !== "Small Order Fee") {
+      if (deliveryDateIndex == -1 || currentInventory <= 0) {
+        let li = document.createElement("li");
+        li.innerText = current.name;
+        unavailableItemsList.appendChild(li);
+        //console.log("items not avail:", current.name);
+      }
+    }
+  }
+
+  if (unavailableItemsList.innerHTML != "") {
+    if (document.querySelector(".date_switch_modal")) {
+      document.querySelector(".date_switch_modal").style.display = "none";
+    }
+    document.querySelector(".clear_cart_modal").style.display = "flex";
+  }
+}
+
+function canShipOnDeliveryDayReview() {
+  const cartItems = FC.json.items;
+  const lowerCaseDay = day.toLowerCase();
+
   let unavailableItemsList = document.querySelector("#clear_cart_list_review");
   unavailableItemsList.innerHTML = "";
 
-  if (!window.location.pathname.match(/nationwide\/review-order/)) {
-    for (var i = 0; i < FC.json.items.length; i++) {
-      const current = cartItems[i];
-      //const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
+  checkInv("http://127.0.0.1:3000/api/inventory").then((e) => {
+    console.log("data:", (currentInv = e));
+    //console.log('records[i].value', e.records[0].value);
+    //console.log('currentInv.length', currentInv.length)
+    let iSODate = new Date(date);
+    let selectedDate = formatDate(iSODate, "yymmdd");
+    console.log("selectedDate: ", selectedDate);
 
-      const deliveryDateIndex = current.options.findIndex(
-        (object) => object.value === date
+    for (var i = 0; i < currentInv.length; i++) {
+      let deliveryDateKey = Object.keys(currentInv[i]).find(
+        (key) => currentInv[i][key] === selectedDate
       );
-      const deliveryDate = current.options[deliveryDateIndex]?.class;
-      const inventoryIndex = current.options.findIndex(
-        (object) => object.class === `${deliveryDate}_inventory`
-      );
-      let currentInventory = current.options[inventoryIndex]?.value;
+      let deliveryDateInvKey = deliveryDateKey + "Inv";
+      console.log("deliveryDateInvKey", deliveryDateInvKey);
 
-      //console.log(`inventory for ${current.name}: `, currentInventory);
+      // MARK: If date is missing, need to mark it as unavailable as well (test with a Turkey item)
 
-      if (current.name !== "Tip" && current.name !== "Small Order Fee") {
-        if (deliveryDateIndex == -1 || currentInventory <= 0) {
-          let li = document.createElement("li");
-          li.innerText = current.name;
-          unavailableItemsList.appendChild(li);
-          //console.log("items not avail:", current.name);
-        }
+      if (currentInv[i][deliveryDateInvKey] <= 0 || !deliveryDateKey) {
+        console.log(
+          "currentInv is less than X for",
+          currentInv[i][deliveryDateKey]
+        );
+        let li = document.createElement("li");
+        li.innerText = currentInv[i].name;
+        unavailableItemsList.appendChild(li);
+        console.log("items not avail on Airtable:", currentInv[i].name);
       }
+
+      // console.log("stock.value", currentInv[i].deliveryDate10Inventory);
+      // if (currentInv[i].stock <= 0) {
+      //   let li = document.createElement("li");
+      //   li.innerText = currentInv[i].name + "Airtable";
+      //   unavailableItemsList.appendChild(li);
+      //   console.log("items not avail on Airtable:", currentInv[i].name);
+      // }
     }
 
     if (unavailableItemsList.innerHTML != "") {
       if (document.querySelector(".date_switch_modal")) {
         document.querySelector(".date_switch_modal").style.display = "none";
       }
-      document.querySelector(".clear_cart_modal").style.display = "flex";
+      //document.querySelectorAll(".heading.sub")[0].innerText =
+      //"We’re sorry, the following items from your cart are no longer available and will be removed from your cart\n";
+      document.querySelector(".clear_cart_modal_review").style.display = "flex";
+      //document.querySelector("#clear_cart_button").style.display = "none";
+
+      continueShoppingOnClearCart = document.querySelector(
+        "#continue_to_clear_review"
+      );
+      continueShoppingOnClearCart.addEventListener("click", function () {
+        removeItemsNotAvailableReviewOrder();
+        // MARK: need to unbind previous event
+      });
     }
-  } else {
-    checkInv("http://127.0.0.1:3000/api/inventory").then((e) => {
-      console.log("data:", (currentInv = e));
-      //console.log('records[i].value', e.records[0].value);
-      //console.log('currentInv.length', currentInv.length)
-      let iSODate = new Date(date);
-      let selectedDate = formatDate(iSODate, "yymmdd");
-      console.log("selectedDate: ", selectedDate);
-
-      for (var i = 0; i < currentInv.length; i++) {
-        let deliveryDateKey = Object.keys(currentInv[i]).find(
-          (key) => currentInv[i][key] === selectedDate
-        );
-        let deliveryDateInvKey = deliveryDateKey + "Inv";
-        console.log("deliveryDateInvKey", deliveryDateInvKey);
-
-        // MARK: If date is missing, need to mark it as unavailable as well (test with a Turkey item)
-
-        if (currentInv[i][deliveryDateInvKey] <= 0 || !deliveryDateKey) {
-          console.log(
-            "currentInv is less than X for",
-            currentInv[i][deliveryDateKey]
-          );
-          let li = document.createElement("li");
-          li.innerText = currentInv[i].name;
-          unavailableItemsList.appendChild(li);
-          console.log("items not avail on Airtable:", currentInv[i].name);
-        }
-
-        // console.log("stock.value", currentInv[i].deliveryDate10Inventory);
-        // if (currentInv[i].stock <= 0) {
-        //   let li = document.createElement("li");
-        //   li.innerText = currentInv[i].name + "Airtable";
-        //   unavailableItemsList.appendChild(li);
-        //   console.log("items not avail on Airtable:", currentInv[i].name);
-        // }
-      }
-
-      if (unavailableItemsList.innerHTML != "") {
-        if (document.querySelector(".date_switch_modal")) {
-          document.querySelector(".date_switch_modal").style.display = "none";
-        }
-        //document.querySelectorAll(".heading.sub")[0].innerText =
-        //"We’re sorry, the following items from your cart are no longer available and will be removed from your cart\n";
-        document.querySelector(".clear_cart_modal_review").style.display =
-          "flex";
-        //document.querySelector("#clear_cart_button").style.display = "none";
-
-        continueShoppingOnClearCart =
-          document.querySelector("#continue_to_clear_review");
-        continueShoppingOnClearCart.addEventListener("click", function () {
-          removeItemsNotAvailableReviewOrder();
-          // MARK: need to unbind previous event
-        });
-      }
-    });
-  }
+  });
 }
 
 function checkInv(url) {
