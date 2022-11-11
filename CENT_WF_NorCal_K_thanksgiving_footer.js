@@ -39,7 +39,7 @@ $(document).ready(function () {
 
   function checkRegion() {
     if (storedRegion != currentRegion) {
-      let iSODate = new Date("Nov 12, 2022");
+      let iSODate = new Date("Nov 19, 2022");
       let shortDate = iSODate.toLocaleString("en-us", {
         weekday: "short",
         month: "numeric",
@@ -110,7 +110,7 @@ $(document).ready(function () {
     // Update date button
     document.querySelector(".current_date").innerText = shortDate;
 
-    $(".products-item").each(function () {
+    $(".products-item, .collection-item-24").each(function () {
       $(this).show();
       $(this).find(".products-item-add-to-cart").hide();
       $(this).find(".products-item-out-of-stock").hide();
