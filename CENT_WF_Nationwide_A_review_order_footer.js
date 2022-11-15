@@ -11,10 +11,7 @@ FC.onLoad = function () {
     if (window.location.pathname.match(/review-order/)) {
       createCartItems();
       removeDuplicates();
-      // MARK: triggering availability check
-      if (window.location.pathname.match(/nationwide\/review-order/)) {
-        canShipOnDeliveryDayReview();
-      }
+      canShipOnDeliveryDayReview();
     }
   });
 };
@@ -214,9 +211,9 @@ function addSubtotal() {
 }
 
 function disableCheckoutButton() {
-  let checkoutHeaderBtn = document.querySelector('#checkout_header_link');
-  let checkoutBtn = document.querySelector("#continue-button");
-  let checkoutBtnMob = document.querySelector("#continue-button-mobile");
+  let checkoutHeaderBtn = document.querySelector("#checkout_header_link");
+  let checkoutBtn = document.querySelector("#continue_checkout");
+  let checkoutBtnMob = document.querySelector("#continue_checkout_mobile");
 
   if (FC.json.total_item_price < 80) {
     checkoutHeaderBtn.href = "#";
