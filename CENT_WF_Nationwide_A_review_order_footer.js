@@ -69,6 +69,7 @@ function addLoadingIcon(container) {
 }
 
 function createCartItems() {
+  
   const cartItems = FC.json.items;
 
   if (!cartItems.length) {
@@ -83,6 +84,7 @@ function createCartItems() {
 
   // Remove children current cart or loader
   if (reviewItemContainer.children.length) {
+    console.log('starting createCartItems function for child : ', reviewItemContainer.children)
     reviewItemContainer.childNodes.forEach((child) => child.remove());
   }
 
@@ -208,24 +210,4 @@ function addSubtotal() {
   document.querySelector(
     ".items-subtotal"
   ).innerText = `$${FC.json.total_item_price.toFixed(2)}`;
-}
-
-function disableCheckoutButton() {
-  let checkoutHeaderBtn = document.querySelector("#checkout_header_link");
-  let checkoutBtn = document.querySelector("#continue_checkout");
-  let checkoutBtnMob = document.querySelector("#continue_checkout_mobile");
-
-  if (FC.json.total_item_price < 80) {
-    checkoutHeaderBtn.href = "#";
-    checkoutBtn.classList.add("inactive");
-    checkoutBtn.href = "#";
-    checkoutBtnMob.classList.add("inactive");
-    checkoutBtnMob.href = "#";
-  } else {
-    checkoutHeaderBtn.href = "https://secure.shoplocale.com/checkout";
-    checkoutBtn.classList.remove("inactive");
-    checkoutBtn.href = "https://secure.shoplocale.com/checkout";
-    checkoutBtnMob.classList.remove("inactive");
-    checkoutBtnMob.href = "https://secure.shoplocale.com/checkout";
-  }
 }
