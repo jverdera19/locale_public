@@ -446,15 +446,15 @@ continueShoppingOnClearCart.addEventListener('click', function () {
     revertSelectedDate()
 })
 
-const handleCheckoutListener = (e) => canShipOnDeliveryDayReview(e.currentTarget.id);
-
-let continueCheckoutButton = document.querySelector('#continue_checkout')
-continueCheckoutButton.href = '#'
-continueCheckoutButton.addEventListener('click', handleCheckoutListener);
-// continueCheckoutButton.addEventListener(
-//   'click',
-//   canShipOnDeliveryDayReview
-// )
+if (
+    window.location.pathname.match(/review-order/)
+) {
+    const handleCheckoutListener = (e) => canShipOnDeliveryDayReview(e.currentTarget.id);
+    
+    let continueCheckoutButton = document.querySelector('#continue_checkout')
+    continueCheckoutButton.href = '#'
+    continueCheckoutButton.addEventListener('click', handleCheckoutListener);
+}
 
 function revertSelectedDate() {
     previousDate = localStorage.getItem('previousDate')
@@ -962,3 +962,6 @@ function disableCheckoutButton() {
         // checkoutBtnMob.href = "https://secure.shoplocale.com/checkout";
     }
 }
+
+
+
