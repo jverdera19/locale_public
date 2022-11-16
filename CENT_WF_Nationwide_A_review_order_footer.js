@@ -12,6 +12,7 @@ FC.onLoad = function () {
       createCartItems();
       removeDuplicates();
       canShipOnDeliveryDayReview();
+      startCheckoutGA();
     }
   });
 };
