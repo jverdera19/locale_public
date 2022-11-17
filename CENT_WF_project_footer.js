@@ -446,14 +446,13 @@ continueShoppingOnClearCart.addEventListener('click', function () {
     revertSelectedDate()
 })
 
-if (
-    window.location.pathname.match(/review-order/)
-) {
-    const handleCheckoutListener = (e) => canShipOnDeliveryDayReview(e.currentTarget.id);
-    
+if (window.location.pathname.match(/review-order/)) {
+    const handleCheckoutListener = (e) =>
+        canShipOnDeliveryDayReview(e.currentTarget.id)
+
     let continueCheckoutButton = document.querySelector('#continue_checkout')
     continueCheckoutButton.href = '#'
-    continueCheckoutButton.addEventListener('click', handleCheckoutListener);
+    continueCheckoutButton.addEventListener('click', handleCheckoutListener)
 }
 
 function revertSelectedDate() {
@@ -536,7 +535,11 @@ function canShipOnDeliveryDay() {
 
         //console.log(`inventory for ${current.name}: `, currentInventory);
 
-        if (current.name !== 'Tip' && current.name !== 'Small Order Fee') {
+        if (
+            current.name !== 'Tip' &&
+            current.name !== 'Small Order Fee' &&
+            current.name !== 'Gift Box'
+        ) {
             if (deliveryDateIndex == -1 || currentInventory <= 0) {
                 let li = document.createElement('li')
                 li.innerText = current.name
@@ -557,9 +560,7 @@ function canShipOnDeliveryDay() {
 // Call this function when clicking on continue to checkout
 // Display an animation while the script is fetching the data
 function canShipOnDeliveryDayReview(button_id) {
-
-
-  console.log('checkout button id: ', button_id)
+    console.log('checkout button id: ', button_id)
     const cartItems = FC.json.items
     const lowerCaseDay = day.toLowerCase()
 
@@ -632,7 +633,10 @@ function canShipOnDeliveryDayReview(button_id) {
                         // MARK: need to unbind previous event
                     }
                 )
-            } else if (button_id == 'continue_checkout' || button_id == 'continue_checkout_mobile') {
+            } else if (
+                button_id == 'continue_checkout' ||
+                button_id == 'continue_checkout_mobile'
+            ) {
                 console.log('proceeding to checkout')
                 window.location.assign('https://secure.shoplocale.com/checkout')
             }
@@ -656,7 +660,11 @@ function checkInv(url) {
     for (var i = 0; i < FC.json.items.length; i++) {
         var current = cartItems[i]
 
-        if (current.name !== 'Tip' && current.name !== 'Small Order Fee') {
+        if (
+            current.name !== 'Tip' &&
+            current.name !== 'Small Order Fee' &&
+            current.name !== 'Gift Box'
+        ) {
             let obj = {
                 name: current.name,
                 quantity: current.quantity,
@@ -709,7 +717,11 @@ function removeItemsNotAvailable() {
         )
         let currentInventory = current.options[inventoryIndex]?.value
 
-        if (current.name !== 'Tip' && current.name !== 'Small Order Fee') {
+        if (
+            current.name !== 'Tip' &&
+            current.name !== 'Small Order Fee' &&
+            current.name !== 'Gift Box'
+        ) {
             if (currentInventory <= 0 || deliveryDateIndex == -1) {
                 FC.client
                     .request(
@@ -723,7 +735,7 @@ function removeItemsNotAvailable() {
                         console.log('items deleted:', current.name)
                         if (window.location.pathname.match(/review-order/)) {
                             console.log('clearing items in review page')
-                            addLoadingIcon(reviewItemContainer);
+                            addLoadingIcon(reviewItemContainer)
                             createCartItems()
                             //removeDuplicates()
                             updateProgressBar()
@@ -768,7 +780,7 @@ function removeItemsNotAvailableReviewOrder() {
                                 window.location.pathname.match(/review-order/)
                             ) {
                                 console.log('clearing items in review page')
-                                addLoadingIcon(reviewItemContainer);
+                                addLoadingIcon(reviewItemContainer)
                                 createCartItems()
                                 //removeDuplicates()
                                 addSubtotal()
@@ -783,7 +795,7 @@ function removeItemsNotAvailableReviewOrder() {
     console.log('removed items')
 
     document.querySelector('.clear_cart_modal_review').style.display = 'none'
-    addLoadingIcon(reviewItemContainer);
+    addLoadingIcon(reviewItemContainer)
     // setTimeout(() => {
     //     console.log('Delayed for o second.')
     //     createCartItems()
@@ -941,18 +953,21 @@ function disableCheckoutButton() {
         checkoutBtn.href = '#'
         checkoutBtnMob.classList.add('inactive')
         checkoutBtnMob.href = '#'
-        continueCheckoutButton.removeEventListener('click', handleCheckoutListener);
-      //   continueCheckoutButton.removeEventListener(
-      //     'click',
-      //     canShipOnDeliveryDayReview
-      // )
+        continueCheckoutButton.removeEventListener(
+            'click',
+            handleCheckoutListener
+        )
+        //   continueCheckoutButton.removeEventListener(
+        //     'click',
+        //     canShipOnDeliveryDayReview
+        // )
     } else {
         // Add Event listener calling canShipOnDeliveryDay('checkout')
-        continueCheckoutButton.addEventListener('click', handleCheckoutListener);
-      //   continueCheckoutButton.addEventListener(
-      //     'click',
-      //     canShipOnDeliveryDayReview
-      // )
+        continueCheckoutButton.addEventListener('click', handleCheckoutListener)
+        //   continueCheckoutButton.addEventListener(
+        //     'click',
+        //     canShipOnDeliveryDayReview
+        // )
         continueCheckoutButton.classList.remove('inactive')
 
         // checkoutHeaderBtn.href = "https://secure.shoplocale.com/checkout";
@@ -962,6 +977,3 @@ function disableCheckoutButton() {
         // checkoutBtnMob.href = "https://secure.shoplocale.com/checkout";
     }
 }
-
-
-
