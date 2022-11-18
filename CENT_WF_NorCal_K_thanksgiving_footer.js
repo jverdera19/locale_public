@@ -39,7 +39,7 @@ $(document).ready(function () {
 
   function checkRegion() {
     if (storedRegion != currentRegion) {
-      let iSODate = new Date("Nov 19, 2022");
+      let iSODate = new Date("Nov 23, 2022");
       let shortDate = iSODate.toLocaleString("en-us", {
         weekday: "short",
         month: "numeric",
