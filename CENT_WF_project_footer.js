@@ -560,6 +560,7 @@ function canShipOnDeliveryDayReview(button_id) {
 
     checkInv('https://inventory-checker-one.vercel.app/api/inventory')
         .then((e) => {
+            currentInv = e;
             let iSODate = new Date(date)
             let selectedDate = formatDate(iSODate, 'yymmdd')
             console.log('selectedDate: ', selectedDate)
@@ -596,7 +597,6 @@ function canShipOnDeliveryDayReview(button_id) {
                     document.querySelector('.date_switch_modal').style.display =
                         'none'
                 }
-
                 document.querySelector(
                     '.clear_cart_modal_review'
                 ).style.display = 'flex'
@@ -608,7 +608,6 @@ function canShipOnDeliveryDayReview(button_id) {
                     'click',
                     function () {
                         removeItemsNotAvailableReviewOrder()
-                        // MARK: need to unbind previous event
                     }
                 )
             } else if (
@@ -671,6 +670,11 @@ function checkInv(url) {
         .then((result) => {
             console.log(result)
             return result
+            //currentInventory = result;
+            //return result;
+            // Need to make this work
+            //const data = await response.json();
+            //return data;
         })
         .catch((error) => console.log('error', error))
 }
@@ -769,14 +773,6 @@ function removeItemsNotAvailableReviewOrder() {
 
     document.querySelector('.clear_cart_modal_review').style.display = 'none'
     addLoadingIcon(reviewItemContainer)
-    // setTimeout(() => {
-    //     console.log('Delayed for o second.')
-    //     createCartItems()
-    //     removeDuplicates()
-    //     addSubtotal()
-    //     updateProgressBar()
-    // }, '1000')
-    //createCartItems()
 }
 
 if (!window.location.pathname.match(/all-vendors/)) {
@@ -916,11 +912,6 @@ function disableCheckoutButton() {
     let checkoutBtn = document.querySelector('#continue_checkout')
     let checkoutBtnMob = document.querySelector('#continue_checkout_mobile')
 
-    // continueCheckoutButton.removeEventListener(
-    //     'click',
-    //     canShipOnDeliveryDayReview('checkout')
-    // )
-
     if (FC.json.total_item_price < 80) {
         checkoutHeaderBtn.href = '#'
         checkoutBtn.classList.add('inactive')
@@ -931,17 +922,9 @@ function disableCheckoutButton() {
             'click',
             handleCheckoutListener
         )
-        //   continueCheckoutButton.removeEventListener(
-        //     'click',
-        //     canShipOnDeliveryDayReview
-        // )
     } else {
         // Add Event listener calling canShipOnDeliveryDay('checkout')
         continueCheckoutButton.addEventListener('click', handleCheckoutListener)
-        //   continueCheckoutButton.addEventListener(
-        //     'click',
-        //     canShipOnDeliveryDayReview
-        // )
         continueCheckoutButton.classList.remove('inactive')
 
         // checkoutHeaderBtn.href = "https://secure.shoplocale.com/checkout";
