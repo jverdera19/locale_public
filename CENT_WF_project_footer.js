@@ -446,11 +446,14 @@ continueShoppingOnClearCart.addEventListener('click', function () {
     revertSelectedDate()
 })
 
+let continueCheckoutButton;
+let handleCheckoutListener;
+
 if (window.location.pathname.match(/review-order/)) {
-    const handleCheckoutListener = (e) =>
+    handleCheckoutListener = (e) =>
         canShipOnDeliveryDayReview(e.currentTarget.id)
 
-    let continueCheckoutButton = document.querySelector('#continue_checkout')
+    continueCheckoutButton = document.querySelector('#continue_checkout')
     continueCheckoutButton.href = '#'
     continueCheckoutButton.addEventListener('click', handleCheckoutListener)
 }
@@ -458,9 +461,7 @@ if (window.location.pathname.match(/review-order/)) {
 function revertSelectedDate() {
     previousDate = localStorage.getItem('previousDate')
     console.log('previousDate', previousDate)
-    // $(`.delivery-date-btn:contains(${previousDate})`).click();
-    //const deliveryDateButtons = document.querySelectorAll('.delivery-date-btn');
-
+    
     for (const button of deliveryDateButtons) {
         let dateText = button.firstChild.innerText
         let dateTextFormatted = new Date(dateText + ', 2022')
@@ -468,9 +469,7 @@ function revertSelectedDate() {
         console.log('goodDate:', goodDate)
 
         if (goodDate == previousDate) {
-            //button.click()
-
-            // // get Inventory date and weekday
+            // get Inventory date and weekday
             let iSODate = new Date(dateText + ', 2022')
 
             previousDate = localStorage.getItem('date')
@@ -508,9 +507,6 @@ function revertSelectedDate() {
             return
         }
     }
-
-    // previousInvDate = new Date(previousDate)
-    // $(`.delivery-date-picker-link:contains(${formatDate(previousInvDate)})`).click();
 }
 
 function canShipOnDeliveryDay() {
@@ -522,8 +518,6 @@ function canShipOnDeliveryDay() {
 
     for (var i = 0; i < FC.json.items.length; i++) {
         const current = cartItems[i]
-        //const deliveryDayIndex = current.options.findIndex(object => object.class === `${lowerCaseDay}_delivery`);
-
         const deliveryDateIndex = current.options.findIndex(
             (object) => object.value === date
         )
@@ -532,8 +526,6 @@ function canShipOnDeliveryDay() {
             (object) => object.class === `${deliveryDate}_inventory`
         )
         let currentInventory = current.options[inventoryIndex]?.value
-
-        //console.log(`inventory for ${current.name}: `, currentInventory);
 
         if (
             current.name !== 'Tip' &&
@@ -544,7 +536,6 @@ function canShipOnDeliveryDay() {
                 let li = document.createElement('li')
                 li.innerText = current.name
                 unavailableItemsList.appendChild(li)
-                //console.log("items not avail:", current.name);
             }
         }
     }
@@ -569,9 +560,6 @@ function canShipOnDeliveryDayReview(button_id) {
 
     checkInv('https://inventory-checker-one.vercel.app/api/inventory')
         .then((e) => {
-            console.log('data:', (currentInv = e))
-            //console.log('records[i].value', e.records[0].value);
-            //console.log('currentInv.length', currentInv.length)
             let iSODate = new Date(date)
             let selectedDate = formatDate(iSODate, 'yymmdd')
             console.log('selectedDate: ', selectedDate)
@@ -601,14 +589,6 @@ function canShipOnDeliveryDayReview(button_id) {
                         currentInv[i].name
                     )
                 }
-
-                // console.log("stock.value", currentInv[i].deliveryDate10Inventory);
-                // if (currentInv[i].stock <= 0) {
-                //   let li = document.createElement("li");
-                //   li.innerText = currentInv[i].name + "Airtable";
-                //   unavailableItemsList.appendChild(li);
-                //   console.log("items not avail on Airtable:", currentInv[i].name);
-                // }
             }
 
             if (unavailableItemsList.innerHTML != '') {
@@ -616,12 +596,10 @@ function canShipOnDeliveryDayReview(button_id) {
                     document.querySelector('.date_switch_modal').style.display =
                         'none'
                 }
-                //document.querySelectorAll(".heading.sub")[0].innerText =
-                //"We’re sorry, the following items from your cart are no longer available and will be removed from your cart\n";
+
                 document.querySelector(
                     '.clear_cart_modal_review'
                 ).style.display = 'flex'
-                //document.querySelector("#clear_cart_button").style.display = "none";
 
                 continueShoppingOnClearCart = document.querySelector(
                     '#continue_to_clear_review'
@@ -693,11 +671,6 @@ function checkInv(url) {
         .then((result) => {
             console.log(result)
             return result
-            //currentInventory = result;
-            //return result;
-            // Need to make this work
-            //const data = await response.json();
-            //return data;
         })
         .catch((error) => console.log('error', error))
 }
@@ -808,6 +781,7 @@ function removeItemsNotAvailableReviewOrder() {
 
 if (!window.location.pathname.match(/all-vendors/)) {
     window.JetboostListUpdated = function (collectionList) {
+        date = localStorage.getItem('date')
         // Loop through all collection items in the list that are currently on the page
         for (var collectionItem of collectionList.children) {
             inventory = ''
