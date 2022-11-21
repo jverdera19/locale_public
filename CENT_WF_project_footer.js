@@ -778,6 +778,7 @@ function removeItemsNotAvailableReviewOrder() {
 if (!window.location.pathname.match(/all-vendors/)) {
     window.JetboostListUpdated = function (collectionList) {
         date = localStorage.getItem('date')
+        $('.products-item-date-unavailable-value').text(date)
         // Loop through all collection items in the list that are currently on the page
         for (var collectionItem of collectionList.children) {
             inventory = ''
