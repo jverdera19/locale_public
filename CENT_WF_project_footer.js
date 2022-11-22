@@ -446,8 +446,8 @@ continueShoppingOnClearCart.addEventListener('click', function () {
     revertSelectedDate()
 })
 
-let continueCheckoutButton;
-let handleCheckoutListener;
+let continueCheckoutButton
+let handleCheckoutListener
 
 if (window.location.pathname.match(/review-order/)) {
     handleCheckoutListener = (e) =>
@@ -461,7 +461,7 @@ if (window.location.pathname.match(/review-order/)) {
 function revertSelectedDate() {
     previousDate = localStorage.getItem('previousDate')
     console.log('previousDate', previousDate)
-    
+
     for (const button of deliveryDateButtons) {
         let dateText = button.firstChild.innerText
         let dateTextFormatted = new Date(dateText + ', 2022')
@@ -560,7 +560,7 @@ function canShipOnDeliveryDayReview(button_id) {
 
     checkInv('https://inventory-checker-one.vercel.app/api/inventory')
         .then((e) => {
-            currentInv = e;
+            currentInv = e
             let iSODate = new Date(date)
             let selectedDate = formatDate(iSODate, 'yymmdd')
             console.log('selectedDate: ', selectedDate)
@@ -775,7 +775,12 @@ function removeItemsNotAvailableReviewOrder() {
     addLoadingIcon(reviewItemContainer)
 }
 
-if (!window.location.pathname.match(/all-vendors/)) {
+if (
+    !window.location.pathname.match(/all-vendors/) ||
+    !window.location.pathname.match(/find/) ||
+    !window.location.pathname.startsWith('/product') ||
+    !window.location.pathname.startsWith('/vendor')
+) {
     window.JetboostListUpdated = function (collectionList) {
         date = localStorage.getItem('date')
         $('.products-item-date-unavailable-value').text(date)
@@ -899,7 +904,9 @@ if (!window.location.pathname.match(/all-vendors/)) {
                             addToCartHref + '&quantity_max=' + inventory
                         )
                 } else {
-                    $(collectionItem).find('.products-item-out-of-stock').show()
+                    //$(collectionItem).find('.products-item-out-of-stock').show()
+                    console.log('Item sold out')
+                    $(collectionItem).hide()
                 }
             } else if (dayAvailable == 'false') {
                 $(collectionItem).hide()
