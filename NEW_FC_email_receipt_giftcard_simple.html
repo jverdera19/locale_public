@@ -1,0 +1,456 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTDXHTML1.0Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    style="margin: 0;padding: 0;font-family: Verdana, Helvetica, Arial, sans-serif;">
+
+
+
+<head style="margin: 0;padding: 0;font-family: Verdana, Helvetica, Arial, sans-serif;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="margin: 0;padding: 0;font-family: Verdana, Helvetica, Arial, sans-serif;">FoxyCart</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"
+        style="margin: 0;padding: 0;font-family: Verdana, Helvetica, Arial, sans-serif;">
+    <meta http-equiv="Content-Language" content="en-us"
+        style="margin: 0;padding: 0;font-family: Verdana, Helvetica, Arial, sans-serif;">
+
+    <style type="text/css" media="screen">
+        /* -------------------------------------------
+        PHONE
+        For clients that support media queries.
+        Nothing fancy.
+        -------------------------------------------- */
+
+        @media only screen and(max-width: 600px) {
+            .fc-show {
+                display: inline;
+            }
+
+            .fc-hide {
+                display: none;
+            }
+
+            .fc-column {
+                width: 100% !important;
+                float: none !important;
+            }
+
+            #fc-header .fc-column,
+            #fc-header #fc-subject {
+                text-align: center !important;
+                padding: 0;
+            }
+
+            #fc-header #fc-logo,
+            #fc-header #fc-subject {
+                height: auto !important;
+                line-height: normal !important;
+            }
+
+            #fc-header #fc-logo {
+                padding-top: 20px;
+                padding-bottom: 10px;
+            }
+
+            #fc-header #fc-subject {
+                padding-top: 10px;
+                padding-bottom: 20px;
+            }
+
+            #fc-main {
+                padding: 20px;
+            }
+
+            #fc-order-summary {
+                margin-bottom: 30px;
+            }
+
+            #fc-cart tbody td.image img {
+                max-width: 45px;
+            }
+        }
+
+        .div-block-257 {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        .text-block-120 {
+            margin-right: 0px;
+            margin-left: 0px;
+            font-family: Raleway, sans-serif;
+            color: #fff;
+            font-size: 24px;
+            line-height: 34px;
+            font-weight: 600;
+            text-align: center;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .text-block-121 {
+            width: 420px;
+            margin: 20px 0px 0px;
+            font-family: Raleway, sans-serif;
+            color: #fff;
+            font-size: 18px;
+            line-height: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .div-block-255 {
+            width: 250px;
+            height: 150px;
+            margin-top: 10px;
+            margin-bottom: 0px;
+            background-image: url("https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/61a69c951c9d9f1e244e488a_white%20text%20new1.png");
+            background-position: 50% 50%;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .bold-text-2 {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .email-art {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 0px;
+            background-image: url("https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/613198228aa4b3fc24ebd702_email%20art-03.png");
+            background-position: 50% 100%;
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+
+        .email-receipt-line-final-total-container {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            -webkit-box-pack: justify;
+            -webkit-justify-content: space-between;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+        }
+
+        .total-charged {
+            margin-right: auto;
+            margin-left: 0px;
+            font-family: 'Open Sans', sans-serif;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .text-block-119 {
+            margin-left: auto;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 30px;
+            line-height: 30px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .w-button {
+            display: inline-block;
+            padding: 9px 15px;
+            background-color: #3898EC;
+            color: white;
+            border: 0;
+            line-height: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .button-12 {
+            width: 155px;
+            margin-top: 20px;
+            margin-right: auto;
+            margin-left: auto;
+            border-radius: 5px;
+            background-color: #e2be64;
+            font-size: 14px;
+        }
+
+        .social-media-div {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            width: 100%;
+            height: 40px;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            opacity: 0.8;
+        }
+
+        .facebook-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            margin-left: 10px;
+            background-image: url("https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/61317c3156bf83127183d40e_social%20media%20icons_facebook-02.png");
+            background-position: 0px 0px;
+            background-size: contain;
+        }
+
+        .instagram-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            margin-left: 10px;
+            background-image: url("https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/61317c32ddec4bcdd22e7d10_social%20media%20icons_instagram.png");
+            background-position: 0px 0px;
+            background-size: contain;
+        }
+
+        .linkedin-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            margin-left: 10px;
+            background-image: url("https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/61317c32c544be404b5c7447_social%20media%20icons_linked%20in-03.png");
+            background-position: 0px 0px;
+            background-size: contain;
+        }
+    </style>
+</head>
+
+
+<body bgcolor="#FFFFFF"
+    style="margin: 0;padding: 0;font-family: Verdana, Helvetica, Arial, sans-serif;-webkit-font-smoothing: antialiased;-webkit-text-size-adjust: none;height: 100%;background-image: url(/static/images/slices/background.png);background-position: top;background-repeat: repeat;background-color: #eeeeee;color: #333333;font-size: 13px;width: 100%;">
+    
+    
+
+        <table bgcolor="#f6f6f6" border="0" cellpadding="0" cellspacing="0" width="100%" id="bodyTable"
+            style="padding-top:40px !important;table-layout: fixed;max-width:100% !important;width: 100% !important;min-width: 100% !important;">
+            <tbody>
+                <tr>
+                    <td align="center" valign="top" id="bodyCell">
+                        <!-- // EMAIL HEADER -->
+
+                        <table border="0" cellpadding="0" cellspacing="0" width="600" id="emailHeader"
+                            style="border-radius: 30px 30px 0px 0px;background-color: #a2dce8;">
+
+                            <!-- HEADER ROW // -->
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <!-- CENTERING TABLE // -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <!-- FLEXIBLE CONTAINER // -->
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600"
+                                                            class="flexibleContainer">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td valign="top" width="600"
+                                                                        class="flexibleContainerCell">
+
+                                                                        <!-- CONTENT TABLE // -->
+                                                                        <table align="center" border="0" cellpadding="0"
+                                                                            cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+
+                                                                                    <td align="center" valign="middle"
+                                                                                        style="display:block; text-align:center;">
+                                                                                        <table border="0"
+                                                                                            cellpadding="0"
+                                                                                            cellspacing="0" width="100%"
+                                                                                            style="max-width:100%;">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td align="center"
+                                                                                                        class="">
+                                                                                                        <div
+                                                                                                            style='width: 250px; height: 150px; margin-top: 50px; margin-bottom: 0px;'>
+                                                                                                            <img src="https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/61a69c951c9d9f1e244e488a_white%20text%20new1.png"
+                                                                                                                width="100%"
+                                                                                                                height="auto"
+                                                                                                                style="position:relative;top:30px;">
+                                                                                                        </div>
+                                                                                                        
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                        <!-- <td style='width: 100%; height: 150px; margin-bottom: 0px; background: url("https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/613198228aa4b3fc24ebd702_email%20art-03.png") no-repeat 100% 100% / 100% 100%;'></td> -->
+                                                                                                        <a href="#">
+                                                                                                            <img style="display:block;text-align:center"
+                                                                                                                src="https://assets-global.website-files.com/5f0c9df3a10c536f63a1849c/613198228aa4b3fc24ebd702_email%20art-03.png"
+                                                                                                                width="100%"
+                                                                                                                height="auto">
+                                                                                                        </a>
+                                                                                                    </td>
+                                                                                                </tr>
+
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- // FLEXIBLE CONTAINER -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- // CENTERING TABLE -->
+                                    </td>
+                                </tr>
+                                <!-- // END -->
+
+                            </tbody>
+                        </table>
+                        <!-- // END -->
+
+
+                        <table bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" width="600" id="emailBody"
+                            style="margin-bottom: 16px; border-radius: 5px; -webkit-border-radius: 0px 0px 30px 30px; -moz-border-radius: 5px; font-size:1px;">
+                            <tbody>
+                                <!-- start -->
+
+                                <!-- end -->
+
+                                <!-- MODULE ROW // -->
+                                <tr>
+                                    <td align="left" valign="top">
+                                        <!-- CENTERING TABLE // -->
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="left" valign="top">
+                                                        <!-- FLEXIBLE CONTAINER // -->
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="600"
+                                                            class="flexibleContainer">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td align="left" valign="top" width="600"
+                                                                        class="flexibleContainerCell">
+                                                                        <table border="0" cellpadding="0"
+                                                                            cellspacing="0" width="100%">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="left" valign="top"
+                                                                                        style="padding: 0 40px">
+
+                                                                                        <!-- CONTENT TABLE // -->
+                                                                                        <table border="0"
+                                                                                            cellpadding="0"
+                                                                                            cellspacing="0" width="100%"
+                                                                                            style="border-collapse:separate;border-spacing:0 16px; margin-top: 26px;">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td>
+                                                                                                        <div class="textRow"
+                                                                                                        style="line-height: 20px;">
+                                                                                                        {% for option in
+                                                                                                            transaction_data._embedded["fx:items"][0]["_embedded"]["fx:item_options"]
+                                                                                                            %} 
+                                                                                                            {% if (option.name == 'gift_recipient_message') %}
+                                                                                                            <p
+                                                                                                                class="text-build-content"
+                                                                                                                style="
+                                                                                                                    line-height: 30px;
+                                                                                                                    text-align: center;
+                                                                                                                    margin: 10px 0;
+                                                                                                                    margin-top: 10px;
+                                                                                                                    margin-bottom: 10px;
+                                                                                                                "
+                                                                                                                data-testid="xQFIzXF17"
+                                                                                                            >
+                                                                                                                <span
+                                                                                                                    style="
+                                                                                                                        color: #666;
+                                                                                                                        font-family: Open Sans;
+                                                                                                                        font-size: 20px;
+                                                                                                                    "
+                                                                                                                    ><i>{{ option.value }}</i></span
+                                                                                                                >
+                                                                                                            </p>
+                                                                                                            {% endif %} 
+                                                                                                        {% endfor %}
+                                                                                                        </div>
+                                                                                                        <div class="textRow"
+                                                                                                            style="line-height: 20px;">
+                                                                                                            {{
+                                                                                                                transaction_data._embedded["fx:items"][0]["_embedded"]["fx:gift_card_codes"].current_balance
+                                                                                                                }}
+                                                                                                        </div>
+                                                                                                        <div class="textRow"
+                                                                                                            style="line-height: 20px;">
+                                                                                                            {{lang.code}}: {{
+                                                                                                                transaction_data._embedded["fx:items"][0]["_embedded"]["fx:gift_card_codes"].code
+                                                                                                                }}
+                                                                                                        </div>
+
+                                                                                                        
+                                                                                                    </td>
+                                                                                                </tr>
+
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                        <!-- // CONTENT TABLE -->
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- // FLEXIBLE CONTAINER -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- // CENTERING TABLE -->
+                                    </td>
+                                </tr>
+                                <!-- // MODULE ROW -->
+
+                                <!-- MODULE DIVIDER // -->
+                            </tbody>
+                        </table>
+                        <!-- END WHITE CONTAINER SECTION -->
+
+
+
+
+                        
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</body>
+
+</html>
