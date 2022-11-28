@@ -624,6 +624,7 @@ function canShipOnDeliveryDayReview(button_id) {
                 event_category: 'error',
                 event_label: 'Review order Airtable script failed',
             })
+            window.location.assign('https://secure.shoplocale.com/checkout')
         })
 }
 
