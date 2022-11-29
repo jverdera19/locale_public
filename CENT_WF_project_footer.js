@@ -244,7 +244,15 @@ function dateChangeProject() {
                     .find('.products-item-add-to-cart a')
                     .attr('href', addToCartHref + '&quantity_max=' + inventory)
             } else {
-                $(this).find('.products-item-out-of-stock').show()
+                if (
+                    window.location.pathname.match(/all-vendors/) ||
+                    window.location.pathname.match(/find/) ||
+                    window.location.pathname.match(/product/)
+                ) {
+                    $(this).find('.products-item-out-of-stock').show()
+                } else {
+                    $(this).hide()
+                }
             }
         } else if (dayAvailable == 'false') {
             if (
