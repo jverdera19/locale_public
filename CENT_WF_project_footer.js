@@ -364,16 +364,21 @@ function dateChangeProject() {
                 $(this).find('.products-item-out-of-stock').show()
             }
         } else if (dayAvailable == 'false') {
-            //if (window.location.pathname.match(/all-vendors/) || window.location.pathname.match(/find/) || window.location.pathname.match(/product/)) {
-            console.log(
-                'collection-item-24 day available false, NOT hiding product'
-            )
-            $(this).find('.products-item-day-unavailable').show()
-            // } else {
-            //   console.log('day available false, hiding product');
-            //   $(this).hide();
-            // }
+            if (
+                window.location.pathname.match(/all-vendors/) ||
+                window.location.pathname.match(/find/) ||
+                window.location.pathname.match(/product/)
+            ) {
+                console.log('day available false, NOT hiding product')
+                $(this).find('.products-item-day-unavailable').show()
+            } else {
+                console.log('day available false, hiding product')
+                $(this).hide()
+            }
         }
+    
+        
+    
     })
 }
 
