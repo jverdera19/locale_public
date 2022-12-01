@@ -790,9 +790,9 @@ function removeItemsNotAvailableReviewOrder() {
 }
 
 if (
-    !window.location.pathname.match(/all-vendors/) ||
-    !window.location.pathname.match(/find/) ||
-    !window.location.pathname.startsWith('/product') ||
+    !window.location.pathname.match(/all-vendors/) &&
+    !window.location.pathname.match(/find/) &&
+    !window.location.pathname.startsWith('/product') &&
     !window.location.pathname.startsWith('/vendor')
 ) {
     window.JetboostListUpdated = function (collectionList) {
