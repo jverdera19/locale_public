@@ -12,6 +12,7 @@ FC.onLoad = function () {
       createCartItems();
       removeDuplicates();
       canShipOnDeliveryDayReview();
+      checkDeliveryType();
       startCheckoutGA();
     }
   });
@@ -33,6 +34,7 @@ window.addEventListener("DOMContentLoaded", () => {
           e.target.innerText = "✔ Added";
           e.target.closest(".addon-item").classList.add("hide");
           createCartItems();
+          checkDeliveryType();
         });
     });
   });
@@ -122,6 +124,7 @@ function createCartItems() {
   addSubtotal();
   updateProgressBar();
   disableCheckoutButton();
+  checkDeliveryType();
 }
 
 function cartItemTemplate(
@@ -170,6 +173,7 @@ function handleQuantityChange(event) {
         addSubtotal();
         updateProgressBar();
         disableCheckoutButton();
+        checkDeliveryType();
         return;
       }
       const { id, name, image, price, price_each, quantity, options } =
@@ -197,6 +201,7 @@ function handleQuantityChange(event) {
       addSubtotal();
       updateProgressBar();
       disableCheckoutButton();
+      checkDeliveryType();
     });
   };
   if (event.target.classList.contains("quantity-decrement")) {
