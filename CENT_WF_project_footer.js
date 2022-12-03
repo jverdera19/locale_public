@@ -143,6 +143,7 @@ function dateChangeProject() {
 
     // Check items not delivered on new date
     canShipOnDeliveryDay()
+    checkDeliveryType()
 
     $('.products-item').each(function () {
         $(this).show()
@@ -954,5 +955,48 @@ function disableCheckoutButton() {
         // checkoutBtn.href = "https://secure.shoplocale.com/checkout";
         // checkoutBtnMob.classList.remove("inactive");
         // checkoutBtnMob.href = "https://secure.shoplocale.com/checkout";
+    }
+}
+
+function checkDeliveryType() {
+    const cartItems = FC.json.items
+    let dropshipItems = []
+    let dropshipVendors = []
+
+    for (var i = 0; i < FC.json.items.length; i++) {
+        const current = cartItems[i]
+
+        const deliveryDateIndex = current.options.findIndex(
+            (object) => object.value === date
+        )
+        const deliveryDate = current.options[deliveryDateIndex]?.class
+        const inventoryIndex = current.options.findIndex(
+            (object) => object.class === `${deliveryDate}_inventory`
+        )
+        let currentInventory = current.options[inventoryIndex]?.value
+
+        if (
+            current.name !== 'Tip' &&
+            current.name !== 'Small Order Fee' &&
+            current.name !== 'Gift Box'
+        ) {
+            if (currentInventory == 999) {
+                dropshipItems.push(current.name)
+                dropshipVendors.push(current.options[0].value)
+            }
+        }
+    }
+
+    let dropshipItemsString = dropshipItems.join(', ');
+    let dropshipVendorsString = dropshipVendors.join(', ');
+    
+    if (dropshipItems.length == 1) {
+        document.querySelector('.shipping-disclaimer').style.display = 'flex'
+        document.querySelector('.disclaimer-text').innerHTML =  `<strong>${dropshipItemsString}</strong> ships directly from <strong>${dropshipVendorsString}</strong> since it’s very perishable! You can expect this product to arrive in a separate box and you’ll receive communication updates directly from the vendor.`
+    } else if (dropshipItems.length >= 2) {
+        document.querySelector('.shipping-disclaimer').style.display = 'flex'
+        document.querySelector('.disclaimer-text').innerHTML =  `<strong>${dropshipItemsString}</strong> ship directly from <strong>${dropshipVendorsString}</strong> since they are very perishable! You can expect these products to arrive in separate boxes and you’ll receive communication updates directly from the vendors.`
+    } else {
+        document.querySelector('.shipping-disclaimer').style.display = 'none'
     }
 }
