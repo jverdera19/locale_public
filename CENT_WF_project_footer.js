@@ -997,7 +997,7 @@ function checkDeliveryType() {
     } else if (dropshipItems.length >= 2) {
         document.querySelector('.shipping-disclaimer').style.display = 'flex'
         document.querySelector('.disclaimer-text').innerHTML =  `<strong>${dropshipItemsString}</strong> ship directly from <strong>${dropshipVendorsString}</strong> since they are very perishable! You can expect these products to arrive in separate boxes and you’ll receive communication updates directly from the vendors.`
-    } else {
+    } else if (document.querySelector('.shipping-disclaimer')) {
         document.querySelector('.shipping-disclaimer').style.display = 'none'
     }
 }
