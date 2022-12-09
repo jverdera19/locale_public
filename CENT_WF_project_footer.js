@@ -126,7 +126,7 @@ function checkDateProject() {
     var currentRegion = document.querySelector('.hidden-locale').innerText;
 
     if (storedRegion != currentRegion) {
-      let iSODate = new Date("Dec 10, 2022");
+      let iSODate = new Date(document.querySelector(".hidden-date").innerText);
       let shortDate = iSODate.toLocaleString("en-us", {
         weekday: "short",
         month: "numeric",
