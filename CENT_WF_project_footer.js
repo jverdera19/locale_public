@@ -51,10 +51,14 @@ const deliveryDateButtons = document.querySelectorAll('.delivery-date-btn')
 
 for (const button of deliveryDateButtons) {
     button.addEventListener('click', function () {
-        let dateText = button.firstChild.innerText
+        // MARK: Temp, for some reason getting text as a child when testing
+        let dateText = button.firstChild.nextElementSibling.innerHTML
+        //let dateText = button.firstChild.innerText
+        console.log('dateText:', dateText);
 
         // // get Inventory date and weekday
         let iSODate = new Date(dateText + ', 2022')
+        console.log('iSODate:', iSODate);
 
         previousDate = localStorage.getItem('date')
         localStorage.setItem('previousDate', previousDate)
@@ -87,41 +91,97 @@ for (const button of deliveryDateButtons) {
     })
 }
 
-/* $('.delivery-date-btn').click(function () {
-    // get Inventory date and weekday
-    let iSODate = new Date(this.innerText);
-    //let iSODate = new Date(document.querySelector('.delivery-date-btn .date-numbers').innerText + ', 2022');
-    let date = formatDate(iSODate, 'inventoryDate');
-    let shortDate = iSODate.toLocaleString('en-us', { weekday: 'short', month: 'numeric', day: '2-digit' })
-    let longDate = formatDate(iSODate, 'long');
-
-    let day = formatDate(iSODate, 'weekday');
-    console.log('updated date');
-    console.log(date, shortDate, longDate, day);
-    
-    previousDate = localStorage.getItem("longDate");
-    localStorage.setItem("previousDate", previousDate);
-
-    localStorage.setItem("date", date);
-    localStorage.setItem("day", day);
-    localStorage.setItem("shortDate", shortDate);
-    localStorage.setItem("longDate", longDate);
-
-    // Select active button when clicking
-    $(".delivery-date-button").removeClass("active");
-    $(this).addClass("active");
-
-    // Update date
-    dateChangeProject();
-
-    chosenDate = date;
-    updateFCDate();
-    cartAvailability('check');
-  }); */
-
 function cartAvailability(action) {
     console.log('starting cartAvailability for action: ', action)
 }
+
+function checkDateProject() {
+    let storedDate = localStorage.getItem("date");
+    let dates = [];
+
+    $(".hidden-date").each(function () {
+        var innerText = $(this).text();
+
+        if (innerText) {
+          let dateTextFormatted = new Date(innerText);
+          let goodDate = formatDate(dateTextFormatted);
+          
+          dates.push(goodDate);
+        }
+      });
+
+    if (dates.includes(storedDate) == true) {
+     // console.log("Date valid");
+      checkRegionProject();
+    } else {
+      //console.log("Resetting date");
+      storedRegion = "";
+      checkRegionProject();
+    }
+  }
+
+  function checkRegionProject() {
+    var storedDate = localStorage.getItem("date");
+    var storedRegion = localStorage.getItem("region");
+    var currentRegion = document.querySelector('.hidden-locale').innerText;
+
+    if (storedRegion != currentRegion) {
+      let iSODate = new Date("Dec 10, 2022");
+      let shortDate = iSODate.toLocaleString("en-us", {
+        weekday: "short",
+        month: "numeric",
+        day: "2-digit",
+      });
+      let longDate = formatDate(iSODate, "long");
+      let date = formatDate(iSODate, "inventoryDate");
+      let day = iSODate.toLocaleString("en-us", { weekday: "long" });
+
+      console.log("date: ", date, "day:", day);
+
+      localStorage.setItem("date", date);
+      localStorage.setItem("shortDate", shortDate);
+      localStorage.setItem("longDate", longDate);
+      localStorage.setItem("day", day);
+      localStorage.setItem("region", currentRegion);
+
+      // Update date button value
+      document.querySelector(".current_date").innerText = shortDate;
+
+      // Mark first date as active
+      $(".delivery-date-btn").first().addClass("active");
+    } else if (storedRegion == currentRegion) {
+      date = localStorage.getItem("date");
+      shortDate = localStorage.getItem("shortDate");
+      longDate = localStorage.getItem("longDate");
+      day = localStorage.getItem("day");
+
+      console.log("date: ", date, "day:", day);
+
+      $(".products-item-day-unavailable-value").text(day);
+      $(".products-item-date-unavailable-value").text(date);
+
+      // Update date button value
+      document.querySelector(".current_date").innerText = shortDate;
+
+      // Mark selected date as active
+      const deliveryDateButtons =
+        document.querySelectorAll(".delivery-date-btn");
+      for (const button of deliveryDateButtons) {
+        // MARK: Temp, for some reason getting text as a child when testing
+        let dateText = button.firstChild.nextElementSibling.innerHTML
+        //let dateText = button.firstChild.innerText
+        let dateTextFormatted = new Date(dateText + ", 2022");
+        let goodDate = formatDate(dateTextFormatted);
+        //console.log("goodDate:", goodDate);
+
+        // Select active button of stored date
+        if (goodDate == localStorage.getItem("date")) {
+          $(".delivery-date-btn").removeClass("active");
+          button.classList.add("active");
+        }
+      }
+    }
+  }
 
 function dateChangeProject() {
     date = localStorage.getItem('date')
@@ -142,8 +202,13 @@ function dateChangeProject() {
     }
 
     // Check items not delivered on new date
-    canShipOnDeliveryDay()
-    checkDeliveryType()
+    if (fcLoaded == true) {
+        canShipOnDeliveryDay()
+    } 
+    // Drop shipping disclaimer check
+    if (window.location.pathname.match(/review-order/)) {
+        checkDeliveryType()
+    }
 
     $('.products-item').each(function () {
         $(this).show()
@@ -224,18 +289,20 @@ function dateChangeProject() {
             var inventory = deliveryDate11Inventory
         }
 
-        if (inventory >= 0) {
+        if (inventory == "") {
+            var dayAvailable = "false";
+        } else if (inventory >= 0) {
             var dayAvailable = 'true'
-            console.log(
-                `Inventory: for ${$(this).find('.pc_name').text()}`,
-                inventory
-            )
+            // console.log(
+            //     `Inventory: for ${$(this).find('.pc_name').text()}`,
+            //     inventory
+            // )
         } else {
             var dayAvailable = 'false'
-            console.log(
-                `Inventory: for ${$(this).find('.pc_name').text()}`,
-                inventory
-            )
+            // console.log(
+            //     `Inventory: for ${$(this).find('.pc_name').text()}`,
+            //     inventory
+            // )
         }
 
         if (dayAvailable == 'true') {
@@ -261,10 +328,10 @@ function dateChangeProject() {
                 window.location.pathname.match(/find/) ||
                 window.location.pathname.match(/product/)
             ) {
-                console.log('day available false, NOT hiding product')
+                //console.log('day available false, NOT hiding product')
                 $(this).find('.products-item-day-unavailable').show()
             } else {
-                console.log('day available false, hiding product')
+                //console.log('day available false, hiding product')
                 $(this).hide()
             }
         }
@@ -480,14 +547,14 @@ function revertSelectedDate() {
         let dateText = button.firstChild.innerText
         let dateTextFormatted = new Date(dateText + ', 2022')
         let goodDate = formatDate(dateTextFormatted)
-        console.log('goodDate:', goodDate)
+        //console.log('goodDate:', goodDate)
 
         if (goodDate == previousDate) {
             // get Inventory date and weekday
             let iSODate = new Date(dateText + ', 2022')
 
             previousDate = localStorage.getItem('date')
-            console.log('previousDate', previousDate)
+            //console.log('previousDate', previousDate)
             localStorage.setItem('previousDate', previousDate)
 
             let date = formatDate(iSODate, 'inventoryDate')
@@ -997,7 +1064,7 @@ function checkDeliveryType() {
     } else if (dropshipItems.length >= 2) {
         document.querySelector('.shipping-disclaimer').style.display = 'flex'
         document.querySelector('.disclaimer-text').innerHTML =  `<strong>${dropshipItemsString}</strong> ship directly from <strong>${dropshipVendorsString}</strong> since they are very perishable! You can expect these products to arrive in separate boxes and you’ll receive communication updates directly from the vendors.`
-    } else if (document.querySelector('.shipping-disclaimer')) {
+    } else if (document.querySelector('.shipping-disclaimer').style.display = 'none') {
         document.querySelector('.shipping-disclaimer').style.display = 'none'
     }
 }
