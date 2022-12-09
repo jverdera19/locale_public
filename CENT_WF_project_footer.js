@@ -51,11 +51,7 @@ const deliveryDateButtons = document.querySelectorAll('.delivery-date-btn')
 
 for (const button of deliveryDateButtons) {
     button.addEventListener('click', function () {
-        // MARK: Temp, for some reason getting text as a child when testing
-        let dateText = button.firstChild.nextElementSibling.innerHTML
-        //let dateText = button.firstChild.innerText
-        console.log('dateText:', dateText);
-
+        let dateText = button.firstChild.innerText;
         // // get Inventory date and weekday
         let iSODate = new Date(dateText + ', 2022')
         console.log('iSODate:', iSODate);
@@ -167,9 +163,7 @@ function checkDateProject() {
       const deliveryDateButtons =
         document.querySelectorAll(".delivery-date-btn");
       for (const button of deliveryDateButtons) {
-        // MARK: Temp, for some reason getting text as a child when testing
-        let dateText = button.firstChild.nextElementSibling.innerHTML
-        //let dateText = button.firstChild.innerText
+        let dateText = button.firstChild.innerText
         let dateTextFormatted = new Date(dateText + ", 2022");
         let goodDate = formatDate(dateTextFormatted);
         //console.log("goodDate:", goodDate);
