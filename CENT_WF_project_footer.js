@@ -776,7 +776,8 @@ if (
                     setProductDeadline(collectionItem)
                     console.log('setting deadline')
                 } else {
-                    collectionItem.querySelector('.holiday-special-copy').style.display = 'none'
+                    collectionItem.querySelector('.urgency').style.display = 'none'
+                    console.log('ignoring deadline')
                 }
             }
             
@@ -1067,9 +1068,9 @@ function setProductDeadline(itemElement) {
 
             if (time.total <= 0) {
                 clearInterval(timeinterval);
-                item.querySelector('.holiday-special-copy').style.display = 'none'
+                item.querySelector('.urgency').style.display = 'none'
             } else {
-                item.querySelector('.holiday-special-copy').style.display = 'flex'
+                item.querySelector('.urgency').style.display = 'flex'
                 item.querySelector('.product-countdown').innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
             }
         }, 1000);
@@ -1088,7 +1089,8 @@ function setProductCountdown() {
             setProductDeadline(item)
             console.log('setting deadline')
         } else {
-            item.querySelector('.holiday-special-copy').style.display = 'none'
+            item.querySelector('.urgency').style.display = 'none'
+            console.log('ignoring deadline')
         }
     }
 }
