@@ -221,6 +221,9 @@ function dateChangeProject() {
         var deliveryDate9 = $(this).find('.delivery-date-9').text()
         var deliveryDate10 = $(this).find('.delivery-date-10').text()
         var deliveryDate11 = $(this).find('.delivery-date-11').text()
+        
+        var deadlineDate = $(this).find('.product-code').text()
+        console.log('product code:', deadlineDate)
 
         var deliveryDate1Inventory = $(this)
             .find('.delivery-date-1-inventory')
@@ -861,8 +864,24 @@ if (
     window.JetboostListUpdated = function (collectionList) {
         date = localStorage.getItem('date')
         $('.products-item-date-unavailable-value').text(date)
+        
+        
         // Loop through all collection items in the list that are currently on the page
         for (var collectionItem of collectionList.children) {
+            
+            if (collectionItem.querySelector('.product-deadline')) {
+                let productDeadlines = new Date(collectionItem.querySelector('.product-deadline').innerText)
+
+                if (productDeadlines != 'Invalid Date') {
+                    //item.querySelector('.product-countdown').innerText = '23:49:02'
+                    setProductDeadline(collectionItem)
+                    console.log('setting deadline')
+                } else {
+                    collectionItem.querySelector('.holiday-special-copy').style.display = 'none'
+                }
+            }
+            
+            
             inventory = ''
 
             $(collectionItem).show()
@@ -1111,3 +1130,68 @@ function setDeadline(deadlineDate) {
 
     clock('js-clock', deadline);
 }
+
+function setProductDeadline(itemElement) {
+    let item = itemElement;
+    let productDeadline = new Date(item.querySelector('.product-deadline').innerText)
+    let deadline = new Date(productDeadline);
+    deadline.setDate(deadline.getDate() + parseInt(1));
+    console.log(deadline);
+    
+    
+
+    function pad(num, size) {
+        var s = "0" + num;
+        return s.substr(s.length - size);
+    }
+
+    // fixes "Date.parse(date)" on safari
+    function parseDate(date) {
+        const parsed = Date.parse(date);
+        if (!isNaN(parsed)) return parsed
+        return Date.parse(date.replace(/-/g, '/').replace(/[a-z]+/gi, ' '));
+    }
+
+    function getTimeRemaining(endtime) {
+        let total = parseDate(endtime) - Date.parse(new Date())
+        let seconds = Math.floor((total / 1000) % 60)
+        let minutes = Math.floor((total / 1000 / 60) % 60)
+        let hours = Math.floor((total / (1000 * 60 * 60)) % 24)
+        let days = Math.floor(total / (1000 * 60 * 60 * 24))
+
+        return { total, days, hours, minutes, seconds };
+    }
+
+    function clock(endtime) {
+        var timeinterval = setInterval(function () {
+            var time = getTimeRemaining(endtime);
+
+            if (time.total <= 0) {
+                clearInterval(timeinterval);
+                item.querySelector('.holiday-special-copy').style.display = 'none'
+            } else {
+                item.querySelector('.holiday-special-copy').style.display = 'flex'
+                item.querySelector('.product-countdown').innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
+            }
+        }, 1000);
+    }
+
+    clock(deadline);
+}
+
+function setProductCountdown() {
+    let itemsList = document.querySelectorAll('.products-item');
+
+    for (const item of itemsList) {
+        let productDeadlines = new Date(item.querySelector('.product-deadline').innerText)
+
+        if (productDeadlines != 'Invalid Date') {
+            setProductDeadline(item)
+            console.log('setting deadline')
+        } else {
+            item.querySelector('.holiday-special-copy').style.display = 'none'
+        }
+    }
+}
+
+
