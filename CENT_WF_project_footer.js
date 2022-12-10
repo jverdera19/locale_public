@@ -204,7 +204,13 @@ function dateChangeProject() {
         checkDeliveryType()
     }
 
-    $('.products-item').each(function () {
+    let dateChangeClasses = ".products-item"
+    
+    if (window.location.pathname.match(/new-limited/)) {
+        dateChangeClasses = ".products-item, .collection-item-24"
+    }
+
+    $(dateChangeClasses).each(function () {
         $(this).show()
         $(this).find('.products-item-add-to-cart').hide()
         $(this).find('.products-item-out-of-stock').hide()
@@ -332,118 +338,6 @@ function dateChangeProject() {
                 $(this).hide()
             }
         }
-    })
-
-    $('.collection-item-24').each(function () {
-        $(this).show()
-        $(this).find('.products-item-add-to-cart').hide()
-        $(this).find('.products-item-out-of-stock').hide()
-        $(this).find('.products-item-day-unavailable').hide()
-
-        var deliveryDate1 = $(this).find('.delivery-date-1').text()
-        var deliveryDate2 = $(this).find('.delivery-date-2').text()
-        var deliveryDate3 = $(this).find('.delivery-date-3').text()
-        var deliveryDate4 = $(this).find('.delivery-date-4').text()
-        var deliveryDate5 = $(this).find('.delivery-date-5').text()
-        var deliveryDate6 = $(this).find('.delivery-date-6').text()
-        var deliveryDate7 = $(this).find('.delivery-date-7').text()
-        var deliveryDate8 = $(this).find('.delivery-date-8').text()
-        var deliveryDate9 = $(this).find('.delivery-date-9').text()
-        var deliveryDate10 = $(this).find('.delivery-date-10').text()
-        var deliveryDate11 = $(this).find('.delivery-date-11').text()
-
-        var deliveryDate1Inventory = $(this)
-            .find('.delivery-date-1-inventory')
-            .text()
-        var deliveryDate2Inventory = $(this)
-            .find('.delivery-date-2-inventory')
-            .text()
-        var deliveryDate3Inventory = $(this)
-            .find('.delivery-date-3-inventory')
-            .text()
-        var deliveryDate4Inventory = $(this)
-            .find('.delivery-date-4-inventory')
-            .text()
-        var deliveryDate5Inventory = $(this)
-            .find('.delivery-date-5-inventory')
-            .text()
-        var deliveryDate6Inventory = $(this)
-            .find('.delivery-date-6-inventory')
-            .text()
-        var deliveryDate7Inventory = $(this)
-            .find('.delivery-date-7-inventory')
-            .text()
-        var deliveryDate8Inventory = $(this)
-            .find('.delivery-date-8-inventory')
-            .text()
-        var deliveryDate9Inventory = $(this)
-            .find('.delivery-date-9-inventory')
-            .text()
-        var deliveryDate10Inventory = $(this)
-            .find('.delivery-date-10-inventory')
-            .text()
-        var deliveryDate11Inventory = $(this)
-            .find('.delivery-date-11-inventory')
-            .text()
-        var addToCartHref = $(this)
-            .find('.products-item-add-to-cart a')
-            .attr('href')
-
-        if (deliveryDate1 == date) {
-            var inventory = deliveryDate1Inventory
-        } else if (deliveryDate2 == date) {
-            var inventory = deliveryDate2Inventory
-        } else if (deliveryDate3 == date) {
-            var inventory = deliveryDate3Inventory
-        } else if (deliveryDate4 == date) {
-            var inventory = deliveryDate4Inventory
-        } else if (deliveryDate5 == date) {
-            var inventory = deliveryDate5Inventory
-        } else if (deliveryDate6 == date) {
-            var inventory = deliveryDate6Inventory
-        } else if (deliveryDate7 == date) {
-            var inventory = deliveryDate7Inventory
-        } else if (deliveryDate8 == date) {
-            var inventory = deliveryDate8Inventory
-        } else if (deliveryDate9 == date) {
-            var inventory = deliveryDate9Inventory
-        } else if (deliveryDate10 == date) {
-            var inventory = deliveryDate10Inventory
-        } else if (deliveryDate11 == date) {
-            var inventory = deliveryDate11Inventory
-        }
-
-        if (inventory >= 0) {
-            var dayAvailable = 'true'
-        } else {
-            var dayAvailable = 'false'
-        }
-
-        if (dayAvailable == 'true') {
-            if (inventory > '0') {
-                $(this).find('.products-item-add-to-cart').show()
-                $(this)
-                    .find('.products-item-add-to-cart a')
-                    .attr('href', addToCartHref + '&quantity_max=' + inventory)
-            } else {
-                $(this).find('.products-item-out-of-stock').show()
-            }
-        } else if (dayAvailable == 'false') {
-            if (
-                window.location.pathname.match(/all-vendors/) ||
-                window.location.pathname.match(/find/) ||
-                window.location.pathname.match(/product/)
-            ) {
-                console.log('day available false, NOT hiding product')
-                $(this).find('.products-item-day-unavailable').show()
-            } else {
-                console.log('day available false, hiding product')
-                $(this).hide()
-            }
-        }
-    
-        
-    
     })
 }
 
@@ -1193,5 +1087,3 @@ function setProductCountdown() {
         }
     }
 }
-
-
