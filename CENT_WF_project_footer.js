@@ -122,12 +122,7 @@ function checkDateProject() {
     var currentRegion = document.querySelector('.hidden-locale').innerText;
 
     if (storedRegion != currentRegion) {
-      let iSODate = new Date();
-      if (window.location.pathname.startsWith('/nationwide/12-days')) {
-        iSODate = new Date("Dec 16, 2022");
-      } else {
-        iSODate = new Date(document.querySelector(".hidden-date").innerText);
-      }
+      let iSODate = new Date(document.querySelector(".hidden-date").innerText);
       let shortDate = iSODate.toLocaleString("en-us", {
         weekday: "short",
         month: "numeric",
