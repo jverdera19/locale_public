@@ -715,9 +715,19 @@ function removeItemsNotAvailableReviewOrder() {
         let deliveryDateInvKey = deliveryDateKey + 'Inv'
         console.log('deliveryDateInvKey', deliveryDateInvKey)
 
-        if (currentInv[i][deliveryDateInvKey] <= 0 || !deliveryDateKey) {
-            for (var j = 0; j < FC.json.items.length; j++) {
-                const current = cartItems[j]
+        for (var j = 0; j < FC.json.items.length; j++) {
+            const current = cartItems[j]
+
+            let recordsToQueryKey = recordsToQuery.findIndex(
+                (object) => object.code === current.code
+            )
+            console.log('name', current.name)
+            let minimumInventory = recordsToQuery[recordsToQueryKey].quantity - 1
+            console.log('min inventory', minimumInventory)
+
+            
+            if (currentInv[i][deliveryDateInvKey] <= minimumInventory || !deliveryDateKey) {
+                
 
                 if (current.code === currentInv[i].code) {
                     FC.client
