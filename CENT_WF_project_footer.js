@@ -765,15 +765,19 @@ if (
             
             if (collectionItem.querySelector('.product-deadline')) {
                 let productDeadlines = new Date(collectionItem.querySelector('.product-deadline').innerText)
+                let urgencyPillbox = collectionItem.querySelector('.urgency')
 
-                if (productDeadlines != 'Invalid Date') {
-                    //item.querySelector('.product-countdown').innerText = '23:49:02'
-                    setProductDeadline(collectionItem)
-                    console.log('setting deadline')
-                } else {
-                    collectionItem.querySelector('.urgency').style.display = 'none'
-                    console.log('ignoring deadline')
+                if (urgencyPillbox) {
+                    if (productDeadlines != 'Invalid Date' && urgencyPillbox) {
+                        //item.querySelector('.product-countdown').innerText = '23:49:02'
+                        setProductDeadline(collectionItem)
+                        console.log('setting deadline')
+                    } else {
+                        collectionItem.querySelector('.urgency').style.display = 'none'
+                        console.log('ignoring deadline')
+                    }
                 }
+                
             }
             
             
@@ -1030,7 +1034,9 @@ function setProductDeadline(itemElement) {
     let item = itemElement;
     let productDeadline = new Date(item.querySelector('.product-deadline').innerText)
     let deadline = new Date(productDeadline);
-    deadline.setDate(deadline.getDate() + parseInt(1));
+    let urgencyPillbox = item.querySelector('.urgency')
+    console.log('urgencyPillox:', urgencyPillbox);
+    deadline.setDate(deadline.getDate())// + parseInt(1));
     console.log(deadline);
     
     
@@ -1070,8 +1076,10 @@ function setProductDeadline(itemElement) {
             }
         }, 1000);
     }
-
-    clock(deadline);
+    if (urgencyPillbox) {
+        clock(deadline);
+    }
+    
 }
 
 function setProductCountdown() {
