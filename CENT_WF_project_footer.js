@@ -5,6 +5,8 @@ const datePickerButtonArray = document.querySelectorAll(
 console.log('datePickerButtonArray:', datePickerButtonArray)
 
 let chosenDate = ''
+let recordsToQuery = [];
+
 const unavailableItemsList = document.querySelector('#unavailableItems')
 
 // Good code
@@ -520,6 +522,8 @@ function canShipOnDeliveryDay() {
     }
 }
 
+
+
 // Call this function when clicking on continue to checkout
 // Display an animation while the script is fetching the data
 function canShipOnDeliveryDayReview(button_id) {
@@ -535,25 +539,25 @@ function canShipOnDeliveryDayReview(button_id) {
             currentInv = e
             let iSODate = new Date(date)
             let selectedDate = formatDate(iSODate, 'yymmdd')
-            console.log('selectedDate: ', selectedDate)
 
             for (var i = 0; i < currentInv.length; i++) {
                 let deliveryDateKey = Object.keys(currentInv[i]).find(
                     (key) => currentInv[i][key] === selectedDate
                 )
                 let deliveryDateInvKey = deliveryDateKey + 'Inv'
-                console.log('deliveryDateInvKey', deliveryDateInvKey)
+
+                let recordsToQueryKey = recordsToQuery.findIndex(
+                    (object) => object.code === currentInv[i].code
+                )
 
                 // MARK: If date is missing, need to mark it as unavailable as well (test with a Turkey item)
 
+                let minimumInventory = recordsToQuery[recordsToQueryKey].quantity - 1
+
                 if (
-                    currentInv[i][deliveryDateInvKey] <= 0 ||
+                    currentInv[i][deliveryDateInvKey] <= minimumInventory ||
                     !deliveryDateKey
                 ) {
-                    console.log(
-                        'currentInv is less than X for',
-                        currentInv[i][deliveryDateKey]
-                    )
                     let li = document.createElement('li')
                     li.innerText = currentInv[i].name
                     unavailableItemsList.appendChild(li)
@@ -604,7 +608,7 @@ function checkInv(url) {
     const cartItems = FC.json.items
 
     // Out of Stock items array
-    let recordsToQuery = []
+    recordsToQuery = []
     let currentInventory = {}
 
     for (var i = 0; i < FC.json.items.length; i++) {
