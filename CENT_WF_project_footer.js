@@ -4,7 +4,8 @@ const datePickerButtonArray = document.querySelectorAll(
 )
 console.log('datePickerButtonArray:', datePickerButtonArray)
 
-let chosenDate = ''
+let chosenDate = '';
+let hiddenDatesContainer = '';
 let recordsToQuery = [];
 
 const unavailableItemsList = document.querySelector('#unavailableItems')
@@ -97,16 +98,59 @@ function checkDateProject() {
     let storedDate = localStorage.getItem("date");
     let dates = [];
 
-    $(".hidden-date").each(function () {
-        var innerText = $(this).text();
-
-        if (innerText) {
-          let dateTextFormatted = new Date(innerText);
-          let goodDate = formatDate(dateTextFormatted);
-          
-          dates.push(goodDate);
+    if (window.location.pathname.startsWith('/product/ba') || window.location.pathname.startsWith('/vendor/ba')) {
+        hiddenDatesContainer = document.querySelector('#hidden-dates-ba');
+        let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+        
+        for (const hiddenDate of hiddenDatesList) {
+            var innerText = hiddenDate.innerText;
+            if (innerText) {
+                let dateTextFormatted = new Date(innerText);
+                let goodDate = formatDate(dateTextFormatted);
+                
+                dates.push(goodDate);
+            }
         }
-      });
+    } else if (window.location.pathname.startsWith('/product/la') || window.location.pathname.startsWith('/vendor/la')) {
+        hiddenDatesContainer = document.querySelector('#hidden-dates-la');
+        let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+        
+        for (const hiddenDate of hiddenDatesList) {
+            var innerText = hiddenDate.innerText;
+            if (innerText) {
+                let dateTextFormatted = new Date(innerText);
+                let goodDate = formatDate(dateTextFormatted);
+                
+                dates.push(goodDate);
+            }
+        }
+    } else if (window.location.pathname.startsWith('/product/na') || window.location.pathname.startsWith('/vendor/na')) {
+        hiddenDatesContainer = document.querySelector('#hidden-dates-na');
+        let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+        
+        for (const hiddenDate of hiddenDatesList) {
+            var innerText = hiddenDate.innerText;
+            if (innerText) {
+                let dateTextFormatted = new Date(innerText);
+                let goodDate = formatDate(dateTextFormatted);
+                
+                dates.push(goodDate);
+            }
+        }
+    } else {
+        $(".hidden-date").each(function () {
+            var innerText = $(this).text();
+
+            if (innerText) {
+                let dateTextFormatted = new Date(innerText);
+                let goodDate = formatDate(dateTextFormatted);
+                
+                dates.push(goodDate);
+            }
+        });
+    }
+
+    
 
     if (dates.includes(storedDate) == true) {
      // console.log("Date valid");
@@ -121,10 +165,26 @@ function checkDateProject() {
   function checkRegionProject() {
     var storedDate = localStorage.getItem("date");
     var storedRegion = localStorage.getItem("region");
-    var currentRegion = document.querySelector('.hidden-locale').innerText;
+    var currentRegion = "";
+
+    if (window.location.pathname.startsWith('/product/ba') || window.location.pathname.startsWith('/vendor/ba')) {
+        currentRegion = hiddenDatesContainer.querySelector('.hidden-locale').innerText;
+    } else if (window.location.pathname.startsWith('/product/la') || window.location.pathname.startsWith('/vendor/la')) {
+        currentRegion = hiddenDatesContainer.querySelector('.hidden-locale').innerText;
+    } else if (window.location.pathname.startsWith('/product/na') || window.location.pathname.startsWith('/vendor/na')) {
+        currentRegion = hiddenDatesContainer.querySelector('.hidden-locale').innerText;
+    } else {
+        currentRegion = document.querySelector('.hidden-locale').innerText;
+    }
 
     if (storedRegion != currentRegion) {
-      let iSODate = new Date(document.querySelector(".hidden-date").innerText);
+        let iSODate = ''
+        if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+            iSODate = new Date(hiddenDatesContainer.querySelector(".hidden-date").innerText);
+        } else {
+            iSODate = new Date(document.querySelector(".hidden-date").innerText);
+        }
+      
       let shortDate = iSODate.toLocaleString("en-us", {
         weekday: "short",
         month: "numeric",
@@ -142,11 +202,40 @@ function checkDateProject() {
       localStorage.setItem("day", day);
       localStorage.setItem("region", currentRegion);
 
-      // Update date button value
-      document.querySelector(".current_date").innerText = shortDate;
+      
+      
+        if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+            // Update date button value
+            document.querySelectorAll("#current_date")[0].innerText = shortDate;
+            document.querySelectorAll("#current_date")[1].innerText = shortDate;
+            document.querySelectorAll("#current_date")[2].innerText = shortDate;
 
-      // Mark first date as active
-      $(".delivery-date-btn").first().addClass("active");
+            // Mark first date as active
+            //$(".delivery-date-btn").first().addClass("active");
+            // Mark selected date as active
+            const deliveryDateButtons = document.querySelectorAll(".delivery-date-btn");
+            for (const button of deliveryDateButtons) {
+                let dateText = button.firstChild.innerText
+                let dateTextFormatted = new Date(dateText + ", 2022");
+                let goodDate = formatDate(dateTextFormatted);
+                //console.log("goodDate:", goodDate);
+
+                // Select active button of stored date
+                if (goodDate == localStorage.getItem("date")) {
+                    $(".delivery-date-btn").removeClass("active");
+                    button.classList.add("active");
+                }
+            }
+        } else {
+            // Update date button value
+            document.querySelector(".current_date").innerText = shortDate;
+
+            // Mark first date as active
+            $(".delivery-date-btn").first().addClass("active");
+            
+        }
+
+      
     } else if (storedRegion == currentRegion) {
       date = localStorage.getItem("date");
       shortDate = localStorage.getItem("shortDate");
@@ -158,24 +247,32 @@ function checkDateProject() {
       $(".products-item-day-unavailable-value").text(day);
       $(".products-item-date-unavailable-value").text(date);
 
-      // Update date button value
-      document.querySelector(".current_date").innerText = shortDate;
+        if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+            // Update date button value
+            document.querySelectorAll("#current_date")[0].innerText = shortDate;
+            document.querySelectorAll("#current_date")[1].innerText = shortDate;
+            document.querySelectorAll("#current_date")[2].innerText = shortDate;
 
-      // Mark selected date as active
-      const deliveryDateButtons =
-        document.querySelectorAll(".delivery-date-btn");
-      for (const button of deliveryDateButtons) {
-        let dateText = button.firstChild.innerText
-        let dateTextFormatted = new Date(dateText + ", 2022");
-        let goodDate = formatDate(dateTextFormatted);
-        //console.log("goodDate:", goodDate);
-
-        // Select active button of stored date
-        if (goodDate == localStorage.getItem("date")) {
-          $(".delivery-date-btn").removeClass("active");
-          button.classList.add("active");
+        } else {
+            // Update date button value
+            document.querySelector(".current_date").innerText = shortDate;            
         }
-      }
+
+        // Mark selected date as active
+            const deliveryDateButtons =
+                document.querySelectorAll(".delivery-date-btn");
+            for (const button of deliveryDateButtons) {
+                let dateText = button.firstChild.innerText
+                let dateTextFormatted = new Date(dateText + ", 2022");
+                let goodDate = formatDate(dateTextFormatted);
+                //console.log("goodDate:", goodDate);
+
+                // Select active button of stored date
+                if (goodDate == localStorage.getItem("date")) {
+                $(".delivery-date-btn").removeClass("active");
+                button.classList.add("active");
+                }
+            }
     }
   }
 
@@ -189,12 +286,22 @@ function dateChangeProject() {
     $('.products-item-date-unavailable-value').text(date)
 
     // Update date button
-    let currentDateDiv = document.querySelector('.current_date')
+    let currentDateDiv = "";
 
-    if (currentDateDiv) {
-        document.querySelector('.current_date').innerText = shortDate
+    if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+        // Update date button value
+        document.querySelectorAll("#current_date")[0].innerText = shortDate;
+        document.querySelectorAll("#current_date")[1].innerText = shortDate;
+        document.querySelectorAll("#current_date")[2].innerText = shortDate;
+
     } else {
-        console.log('it doesnt exist!')
+        // Update date button value
+        currentDateDiv = document.querySelector('.current_date');
+        if (currentDateDiv) {
+            document.querySelector('.current_date').innerText = shortDate
+        } else {
+            console.log('it doesnt exist!')
+        }
     }
 
     // Check items not delivered on new date
@@ -298,48 +405,72 @@ function dateChangeProject() {
             var dayAvailable = "false";
         } else if (inventory >= 0) {
             var dayAvailable = 'true'
-            // console.log(
-            //     `Inventory: for ${$(this).find('.pc_name').text()}`,
-            //     inventory
-            // )
         } else {
             var dayAvailable = 'false'
-            // console.log(
-            //     `Inventory: for ${$(this).find('.pc_name').text()}`,
-            //     inventory
-            // )
         }
 
-        if (dayAvailable == 'true') {
-            if (inventory > '0') {
-                $(this).find('.products-item-add-to-cart').show()
-                $(this)
-                    .find('.products-item-add-to-cart a')
-                    .attr('href', addToCartHref + '&quantity_max=' + inventory)
-            } else {
+        if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+            if (!$(this).hasClass("products-detail")) {
+                if (dayAvailable == "true") {
+                  if (inventory > "0") {
+                    $(this).show();
+                    $(this)
+                      .find(".products-item-add-to-cart a")
+                      .attr("href", addToCartHref + "&quantity_max=" + inventory);
+                  } else {
+                    $(this).find(".products-item-out-of-stock").show();
+                  }
+                } else if (dayAvailable == "false") {
+                    $(this).find(".products-item-day-unavailable").show();
+                }
+              } else {
+                $(this).find(".products-item-add-to-cart").hide();
+                if (dayAvailable == "true") {
+                  if (inventory > "0") {
+                    $(this).find(".products-item-add-to-cart").show();
+                    $('input[name="quantity"]').attr("max", inventory);
+                    $('input[name="quantity_max"]').val(inventory);
+                  } else {
+                    $(this).find(".products-item-out-of-stock").show();
+                  }
+                } else if (dayAvailable == "false") {
+                  $(this).find(".products-item-day-unavailable").show();
+                }
+              }
+        } else {
+            if (dayAvailable == 'true') {
+                if (inventory > '0') {
+                    $(this).find('.products-item-add-to-cart').show()
+                    $(this)
+                        .find('.products-item-add-to-cart a')
+                        .attr('href', addToCartHref + '&quantity_max=' + inventory)
+                } else {
+                    if (
+                        window.location.pathname.match(/all-vendors/) ||
+                        window.location.pathname.match(/find/) ||
+                        window.location.pathname.match(/product/)
+                    ) {
+                        $(this).find('.products-item-out-of-stock').show()
+                    } else {
+                        $(this).hide()
+                    }
+                }
+            } else if (dayAvailable == 'false') {
                 if (
                     window.location.pathname.match(/all-vendors/) ||
                     window.location.pathname.match(/find/) ||
                     window.location.pathname.match(/product/)
                 ) {
-                    $(this).find('.products-item-out-of-stock').show()
+                    //console.log('day available false, NOT hiding product')
+                    $(this).find('.products-item-day-unavailable').show()
                 } else {
+                    //console.log('day available false, hiding product')
                     $(this).hide()
                 }
             }
-        } else if (dayAvailable == 'false') {
-            if (
-                window.location.pathname.match(/all-vendors/) ||
-                window.location.pathname.match(/find/) ||
-                window.location.pathname.match(/product/)
-            ) {
-                //console.log('day available false, NOT hiding product')
-                $(this).find('.products-item-day-unavailable').show()
-            } else {
-                //console.log('day available false, hiding product')
-                $(this).hide()
-            }
         }
+
+        
     })
 }
 
@@ -1111,5 +1242,3 @@ function setProductCountdown() {
         }
     }
 }
-
-
