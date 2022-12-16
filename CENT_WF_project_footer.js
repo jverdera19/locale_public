@@ -56,7 +56,13 @@ for (const button of deliveryDateButtons) {
     button.addEventListener('click', function () {
         let dateText = button.firstChild.innerText;
         // // get Inventory date and weekday
-        let iSODate = new Date(dateText + ', 2022')
+        let iSODate = ""
+        if (dateText.startsWith('Dec')) {
+            iSODate = new Date(dateText + ", 2022");
+        } else {
+            iSODate = new Date(dateText + ", 2023");
+        }
+
         console.log('iSODate:', iSODate);
 
         previousDate = localStorage.getItem('date')
@@ -216,7 +222,12 @@ function checkDateProject() {
             const deliveryDateButtons = document.querySelectorAll(".delivery-date-btn");
             for (const button of deliveryDateButtons) {
                 let dateText = button.firstChild.innerText
-                let dateTextFormatted = new Date(dateText + ", 2022");
+                let dateTextFormatted = ""
+                if (dateText.startsWith('Dec')) {
+                    dateTextFormatted = new Date(dateText + ", 2022");
+                } else {
+                    dateTextFormatted = new Date(dateText + ", 2023");
+                }
                 let goodDate = formatDate(dateTextFormatted);
                 //console.log("goodDate:", goodDate);
 
@@ -263,7 +274,13 @@ function checkDateProject() {
                 document.querySelectorAll(".delivery-date-btn");
             for (const button of deliveryDateButtons) {
                 let dateText = button.firstChild.innerText
-                let dateTextFormatted = new Date(dateText + ", 2022");
+                
+                let dateTextFormatted = ""
+                if (dateText.startsWith('Dec')) {
+                    dateTextFormatted = new Date(dateText + ", 2022");
+                } else {
+                    dateTextFormatted = new Date(dateText + ", 2023");
+                }
                 let goodDate = formatDate(dateTextFormatted);
                 //console.log("goodDate:", goodDate);
 
@@ -569,13 +586,23 @@ function revertSelectedDate() {
 
     for (const button of deliveryDateButtons) {
         let dateText = button.firstChild.innerText
-        let dateTextFormatted = new Date(dateText + ', 2022')
+        let dateTextFormatted = ""
+                if (dateText.startsWith('Dec')) {
+                    dateTextFormatted = new Date(dateText + ", 2022");
+                } else {
+                    dateTextFormatted = new Date(dateText + ", 2023");
+                }
         let goodDate = formatDate(dateTextFormatted)
         //console.log('goodDate:', goodDate)
 
         if (goodDate == previousDate) {
             // get Inventory date and weekday
-            let iSODate = new Date(dateText + ', 2022')
+            let iSODate = ""
+                if (dateText.startsWith('Dec')) {
+                    iSODate = new Date(dateText + ", 2022");
+                } else {
+                    iSODate = new Date(dateText + ", 2023");
+                }
 
             previousDate = localStorage.getItem('date')
             //console.log('previousDate', previousDate)
@@ -1242,3 +1269,5 @@ function setProductCountdown() {
         }
     }
 }
+
+
