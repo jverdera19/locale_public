@@ -353,9 +353,10 @@ function dateChangeProject() {
         var deliveryDate9 = $(this).find('.delivery-date-9').text()
         var deliveryDate10 = $(this).find('.delivery-date-10').text()
         var deliveryDate11 = $(this).find('.delivery-date-11').text()
-        
-        var deadlineDate = $(this).find('.product-code').text()
-        console.log('product code:', deadlineDate)
+       
+        // MARK: Refactor or delete?
+        //var deadlineDate = $(this).find('.product-code').text()
+        //console.log('product code:', deadlineDate)
 
         var deliveryDate1Inventory = $(this)
             .find('.delivery-date-1-inventory')
