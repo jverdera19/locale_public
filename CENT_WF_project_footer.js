@@ -172,6 +172,7 @@ function checkDateProject() {
     var storedDate = localStorage.getItem("date");
     var storedRegion = localStorage.getItem("region");
     var currentRegion = "";
+    let dates = [];
 
     if (window.location.pathname.startsWith('/product/ba') || window.location.pathname.startsWith('/vendor/ba')) {
         currentRegion = hiddenDatesContainer.querySelector('.hidden-locale').innerText;
@@ -186,8 +187,21 @@ function checkDateProject() {
     if (storedRegion != currentRegion) {
         let iSODate = ''
         if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
-            iSODate = new Date(hiddenDatesContainer.querySelector(".hidden-date").innerText);
+            let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+        
+            for (const hiddenDate of hiddenDatesList) {
+                var innerText = hiddenDate.innerText;
+                if (innerText) {
+                    let dateTextFormatted = new Date(innerText);
+                    let goodDate = formatDate(dateTextFormatted);
+                    
+                    dates.push(goodDate);
+                }
+            }
+
+            iSODate = new Date(dates[0]);
         } else {
+            // MARK: Test if first date is empty
             iSODate = new Date(document.querySelector(".hidden-date").innerText);
         }
       
