@@ -470,6 +470,19 @@ function dateChangeProject() {
                   $(this).find(".products-item-day-unavailable").show();
                 }
               }
+        } else if (window.location.pathname.match(/review-order/)) {
+            if (dayAvailable == 'true') {
+                if (inventory > '0') {
+                    $(this).css('display', 'flex')
+                    $(this).removeClass('hide')
+                } else {
+                    $(this).hide()
+                    $(this).addClass('hide')
+                }
+            } else if (dayAvailable == 'false') {
+                $(this).hide()
+                $(this).addClass('hide')
+            }
         } else {
             if (dayAvailable == 'true') {
                 if (inventory > '0') {
@@ -481,7 +494,9 @@ function dateChangeProject() {
                     if (
                         window.location.pathname.match(/all-vendors/) ||
                         window.location.pathname.match(/find/) ||
-                        window.location.pathname.match(/product/)
+                        window.location.pathname.match(/product/) ||
+                        window.location.pathname.match(/12-days/)  ||
+                        window.location.pathname.match(/christmas/)
                     ) {
                         $(this).find('.products-item-out-of-stock').show()
                     } else {
