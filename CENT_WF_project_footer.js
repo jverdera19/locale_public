@@ -185,26 +185,26 @@ function checkDateProject() {
     }
 
     if (storedRegion != currentRegion) {
-        let iSODate = new Date("Dec 23, 2022");
-        // let iSODate = ''
-        // if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
-        //     let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
         
-        //     for (const hiddenDate of hiddenDatesList) {
-        //         var innerText = hiddenDate.innerText;
-        //         if (innerText) {
-        //             let dateTextFormatted = new Date(innerText);
-        //             let goodDate = formatDate(dateTextFormatted);
+        let iSODate = ''
+        if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+            let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+        
+            for (const hiddenDate of hiddenDatesList) {
+                var innerText = hiddenDate.innerText;
+                if (innerText) {
+                    let dateTextFormatted = new Date(innerText);
+                    let goodDate = formatDate(dateTextFormatted);
                     
-        //             dates.push(goodDate);
-        //         }
-        //     }
+                    dates.push(goodDate);
+                }
+            }
 
-        //     iSODate = new Date(dates[0]);
-        // } else {
-        //     // MARK: Test if first date is empty
-        //     iSODate = new Date(document.querySelector(".hidden-date").innerText);
-        // }
+            iSODate = new Date(dates[0]);
+        } else {
+            // MARK: Test if first date is empty
+            iSODate = new Date(document.querySelector(".hidden-date").innerText);
+        }
       
       let shortDate = iSODate.toLocaleString("en-us", {
         weekday: "short",
