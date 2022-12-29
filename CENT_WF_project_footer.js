@@ -726,6 +726,12 @@ function canShipOnDeliveryDayReview(button_id) {
     checkInv('https://inventory-checker-one.vercel.app/api/inventory')
         .then((e) => {
             currentInv = e
+            gtag('event', 'review_order_check', {
+                event_category: 'check',
+                event_label: 'Review order Airtable response',
+                value: currentInv
+            })
+
             let iSODate = new Date(date)
             let selectedDate = formatDate(iSODate, 'yymmdd')
 
