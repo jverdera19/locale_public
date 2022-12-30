@@ -526,7 +526,7 @@ function formatDate(date, format) {
     const weekday = date.toLocaleString('en-us', { weekday: 'long' })
     const shortMonth = date.toLocaleString('en-us', { month: 'short' })
     const longMonth = date.toLocaleString('en-us', { month: 'long' })
-    const numericMonth = date.toLocaleString('en-us', { month: 'numeric' })
+    const numericMonth = date.toLocaleString('en-us', { month: '2-digit' })
     const year = date.getFullYear()
     const monthdayshort = date.toLocaleString('en-us', { day: 'numeric' })
     const monthdaylong = date.toLocaleString('en-us', { day: '2-digit' })
@@ -1313,3 +1313,5 @@ function setProductCountdown() {
         }
     }
 }
+
+
