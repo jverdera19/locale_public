@@ -726,11 +726,7 @@ function canShipOnDeliveryDayReview(button_id) {
     checkInv('https://inventory-checker-one.vercel.app/api/inventory')
         .then((e) => {
             currentInv = e
-            gtag('event', 'review_order_check', {
-                event_category: 'check',
-                event_label: 'Review order Airtable response',
-                value: currentInv
-            })
+            
 
             let iSODate = new Date(date)
             let selectedDate = formatDate(iSODate, 'yymmdd')
@@ -764,6 +760,12 @@ function canShipOnDeliveryDayReview(button_id) {
             }
 
             if (unavailableItemsList.innerHTML != '') {
+                gtag('event', 'review_order_check', {
+                    event_category: 'check',
+                    event_label: 'Review order Airtable response',
+                    value: 0
+                })
+
                 if (document.querySelector('.date_switch_modal')) {
                     document.querySelector('.date_switch_modal').style.display =
                         'none'
@@ -785,6 +787,11 @@ function canShipOnDeliveryDayReview(button_id) {
                 button_id == 'continue_checkout' ||
                 button_id == 'continue_checkout_mobile'
             ) {
+                gtag('event', 'review_order_check', {
+                    event_category: 'check',
+                    event_label: 'Review order Airtable response',
+                    value: 1
+                })
                 console.log('proceeding to checkout')
                 window.location.assign('https://secure.shoplocale.com/checkout')
             }
@@ -1306,5 +1313,3 @@ function setProductCountdown() {
         }
     }
 }
-
-
