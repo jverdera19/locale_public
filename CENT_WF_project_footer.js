@@ -202,7 +202,7 @@ function checkDateProject() {
 
             iSODate = new Date(dates[0]);
         } else {
-            let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+            let hiddenDatesList = document.querySelectorAll('.hidden-date');
         
             for (const hiddenDate of hiddenDatesList) {
                 var innerText = hiddenDate.innerText;
