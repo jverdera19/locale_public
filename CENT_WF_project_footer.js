@@ -364,7 +364,11 @@ function dateChangeProject() {
 
     $(dateChangeClasses).each(function () {
         $(this).show()
-        $(this).find('.products-item-add-to-cart').hide()
+        if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+            $(this).find('.products-item-add-to-cart').show();
+        } else {
+            $(this).find('.products-item-add-to-cart').hide();
+        }
         $(this).find('.products-item-out-of-stock').hide()
         $(this).find('.products-item-day-unavailable').hide()
 
