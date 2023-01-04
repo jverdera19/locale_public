@@ -202,8 +202,19 @@ function checkDateProject() {
 
             iSODate = new Date(dates[0]);
         } else {
-            // MARK: Test if first date is empty
-            iSODate = new Date(document.querySelector(".hidden-date").innerText);
+            let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+        
+            for (const hiddenDate of hiddenDatesList) {
+                var innerText = hiddenDate.innerText;
+                if (innerText) {
+                    let dateTextFormatted = new Date(innerText);
+                    let goodDate = formatDate(dateTextFormatted);
+                    
+                    dates.push(goodDate);
+                }
+            }
+
+            iSODate = new Date(dates[0]);
         }
       
       let shortDate = iSODate.toLocaleString("en-us", {
@@ -794,6 +805,12 @@ function canShipOnDeliveryDayReview(button_id) {
                 })
                 console.log('proceeding to checkout')
                 window.location.assign('https://secure.shoplocale.com/checkout')
+            } else {
+                gtag('event', 'review_order_check', {
+                    event_category: 'check',
+                    event_label: 'Review order Airtable response',
+                    value: 1
+                })
             }
         })
         .catch((error) => {
