@@ -775,10 +775,9 @@ function canShipOnDeliveryDayReview(button_id) {
             }
 
             if (unavailableItemsList.innerHTML != '') {
-                gtag('event', 'review_order_check', {
-                    event_category: 'check',
-                    event_label: 'Review order Airtable response',
-                    value: 0
+                gtag('event', 'items_missing_modal', {
+                    event_category: 'warning',
+                    event_label: 'Items not available found in cart'
                 })
 
                 if (document.querySelector('.date_switch_modal')) {
