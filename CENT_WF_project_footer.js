@@ -348,7 +348,9 @@ function dateChangeProject() {
     }
 
     // Check items not delivered on new date
-    if (fcLoaded == true) {
+    if (window.location.pathname.match(/review-order/)) {
+        canShipOnDeliveryDay()
+    } else if (fcLoaded == true) {
         canShipOnDeliveryDay()
     } 
     // Drop shipping disclaimer check
@@ -1333,5 +1335,3 @@ function setProductCountdown() {
         }
     }
 }
-
-
