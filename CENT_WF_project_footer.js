@@ -1328,7 +1328,14 @@ function setProductDeadline(itemElement) {
                 item.querySelector('.urgency').style.display = 'none'
             } else {
                 item.querySelector('.urgency').style.display = 'flex'
-                item.querySelectorAll('.product-countdown')[2].innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
+                
+                if (storedRegion == "Bay Area") {
+                    item.querySelectorAll('.product-countdown')[0].innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
+                } else if (storedRegion == "Nationwide") {
+                    item.querySelectorAll('.product-countdown')[1].innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
+                } else if (storedRegion == "Los Angeles") {
+                    item.querySelectorAll('.product-countdown')[2].innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
+                }
             }
         }, 1000);
     }
