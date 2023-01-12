@@ -352,7 +352,9 @@ function dateChangeProject() {
     }
 
     // Check items not delivered on new date
-    if (fcLoaded == true) {
+    if (window.location.pathname.match(/review-order/)) {
+        canShipOnDeliveryDay()
+    } else if (fcLoaded == true) {
         canShipOnDeliveryDay()
     } 
     // Drop shipping disclaimer check
@@ -1280,7 +1282,15 @@ function setProductDeadline(itemElement) {
     productDeadline.setDate(productDeadline.getDate() + 1)
 
     let deadline = new Date(productDeadline);
-    let urgencyPillbox = item.querySelectorAll('.urgency')[2]
+    let urgencyPillbox = "";
+    if (storedRegion == "Bay Area") {
+        urgencyPillbox = item.querySelectorAll('.urgency')[0]
+    } else if (storedRegion == "Nationwide") {
+        urgencyPillbox = item.querySelectorAll('.urgency')[1]
+    } else if (storedRegion == "Los Angeles") {
+        urgencyPillbox = item.querySelectorAll('.urgency')[2]
+    }
+    
     console.log('urgencyPillox:', urgencyPillbox);
     deadline.setDate(deadline.getDate())// + parseInt(1));
     console.log(deadline);
@@ -1323,7 +1333,7 @@ function setProductDeadline(itemElement) {
         }, 1000);
     }
     
-    if (storedRegion == "Los Angeles" && urgencyPillbox) {
+    if (urgencyPillbox) {
         clock(deadline);
     }
 }
@@ -1343,10 +1353,12 @@ function setProductCountdown() {
         }
 
         if (productCountdown != '') {
-            setProductDeadline(item, storedRegion)
+            setProductDeadline(item)
             console.log('setting deadline')
         } else {
-            item.querySelector('.urgency').style.display = 'none'
+            item.querySelectorAll('.urgency')[0].style.display = 'none'
+            item.querySelectorAll('.urgency')[1].style.display = 'none'
+            item.querySelectorAll('.urgency')[2].style.display = 'none'
             console.log('ignoring deadline')
         }
     }
