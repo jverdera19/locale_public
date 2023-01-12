@@ -1,3 +1,7 @@
+if (window.location.pathname.match(/vendor/)) {
+    setProductCountdown();
+}
+
 // Checking Inventory
 const datePickerButtonArray = document.querySelectorAll(
     '.delivery-date-picker-link'
@@ -348,9 +352,7 @@ function dateChangeProject() {
     }
 
     // Check items not delivered on new date
-    if (window.location.pathname.match(/review-order/)) {
-        canShipOnDeliveryDay()
-    } else if (fcLoaded == true) {
+    if (fcLoaded == true) {
         canShipOnDeliveryDay()
     } 
     // Drop shipping disclaimer check
@@ -779,7 +781,7 @@ function canShipOnDeliveryDayReview(button_id) {
             if (unavailableItemsList.innerHTML != '') {
                 gtag('event', 'items_missing_modal', {
                     event_category: 'warning',
-                    event_label: 'Items not available found in cart'
+                    event_label: 'Items not available found in response'
                 })
 
                 if (document.querySelector('.date_switch_modal')) {
@@ -1269,10 +1271,16 @@ function setDeadline(deadlineDate) {
 }
 
 function setProductDeadline(itemElement) {
+    let storedRegion = localStorage.getItem("region");
     let item = itemElement;
-    let productDeadline = new Date(item.querySelector('.product-deadline').innerText)
+    // Assuming it's midnight for now
+    //let productDeadline = new Date( item.querySelector('.product-deadline').innerText)
+    let productDeadline = new Date();
+    productDeadline.setHours(0,0,0,0);
+    productDeadline.setDate(productDeadline.getDate() + 1)
+
     let deadline = new Date(productDeadline);
-    let urgencyPillbox = item.querySelector('.urgency')
+    let urgencyPillbox = item.querySelectorAll('.urgency')[2]
     console.log('urgencyPillox:', urgencyPillbox);
     deadline.setDate(deadline.getDate())// + parseInt(1));
     console.log(deadline);
@@ -1310,24 +1318,32 @@ function setProductDeadline(itemElement) {
                 item.querySelector('.urgency').style.display = 'none'
             } else {
                 item.querySelector('.urgency').style.display = 'flex'
-                item.querySelector('.product-countdown').innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
+                item.querySelectorAll('.product-countdown')[2].innerText = `${pad(time.hours, 2)}:${pad(time.minutes, 2)}:${pad(time.seconds, 2)}`
             }
         }, 1000);
     }
-    if (urgencyPillbox) {
+    
+    if (storedRegion == "Los Angeles" && urgencyPillbox) {
         clock(deadline);
     }
-    
 }
 
 function setProductCountdown() {
+    let storedRegion = localStorage.getItem("region");
     let itemsList = document.querySelectorAll('.products-item');
 
     for (const item of itemsList) {
-        let productDeadlines = new Date(item.querySelector('.product-deadline').innerText)
+        let productCountdown = '';
+        if (storedRegion == "Bay Area" && item.querySelector('#product-countdown-ba')) {
+            productCountdown = item.querySelector('#product-countdown-ba').innerText;
+        } else if (storedRegion == "Los Angeles" && item.querySelector('#product-countdown-la')) {
+            productCountdown = item.querySelector('#product-countdown-la').innerText;
+        } else if (storedRegion == "Nationwide" && item.querySelector('#product-countdown-na')) {
+            productCountdown = item.querySelector('#product-countdown-na').innerText;
+        }
 
-        if (productDeadlines != 'Invalid Date') {
-            setProductDeadline(item)
+        if (productCountdown != '') {
+            setProductDeadline(item, storedRegion)
             console.log('setting deadline')
         } else {
             item.querySelector('.urgency').style.display = 'none'
