@@ -364,7 +364,10 @@ function dateChangeProject() {
 
     let dateChangeClasses = ".products-item"
     
-    if (window.location.pathname.match(/new-limited/)) {
+    if (
+        window.location.pathname.match(/new-limited/) ||
+        window.location.pathname.match(/all-vendors/)
+        ) {
         dateChangeClasses = ".products-item, .collection-item-24"
     }
 
@@ -997,6 +1000,7 @@ if (
     !window.location.pathname.startsWith('/product') &&
     !window.location.pathname.startsWith('/vendor')
 ) {
+    console.log('starting Jetboost script;')
     window.JetboostListUpdated = function (collectionList) {
         date = localStorage.getItem('date')
         $('.products-item-date-unavailable-value').text(date)
