@@ -997,8 +997,10 @@ function removeItemsNotAvailableReviewOrder() {
 if (
     !window.location.pathname.match(/all-vendors/) &&
     !window.location.pathname.match(/find/) &&
+    !window.location.pathname.match(/all-products/) &&
     !window.location.pathname.startsWith('/product') &&
     !window.location.pathname.startsWith('/vendor')
+
 ) {
     console.log('starting Jetboost script;')
     window.JetboostListUpdated = function (collectionList) {
