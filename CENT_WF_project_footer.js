@@ -154,7 +154,7 @@ function checkDateProject() {
             if (innerText) {
                 let dateTextFormatted = new Date(innerText);
                 let goodDate = formatDate(dateTextFormatted);
-                
+                console.log(goodDate)
                 dates.push(goodDate);
             }
         });
@@ -163,11 +163,10 @@ function checkDateProject() {
     
 
     if (dates.includes(storedDate) == true) {
-     // console.log("Date valid");
       checkRegionProject();
     } else {
-      //console.log("Resetting date");
       storedRegion = "";
+      localStorage.setItem("region", storedRegion);
       checkRegionProject();
     }
   }
@@ -186,6 +185,7 @@ function checkDateProject() {
         currentRegion = hiddenDatesContainer.querySelector('.hidden-locale').innerText;
     } else {
         currentRegion = document.querySelector('.hidden-locale').innerText;
+        console.log('current region:', currentRegion)
     }
 
     if (storedRegion != currentRegion) {
