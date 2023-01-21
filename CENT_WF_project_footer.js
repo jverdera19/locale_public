@@ -191,7 +191,22 @@ function checkDateProject() {
     if (storedRegion != currentRegion) {
         
         let iSODate = ''
-        if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
+        if (window.location.pathname.startsWith('/product/ba') || window.location.pathname.startsWith('/vendor/ba')) {
+            let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
+        
+            for (const hiddenDate of hiddenDatesList) {
+                var innerText = hiddenDate.innerText;
+                if (innerText) {
+                    let dateTextFormatted = new Date(innerText);
+                    let goodDate = formatDate(dateTextFormatted);
+                    
+                    dates.push(goodDate);
+                }
+            }
+            
+            // MARK: Make this pick first Saturday dynamicly
+            iSODate = new Date("Jan 28, 2023");
+        } else if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
             let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
         
             for (const hiddenDate of hiddenDatesList) {
@@ -304,13 +319,7 @@ function checkDateProject() {
                 document.querySelectorAll(".delivery-date-btn");
             for (const button of deliveryDateButtons) {
                 let dateText = button.firstChild.innerText
-                
-                let dateTextFormatted = ""
-                if (dateText.startsWith('Dec')) {
-                    dateTextFormatted = new Date(dateText + ", 2022");
-                } else {
-                    dateTextFormatted = new Date(dateText + ", 2023");
-                }
+                let dateTextFormatted = new Date(dateText + ", 2023");
                 let goodDate = formatDate(dateTextFormatted);
                 //console.log("goodDate:", goodDate);
 
