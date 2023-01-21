@@ -362,13 +362,17 @@ function dateChangeProject() {
 
     // Check items not delivered on new date
     if (window.location.pathname.match(/review-order/)) {
-        canShipOnDeliveryDay()
+        var FC = FC || {};
+
+        FC.onLoad = function () {
+            FC.client.on("ready.done", () => {
+                canShipOnDeliveryDay()
+                // Drop shipping disclaimer check
+                checkDeliveryType()
+            });
+        };
     } else if (fcLoaded == true) {
         canShipOnDeliveryDay()
-    } 
-    // Drop shipping disclaimer check
-    if (window.location.pathname.match(/review-order/)) {
-        checkDeliveryType()
     }
 
     let dateChangeClasses = ".products-item"
