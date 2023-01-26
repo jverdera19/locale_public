@@ -710,6 +710,7 @@ function revertSelectedDate() {
 }
 
 function canShipOnDeliveryDay() {
+    console.log("INFO: Starting Delivery Day Check")
     const cartItems = FC.json.items
     const lowerCaseDay = day.toLowerCase()
 
