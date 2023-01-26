@@ -58,7 +58,9 @@ const deliveryDateButtons = document.querySelectorAll('.delivery-date-btn')
 
 for (const button of deliveryDateButtons) {
     button.addEventListener('click', function () {
-        let dateText = button.firstChild.innerText;
+        let dateText = button.querySelector('.date-numbers').innerText;
+        console.log('dateText:', dateText )
+        
         // // get Inventory date and weekday
         let iSODate = ""
         if (dateText.startsWith('Dec')) {
@@ -362,10 +364,12 @@ function dateChangeProject() {
 
     // Check items not delivered on new date
     if (window.location.pathname.match(/review-order/)) {
+        console.log('INFO: Starting FC check')
         var FC = FC || {};
 
         FC.onLoad = function () {
             FC.client.on("ready.done", () => {
+                console.log('INFO: Triggering Delivery Day check')
                 canShipOnDeliveryDay()
                 // Drop shipping disclaimer check
                 checkDeliveryType()
