@@ -207,7 +207,7 @@ function checkDateProject() {
             }
             
             // MARK: Make this pick first Saturday dynamicly
-            iSODate = new Date("Jan 28, 2023");
+            iSODate = new Date("Feb 04, 2023");
         } else if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
             let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
         
