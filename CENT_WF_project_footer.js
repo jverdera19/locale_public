@@ -1013,9 +1013,7 @@ function removeItemsNotAvailableReviewOrder() {
 
 // Jetboost filters
 if (
-    !window.location.pathname.match(/all-vendors/) &&
-    !window.location.pathname.match(/find/) &&
-    !window.location.pathname.match(/all-products/) &&
+    !window.location.pathname.match(/all-vendors/) && 
     !window.location.pathname.startsWith('/product') &&
     !window.location.pathname.startsWith('/vendor')
 
@@ -1165,9 +1163,13 @@ if (
                             addToCartHref + '&quantity_max=' + inventory
                         )
                 } else {
-                    //$(collectionItem).find('.products-item-out-of-stock').show()
-                    console.log('Item sold out')
-                    $(collectionItem).hide()
+                    if (!window.location.pathname.match(/find/) && !window.location.pathname.match(/all-products/)) {
+                        console.log('Item sold out - hiding it')
+                        $(collectionItem).hide()
+                    } else {
+                        $(collectionItem).find('.products-item-out-of-stock').show()
+                        console.log('Item sold out - showing message')
+                    }
                 }
             } else if (dayAvailable == 'false') {
                 $(collectionItem).hide()
