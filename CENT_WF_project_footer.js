@@ -641,6 +641,7 @@ continueShoppingOnClearCart.addEventListener('click', function () {
 })
 
 let continueCheckoutButton
+let continueCheckoutButtonMobile
 let handleCheckoutListener
 
 if (window.location.pathname.match(/review-order/)) {
@@ -650,6 +651,9 @@ if (window.location.pathname.match(/review-order/)) {
     continueCheckoutButton = document.querySelector('#continue_checkout')
     continueCheckoutButton.href = '#'
     continueCheckoutButton.addEventListener('click', handleCheckoutListener)
+    continueCheckoutButtonMobile = document.querySelector('#continue_checkout_mobile')
+    continueCheckoutButtonMobile.href = '#'
+    continueCheckoutButtonMobile.addEventListener('click', handleCheckoutListener)
 }
 
 function revertSelectedDate() {
@@ -753,12 +757,15 @@ function canShipOnDeliveryDay() {
     }
 }
 
-
-
-// Call this function when clicking on continue to checkout
-// Display an animation while the script is fetching the data
 function canShipOnDeliveryDayReview(button_id) {
     console.log('checkout button id: ', button_id)
+
+    if (button_id == 'continue_checkout' || button_id == 'continue_checkout_mobile') {
+        setTimeout(() => {
+            continueCheckoutButton.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
+            continueCheckoutButtonMobile.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
+          }, "200");
+    } 
     const cartItems = FC.json.items
     const lowerCaseDay = day.toLowerCase()
 
