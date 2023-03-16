@@ -1396,10 +1396,9 @@ function setProductCountdown() {
             setProductDeadline(item)
             console.log('setting deadline')
         } else {
-            item.querySelectorAll('.urgency')[0].style.display = 'none'
-            item.querySelectorAll('.urgency')[1].style.display = 'none'
-            item.querySelectorAll('.urgency')[2].style.display = 'none'
             console.log('ignoring deadline')
+                item.querySelectorAll('.urgency')[0].style.display = 'none'
+                item.querySelectorAll('.urgency')[1].style.display = 'none'
         }
     }
 }
