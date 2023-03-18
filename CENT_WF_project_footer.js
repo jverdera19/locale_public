@@ -208,6 +208,7 @@ function checkDateProject() {
             
             // MARK: Make this pick first Saturday dynamicly
             iSODate = new Date("Mar 25, 2023");
+            console.warn('testing new date', baDeliveryDate);
         } else if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
             let hiddenDatesList = hiddenDatesContainer.querySelectorAll('.hidden-date');
         
@@ -261,7 +262,6 @@ function checkDateProject() {
             // Update date button value
             document.querySelectorAll("#current_date")[0].innerText = shortDate;
             document.querySelectorAll("#current_date")[1].innerText = shortDate;
-            document.querySelectorAll("#current_date")[2].innerText = shortDate;
 
             // Mark first date as active
             //$(".delivery-date-btn").first().addClass("active");
@@ -308,8 +308,7 @@ function checkDateProject() {
         if (window.location.pathname.startsWith('/product/') || window.location.pathname.startsWith('/vendor/')) {
             // Update date button value
             document.querySelectorAll("#current_date")[0].innerText = shortDate;
-            document.querySelectorAll("#current_date")[1].innerText = shortDate;
-            document.querySelectorAll("#current_date")[2].innerText = shortDate;
+            document.querySelectorAll("#current_date")[1].innerText = shortDate; 
 
         } else {
             // Update date button value
@@ -350,7 +349,6 @@ function dateChangeProject() {
         // Update date button value
         document.querySelectorAll("#current_date")[0].innerText = shortDate;
         document.querySelectorAll("#current_date")[1].innerText = shortDate;
-        document.querySelectorAll("#current_date")[2].innerText = shortDate;
 
     } else {
         // Update date button value
