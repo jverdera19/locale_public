@@ -9,7 +9,7 @@ const vendorIndexName = 'BA Vendors'
 
 const { setIsOpen } = autocomplete({
     container: '#autocomplete',
-    placeholder: 'Search for your favorite foods or vendors',
+    placeholder: 'Search Locale',
     detachedMediaQuery: '',
     openOnFocus: true,
 
@@ -239,7 +239,7 @@ const { setIsOpen } = autocomplete({
                                 vendor_city: 'Napa Valley, CA',
                                 full_website_description:
                                     "Model Bakery's Famous English Muffins are a beloved treat enjoyed by generations of customers. They are made with the …",
-                                normal_website_price: '$19',
+                                normal_website_price: 19,
                             },
                             {
                                 product_url_slug: 'ba-large-gem-avocados',
@@ -493,7 +493,7 @@ const { setIsOpen } = autocomplete({
                     },
                     templates: {
                         header() {
-                            return 'Popular Foods This Week'
+                            return 'Trending Foods This Week'
                         },
                         item({ item, components, html }) {
                             return html`<a
@@ -559,7 +559,7 @@ const { setIsOpen } = autocomplete({
                                                 class="widget_product_price_location"
                                             >
                                                 <div class="pc_price">
-                                                    ${item.normal_website_price}
+                                                    $${item.normal_website_price}
                                                 </div>
                                                 <div
                                                     class="widget_location_container"
