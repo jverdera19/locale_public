@@ -270,7 +270,7 @@ const { setIsOpen } = autocomplete({
                             {
                                 product_url_slug: 'ba-large-gem-avocados',
                                 product_name_adj:
-                                    'Sold out - Large Gem Avocados',
+                                    'Large Gem Avocados',
                                 product_image:
                                     'https://uploads-ssl.webflow.com/6226a2abeb906f60cc1f024c/643997cb435533af1ee88e50_8AD8h-4LH1UsxzgUV8lS78VXuUQpoB2LSrwmX5cilB8.jpeg',
                                 vendor_name: 'Brokaw Ranch',
