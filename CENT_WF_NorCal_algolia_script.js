@@ -1,4 +1,3 @@
-let vendorTest
 const { autocomplete, getAlgoliaResults, getAlgoliaFacets } =
     window['@algolia/autocomplete-js']
 const appId = '09BBTSQZXQ'
@@ -673,7 +672,7 @@ const { setIsOpen } = autocomplete({
                         `
                     },
                     noResults() {
-                        return 'No vendors for this query.'
+                        return 'No vendors found.'
                     },
                 },
                 getItemUrl({ item }) {
@@ -794,7 +793,7 @@ const { setIsOpen } = autocomplete({
                         </a>`
                     },
                     noResults() {
-                        return 'We couldnt find anything :( Have a suggestion? share it here!'
+                        return 'We couldn’t find any products that match this search :('
                     },
                 },
                 getItemUrl({ item }) {
