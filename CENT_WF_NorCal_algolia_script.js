@@ -106,7 +106,7 @@ const { setIsOpen } = autocomplete({
     //     }
     // },
     getSources({ query, state }) {
-        if (!query) {
+        if (!query || query.length < 2) {
             return [
                 {
                     sourceId: 'default_vendors',
