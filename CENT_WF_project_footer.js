@@ -155,6 +155,18 @@ function checkDateProject() {
                 dates.push(goodDate)
             }
         }
+    } else if (
+        window.location.pathname.match(/review-order/)
+    ) {
+        $('.delivery-date-btn .date-numbers').each(function () {
+            if ($(this).text()) {
+                var innerText = $(this).text()
+                let dateTextFormatted = new Date(innerText + ', 2023')
+                let goodDate = formatDate(dateTextFormatted)
+
+                dates.push(goodDate)
+            }
+        })
     } else {
         $('.hidden-date').each(function () {
             var innerText = $(this).text()
@@ -201,158 +213,229 @@ function checkRegionProject() {
     ) {
         currentRegion =
             hiddenDatesContainer.querySelector('.hidden-locale').innerText
+    } else if (
+        window.location.pathname.match(/bay-area\/review-order/)
+    ) {
+        currentRegion = 'Bay Area'
     } else {
         currentRegion = document.querySelector('.hidden-locale').innerText
         console.log('current region:', currentRegion)
     }
-
-    if (storedRegion != currentRegion) {
-        let iSODate = ''
-        if (
-            window.location.pathname.startsWith('/product/ba') ||
-            window.location.pathname.startsWith('/vendor/ba')
-        ) {
-            let hiddenDatesList =
-                hiddenDatesContainer.querySelectorAll('.hidden-date')
-
-            for (const hiddenDate of hiddenDatesList) {
-                var innerText = hiddenDate.innerText
-                if (innerText) {
-                    let dateTextFormatted = new Date(innerText)
+    if (
+        window.location.pathname.match(/bay-area\/review-order/) ) {
+            if (storedRegion != currentRegion) {
+                let iSODate = new Date(baDeliveryDate)
+                let shortDate = iSODate.toLocaleString('en-us', {
+                    weekday: 'short',
+                    month: 'numeric',
+                    day: '2-digit',
+                })
+                let longDate = formatDate(iSODate, 'long')
+                let date = formatDate(iSODate, 'inventoryDate')
+                let day = iSODate.toLocaleString('en-us', { weekday: 'long' })
+    
+                let gaDateFormatted = formatDate(iSODate, 'yymmdd')
+    
+                gtag('event', 'date_reset', {
+                    event_category: 'new_date',
+                    event_label: gaDateFormatted,
+                    value: 1,
+                })
+    
+                localStorage.setItem('date', date)
+                localStorage.setItem('shortDate', shortDate)
+                localStorage.setItem('longDate', longDate)
+                localStorage.setItem('day', day)
+                localStorage.setItem('region', currentRegion)
+                console.log('date_reset completed')
+                console.log('date: ', date)
+    
+                // Update date button value
+                document.querySelector('.current_date').innerText = shortDate
+    
+                // Mark first date as active
+                $('.delivery-date-btn').first().addClass('active')
+            } else if (storedRegion == currentRegion) {
+                date = localStorage.getItem('date')
+                shortDate = localStorage.getItem('shortDate')
+                longDate = localStorage.getItem('longDate')
+                day = localStorage.getItem('day')
+    
+                console.log('date: ', date, 'day:', day)
+    
+                $('.products-item-day-unavailable-value').text(day)
+                $('.products-item-date-unavailable-value').text(date)
+    
+                // Update date button value
+                document.querySelector('.current_date').innerText = shortDate
+    
+                // Mark selected date as active
+                const deliveryDateButtons =
+                    document.querySelectorAll('.delivery-date-btn')
+                for (const button of deliveryDateButtons) {
+                    let dateText = button.firstChild.innerText
+                    let dateTextFormatted = new Date(dateText + ', 2023')
                     let goodDate = formatDate(dateTextFormatted)
-
-                    dates.push(goodDate)
+                    console.log('goodDate:', goodDate)
+    
+                    // Select active button of stored date
+                    if (goodDate == localStorage.getItem('date')) {
+                        $('.delivery-date-btn').removeClass('active')
+                        button.classList.add('active')
+                    }
                 }
             }
-
-            // MARK: Make this pick first Saturday dynamicly
-            iSODate = new Date(baDeliveryDate)
-            console.warn('testing new date', baDeliveryDate)
-        } else if (
-            window.location.pathname.startsWith('/product/') ||
-            window.location.pathname.startsWith('/vendor/')
-        ) {
-            let hiddenDatesList =
-                hiddenDatesContainer.querySelectorAll('.hidden-date')
-
-            for (const hiddenDate of hiddenDatesList) {
-                var innerText = hiddenDate.innerText
-                if (innerText) {
-                    let dateTextFormatted = new Date(innerText)
-                    let goodDate = formatDate(dateTextFormatted)
-
-                    dates.push(goodDate)
+    } else {
+        if (storedRegion != currentRegion) {
+            let iSODate = ''
+            if (
+                window.location.pathname.startsWith('/product/ba') ||
+                window.location.pathname.startsWith('/vendor/ba')
+            ) {
+                let hiddenDatesList =
+                    hiddenDatesContainer.querySelectorAll('.hidden-date')
+    
+                for (const hiddenDate of hiddenDatesList) {
+                    var innerText = hiddenDate.innerText
+                    if (innerText) {
+                        let dateTextFormatted = new Date(innerText)
+                        let goodDate = formatDate(dateTextFormatted)
+    
+                        dates.push(goodDate)
+                    }
                 }
-            }
-
-            iSODate = new Date(dates[0])
-        } else {
-            let hiddenDatesList = document.querySelectorAll('.hidden-date')
-
-            for (const hiddenDate of hiddenDatesList) {
-                var innerText = hiddenDate.innerText
-                if (innerText) {
-                    let dateTextFormatted = new Date(innerText)
-                    let goodDate = formatDate(dateTextFormatted)
-
-                    dates.push(goodDate)
+    
+                // MARK: Make this pick first Saturday dynamicly
+                iSODate = new Date(baDeliveryDate)
+                console.warn('testing new date', baDeliveryDate)
+            } else if (
+                window.location.pathname.startsWith('/product/') ||
+                window.location.pathname.startsWith('/vendor/')
+            ) {
+                let hiddenDatesList =
+                    hiddenDatesContainer.querySelectorAll('.hidden-date')
+    
+                for (const hiddenDate of hiddenDatesList) {
+                    var innerText = hiddenDate.innerText
+                    if (innerText) {
+                        let dateTextFormatted = new Date(innerText)
+                        let goodDate = formatDate(dateTextFormatted)
+    
+                        dates.push(goodDate)
+                    }
                 }
+    
+                iSODate = new Date(dates[0])
+            } else {
+                let hiddenDatesList = document.querySelectorAll('.hidden-date')
+    
+                for (const hiddenDate of hiddenDatesList) {
+                    var innerText = hiddenDate.innerText
+                    if (innerText) {
+                        let dateTextFormatted = new Date(innerText)
+                        let goodDate = formatDate(dateTextFormatted)
+    
+                        dates.push(goodDate)
+                    }
+                }
+    
+                iSODate = new Date(dates[0])
             }
-
-            iSODate = new Date(dates[0])
-        }
-
-        let shortDate = iSODate.toLocaleString('en-us', {
-            weekday: 'short',
-            month: 'numeric',
-            day: '2-digit',
-        })
-        let longDate = formatDate(iSODate, 'long')
-        let date = formatDate(iSODate, 'inventoryDate')
-        let day = iSODate.toLocaleString('en-us', { weekday: 'long' })
-
-        console.log('date: ', date, 'day:', day)
-
-        localStorage.setItem('date', date)
-        localStorage.setItem('shortDate', shortDate)
-        localStorage.setItem('longDate', longDate)
-        localStorage.setItem('day', day)
-        localStorage.setItem('region', currentRegion)
-
-        if (
-            window.location.pathname.startsWith('/product/') ||
-            window.location.pathname.startsWith('/vendor/')
-        ) {
-            // Update date button value
-            document.querySelectorAll('#current_date')[0].innerText = shortDate
-            document.querySelectorAll('#current_date')[1].innerText = shortDate
-
-            // Mark first date as active
-            //$(".delivery-date-btn").first().addClass("active");
+    
+            let shortDate = iSODate.toLocaleString('en-us', {
+                weekday: 'short',
+                month: 'numeric',
+                day: '2-digit',
+            })
+            let longDate = formatDate(iSODate, 'long')
+            let date = formatDate(iSODate, 'inventoryDate')
+            let day = iSODate.toLocaleString('en-us', { weekday: 'long' })
+    
+            console.log('date: ', date, 'day:', day)
+    
+            localStorage.setItem('date', date)
+            localStorage.setItem('shortDate', shortDate)
+            localStorage.setItem('longDate', longDate)
+            localStorage.setItem('day', day)
+            localStorage.setItem('region', currentRegion)
+    
+            if (
+                window.location.pathname.startsWith('/product/') ||
+                window.location.pathname.startsWith('/vendor/')
+            ) {
+                // Update date button value
+                document.querySelectorAll('#current_date')[0].innerText = shortDate
+                document.querySelectorAll('#current_date')[1].innerText = shortDate
+    
+                // Mark first date as active
+                //$(".delivery-date-btn").first().addClass("active");
+                // Mark selected date as active
+                const deliveryDateButtons =
+                    document.querySelectorAll('.delivery-date-btn')
+                for (const button of deliveryDateButtons) {
+                    let dateText = button.firstChild.innerText
+                    let dateTextFormatted = ''
+                    if (dateText.startsWith('Dec')) {
+                        dateTextFormatted = new Date(dateText + ', 2022')
+                    } else {
+                        dateTextFormatted = new Date(dateText + ', 2023')
+                    }
+                    let goodDate = formatDate(dateTextFormatted)
+    
+                    // Select active button of stored date
+                    if (goodDate == localStorage.getItem('date')) {
+                        $('.delivery-date-btn').removeClass('active')
+                        button.classList.add('active')
+                    }
+                }
+            } else {
+                // Update date button value
+                document.querySelector('.current_date').innerText = shortDate
+    
+                // Mark first date as active
+                $('.delivery-date-btn').first().addClass('active')
+            }
+        } else if (storedRegion == currentRegion) {
+            date = localStorage.getItem('date')
+            shortDate = localStorage.getItem('shortDate')
+            longDate = localStorage.getItem('longDate')
+            day = localStorage.getItem('day')
+    
+            console.log('date: ', date, 'day:', day)
+    
+            $('.products-item-day-unavailable-value').text(day)
+            $('.products-item-date-unavailable-value').text(date)
+    
+            if (
+                window.location.pathname.startsWith('/product/') ||
+                window.location.pathname.startsWith('/vendor/')
+            ) {
+                // Update date button value
+                document.querySelectorAll('#current_date')[0].innerText = shortDate
+                document.querySelectorAll('#current_date')[1].innerText = shortDate
+            } else {
+                // Update date button value
+                document.querySelector('.current_date').innerText = shortDate
+            }
+    
             // Mark selected date as active
             const deliveryDateButtons =
                 document.querySelectorAll('.delivery-date-btn')
             for (const button of deliveryDateButtons) {
                 let dateText = button.firstChild.innerText
-                let dateTextFormatted = ''
-                if (dateText.startsWith('Dec')) {
-                    dateTextFormatted = new Date(dateText + ', 2022')
-                } else {
-                    dateTextFormatted = new Date(dateText + ', 2023')
-                }
+                let dateTextFormatted = new Date(dateText + ', 2023')
                 let goodDate = formatDate(dateTextFormatted)
-
+    
                 // Select active button of stored date
                 if (goodDate == localStorage.getItem('date')) {
                     $('.delivery-date-btn').removeClass('active')
                     button.classList.add('active')
                 }
             }
-        } else {
-            // Update date button value
-            document.querySelector('.current_date').innerText = shortDate
-
-            // Mark first date as active
-            $('.delivery-date-btn').first().addClass('active')
-        }
-    } else if (storedRegion == currentRegion) {
-        date = localStorage.getItem('date')
-        shortDate = localStorage.getItem('shortDate')
-        longDate = localStorage.getItem('longDate')
-        day = localStorage.getItem('day')
-
-        console.log('date: ', date, 'day:', day)
-
-        $('.products-item-day-unavailable-value').text(day)
-        $('.products-item-date-unavailable-value').text(date)
-
-        if (
-            window.location.pathname.startsWith('/product/') ||
-            window.location.pathname.startsWith('/vendor/')
-        ) {
-            // Update date button value
-            document.querySelectorAll('#current_date')[0].innerText = shortDate
-            document.querySelectorAll('#current_date')[1].innerText = shortDate
-        } else {
-            // Update date button value
-            document.querySelector('.current_date').innerText = shortDate
-        }
-
-        // Mark selected date as active
-        const deliveryDateButtons =
-            document.querySelectorAll('.delivery-date-btn')
-        for (const button of deliveryDateButtons) {
-            let dateText = button.firstChild.innerText
-            let dateTextFormatted = new Date(dateText + ', 2023')
-            let goodDate = formatDate(dateTextFormatted)
-
-            // Select active button of stored date
-            if (goodDate == localStorage.getItem('date')) {
-                $('.delivery-date-btn').removeClass('active')
-                button.classList.add('active')
-            }
         }
     }
+
+
 }
 
 function dateChangeProject() {
@@ -789,6 +872,7 @@ function canShipOnDeliveryDay() {
 
 function canShipOnDeliveryDayReview(button_id) {
     console.log('checkout button id: ', button_id)
+    date = localStorage.getItem('date')
 
     if (
         button_id == 'continue_checkout' ||
@@ -838,10 +922,26 @@ function canShipOnDeliveryDayReview(button_id) {
             }
 
             if (unavailableItemsList.innerHTML != '') {
+                let originalDate = new Date(date)
+                let originalDateFormatted = formatDate(originalDate, 'yymmdd')
+                gtag('event', 'sold_out_items_msg', {
+                    event_category: 'items_unavailable',
+                    event_label: unavailableItemsList.childNodes.length,
+                    value: 1,
+                })
+                gtag('event', 'sold_out_items_msg', {
+                    event_category: 'original_date',
+                    event_label: originalDateFormatted,
+                    value: 1,
+                })
+
                 gtag('event', 'items_missing_modal', {
                     event_category: 'warning',
                     event_label: 'Items not available found in response',
                 })
+                
+                console.log('original_date', originalDateFormatted)
+                
 
                 if (document.querySelector('.date_switch_modal')) {
                     document.querySelector('.date_switch_modal').style.display =
@@ -985,9 +1085,11 @@ function removeItemsNotAvailable() {
 }
 
 function removeItemsNotAvailableReviewOrder() {
+    let itemsDeleted = 0
     const cartItems = FC.json.items
     let iSODate = new Date(date)
     let selectedDate = formatDate(iSODate, 'yymmdd') + 'T00:00:00.000Z'
+    let gaDateFormatted = formatDate(iSODate, 'yymmdd')
 
     for (var i = 0; i < currentInv.length; i++) {
         let deliveryDateKey = Object.keys(currentInv[i]).find(
@@ -996,6 +1098,8 @@ function removeItemsNotAvailableReviewOrder() {
         let deliveryDateInvKey = deliveryDateKey + '_inventory'
 
         for (var j = 0; j < FC.json.items.length; j++) {
+            // MARK: Log number of items after removing sold out products
+             
             const current = cartItems[j]
 
             if (
@@ -1016,6 +1120,7 @@ function removeItemsNotAvailableReviewOrder() {
                     !deliveryDateKey
                 ) {
                     if (current.code === currentInv[i].id) {
+                        itemsDeleted += 1
                         FC.client
                             .request(
                                 'https://' +
@@ -1035,10 +1140,27 @@ function removeItemsNotAvailableReviewOrder() {
                                     //removeDuplicates()
                                     addSubtotal()
                                     updateProgressBar()
+                                    console.log('updated progress bar')
                                 }
                             })
                     }
                 }
+            }
+
+            if (i == currentInv.length - 1 && j == FC.json.items.length - 1) {
+                checkDateProject()
+                let itemsRemaining = currentInv.length - itemsDeleted
+                console.log('LAST ITEM')
+                // console.log('items deleted:', itemsDeleted)
+                // console.log('items remaining:', itemsRemaining)
+                gtag('event', 'removed_sold_out_items_event', {
+                    event_category: 'items_remaining_in_cart',
+                    event_label: `${itemsRemaining}`,
+                    value: 1,
+                })
+                setTimeout(() => {
+                    createCartItems()
+                }, '500')
             }
         }
     }
