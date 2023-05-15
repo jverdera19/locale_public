@@ -476,8 +476,6 @@ function dateChangeProject() {
             FC.client.on('ready.done', () => {
                 console.log('INFO: Triggering Delivery Day check')
                 canShipOnDeliveryDay()
-                // Drop shipping disclaimer check
-                checkDeliveryType()
             })
         }
     } else if (fcLoaded == true) {
@@ -748,7 +746,8 @@ clearCartButton.addEventListener('click', function () {
     removeItemsNotAvailable()
 })
 
-let continueShoppingOnClearCart = document.querySelectorAll('.next-button')[0]
+// MARK: Fix for meals page
+let continueShoppingOnClearCart = document.querySelectorAll('.next-button-4')[0]
 continueShoppingOnClearCart.addEventListener('click', function () {
     revertSelectedDate()
 })
@@ -758,6 +757,7 @@ let continueCheckoutButtonMobile
 let handleCheckoutListener
 
 if (window.location.pathname.match(/review-order/)) {
+    console.log('review order page - adding event listener')
     handleCheckoutListener = (e) =>
         canShipOnDeliveryDayReview(e.currentTarget.id)
 
@@ -1341,82 +1341,8 @@ if (
     }
 }
 
-function disableCheckoutButton() {
-    console.log('disableCheckoutButton is not running anymore')
-    // let checkoutHeaderBtn = document.querySelector('#checkout_header_link')
-    // let checkoutBtn = document.querySelector('#continue_checkout')
-    // let checkoutBtnMob = document.querySelector('#continue_checkout_mobile')
-
-    // if (FC.json.total_item_price < 80) {
-    //     checkoutHeaderBtn.href = '#'
-    //     checkoutBtn.classList.add('inactive')
-    //     checkoutBtn.href = '#'
-    //     checkoutBtnMob.classList.add('inactive')
-    //     checkoutBtnMob.href = '#'
-    //     continueCheckoutButton.removeEventListener(
-    //         'click',
-    //         handleCheckoutListener
-    //     )
-    // } else {
-    //     // Add Event listener calling canShipOnDeliveryDay('checkout')
-    //     continueCheckoutButton.addEventListener('click', handleCheckoutListener)
-    //     continueCheckoutButton.classList.remove('inactive')
-
-    //     // checkoutHeaderBtn.href = "https://secure.shoplocale.com/checkout";
-    //     // checkoutBtn.classList.remove("inactive");
-    //     // checkoutBtn.href = "https://secure.shoplocale.com/checkout";
-    //     // checkoutBtnMob.classList.remove("inactive");
-    //     // checkoutBtnMob.href = "https://secure.shoplocale.com/checkout";
-    // }
-}
-
 function checkDeliveryType() {
-    const cartItems = FC.json.items
-    let dropshipItems = []
-    let dropshipVendors = []
-
-    for (var i = 0; i < FC.json.items.length; i++) {
-        const current = cartItems[i]
-
-        const deliveryDateIndex = current.options.findIndex(
-            (object) => object.value === date
-        )
-        const deliveryDate = current.options[deliveryDateIndex]?.class
-        const inventoryIndex = current.options.findIndex(
-            (object) => object.class === `${deliveryDate}_inventory`
-        )
-        let currentInventory = current.options[inventoryIndex]?.value
-
-        if (
-            current.name !== 'Tip' &&
-            current.name !== 'Small Order Fee' &&
-            current.name !== 'Gift Box'
-        ) {
-            if (currentInventory == 999) {
-                dropshipItems.push(current.name)
-                dropshipVendors.push(current.options[0].value)
-            }
-        }
-    }
-
-    let dropshipItemsString = dropshipItems.join(', ')
-    let dropshipVendorsString = dropshipVendors.join(', ')
-
-    if (dropshipItems.length == 1) {
-        document.querySelector('.shipping-disclaimer').style.display = 'flex'
-        document.querySelector(
-            '.disclaimer-text'
-        ).innerHTML = `<strong>${dropshipItemsString}</strong> ships directly from <strong>${dropshipVendorsString}</strong> since it’s very perishable! You can expect this product to arrive in a separate box and you’ll receive communication updates directly from the vendor.`
-    } else if (dropshipItems.length >= 2) {
-        document.querySelector('.shipping-disclaimer').style.display = 'flex'
-        document.querySelector(
-            '.disclaimer-text'
-        ).innerHTML = `<strong>${dropshipItemsString}</strong> ship directly from <strong>${dropshipVendorsString}</strong> since they are very perishable! You can expect these products to arrive in separate boxes and you’ll receive communication updates directly from the vendors.`
-    } else if (
-        (document.querySelector('.shipping-disclaimer').style.display = 'none')
-    ) {
-        document.querySelector('.shipping-disclaimer').style.display = 'none'
-    }
+   // Dropshipping check no longer needed
 }
 
 function setDeadline(deadlineDate) {
