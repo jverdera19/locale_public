@@ -970,7 +970,7 @@ function canShipOnDeliveryDayReview(button_id) {
                     value: 1,
                 })
                 console.log('proceeding to checkout')
-                window.location.assign('https://secure.shoplocale.com/checkout')
+                window.location.assign(`https://${FC.settings.storedomain}/checkout`)
             } else {
                 gtag('event', 'review_order_check', {
                     event_category: 'check',
@@ -986,7 +986,7 @@ function canShipOnDeliveryDayReview(button_id) {
                 event_label: 'Review order Airtable script failed',
             })
             // MARK: Disable redirect to checkout if Airtable fails
-            window.location.assign('https://secure.shoplocale.com/checkout')
+            window.location.assign(`https://${FC.settings.storedomain}/checkout`)
         })
 }
 
