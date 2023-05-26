@@ -203,6 +203,15 @@ function cartItemTemplate(
                     <div class="text-block-197">${name}</div>
                 </div>
             </div>
+            <div class="price-per-serving-div" ${
+              pricePerServing ? "" : 'style="display:none;"'
+            }>
+              <div class="div-block-665">
+                <div class="pc_price_per_serving">$</div>
+                <div class="pc_price_per_serving">${pricePerServing}}</div>
+              </div>
+              <div class="price-per-serving-text">Per serving</div>
+            </div>
             <div class="div-block-513">
                 <div class="div-block-511">
                     <div class="input-quantity-decrement">
