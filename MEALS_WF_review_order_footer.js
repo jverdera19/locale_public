@@ -40,7 +40,7 @@ FC.onLoad = function () {
       createCartItems();
       removeDuplicates();
       canShipOnDeliveryDayReview();
-      // startCheckoutGA();
+      //startCheckoutGA()
     }
   });
 };
@@ -132,13 +132,10 @@ function createCartItems() {
       vendorName = options.find((item) => item.name === "Vendor")?.value;
       //optional
       size = options.find((item) => item.name === "Size")?.value;
-      // print size
-      console.log("size", size);
       servings = options.find((item) => item.name === "Servings")?.value;
       howItArrives = options.find(
         (item) => item.class === "how_it_arrives"
       )?.value;
-      console.log("howItArrives1", howItArrives);
       shelfLife = options.find((item) => item.name === "Shelf Life")?.value;
       prepTime = options.find((item) => item.name === "Prep Time")?.value;
       pricePerServing = options.find(
@@ -310,7 +307,7 @@ function cartItemTemplate(
           alt="" 
           class="product-tag-icon">
         <div class="pc_detail-text">Arrives:</div>
-        <div class="pc_detail-text">Refrigerated</div></div>
+        <div class="pc_detail-text">${howItArrives}</div></div>
       <div class="product-tag" ${prepTime ? "" : 'style="display:none;"'}>
           <img
               src="https://uploads-ssl.webflow.com/64545b3f66dc274ddcd1a775/645ab6b02ed680d08c539cb6_Countdown.svg"
@@ -318,7 +315,7 @@ function cartItemTemplate(
               alt=""
               class="product-tag-icon"
           />
-          <div class="pc_detail-text">Quick &lt;5 min</div>
+          <div class="pc_detail-text">${prepTime}</div>
       </div>
       <div class="product-tag" ${shelfLife ? "" : 'style="display:none;"'}>
       <img
@@ -328,7 +325,7 @@ function cartItemTemplate(
               class="product-tag-icon"
           />
           <div class="pc_detail-text">Eat within</div>
-          <div class="pc_detail-text">3 days</div>
+          <div class="pc_detail-text">${shelfLife}</div>
       </div>
         
     </div>
@@ -382,13 +379,10 @@ function handleQuantityChange(event) {
         vendorName = options.find((item) => item.name === "Vendor")?.value;
         //optional
         size = options.find((item) => item.name === "Size")?.value;
-        // print size
-        console.log("size", size);
         servings = options.find((item) => item.name === "Servings")?.value;
         howItArrives = options.find(
           (item) => item.class === "how_it_arrives"
         )?.value;
-        console.log("howItArrives", howItArrives);
         shelfLife = options.find((item) => item.name === "Shelf Life")?.value;
         prepTime = options.find((item) => item.name === "Prep Time")?.value;
         pricePerServing = options.find(
