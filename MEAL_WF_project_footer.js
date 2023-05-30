@@ -747,10 +747,12 @@ clearCartButton.addEventListener('click', function () {
 })
 
 // MARK: Fix for meals page
-let continueShoppingOnClearCart = document.querySelectorAll('.next-button-4')[0]
-continueShoppingOnClearCart.addEventListener('click', function () {
-    revertSelectedDate()
-})
+if (window.location.pathname.match(/review-order/)) {
+    let continueShoppingOnClearCart = document.querySelectorAll('.next-button-4')[0]
+    continueShoppingOnClearCart.addEventListener('click', function () {
+        revertSelectedDate()
+    })
+}
 
 let continueCheckoutButton
 let continueCheckoutButtonMobile
