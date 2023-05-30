@@ -764,12 +764,12 @@ if (window.location.pathname.match(/review-order/)) {
         canShipOnDeliveryDayReview(e.currentTarget.id)
 
     continueCheckoutButton = document.querySelector('#continue_checkout')
-    continueCheckoutButton.href = '#'
+    continueCheckoutButton.href = 'https://secure.localemeals.com/checkout'
     continueCheckoutButton.addEventListener('click', handleCheckoutListener)
     continueCheckoutButtonMobile = document.querySelector(
         '#continue_checkout_mobile'
     )
-    continueCheckoutButtonMobile.href = '#'
+    continueCheckoutButtonMobile.href = 'https://secure.localemeals.com/checkout'
     continueCheckoutButtonMobile.addEventListener(
         'click',
         handleCheckoutListener
@@ -874,122 +874,123 @@ function canShipOnDeliveryDay() {
 
 function canShipOnDeliveryDayReview(button_id) {
     console.log('checkout button id: ', button_id)
-    date = localStorage.getItem('date')
+    // MARK: Disabled inventory check
+    // date = localStorage.getItem('date')
 
-    if (
-        button_id == 'continue_checkout' ||
-        button_id == 'continue_checkout_mobile'
-    ) {
-        setTimeout(() => {
-            continueCheckoutButton.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
-            continueCheckoutButtonMobile.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
-        }, '200')
-    }
-    const cartItems = FC.json.items
-    const lowerCaseDay = day.toLowerCase()
+    // if (
+    //     button_id == 'continue_checkout' ||
+    //     button_id == 'continue_checkout_mobile'
+    // ) {
+    //     setTimeout(() => {
+    //         continueCheckoutButton.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
+    //         continueCheckoutButtonMobile.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
+    //     }, '200')
+    // }
+    // const cartItems = FC.json.items
+    // const lowerCaseDay = day.toLowerCase()
 
-    let unavailableItemsList = document.querySelector('#clear_cart_list_review')
-    unavailableItemsList.innerHTML = ''
+    // let unavailableItemsList = document.querySelector('#clear_cart_list_review')
+    // unavailableItemsList.innerHTML = ''
 
-    checkInv('https://inventory-checker-one.vercel.app/api/inventorymeals')
-        .then((e) => {
-            currentInv = e.result.products
-            console.log('currentInv: ', currentInv)
+    // checkInv('https://inventory-checker-one.vercel.app/api/inventorymeals')
+    //     .then((e) => {
+    //         currentInv = e.result.products
+    //         console.log('currentInv: ', currentInv)
 
-            let iSODate = new Date(date)
-            let selectedDate = formatDate(iSODate, 'yymmdd') + 'T00:00:00.000Z'
+    //         let iSODate = new Date(date)
+    //         let selectedDate = formatDate(iSODate, 'yymmdd') + 'T00:00:00.000Z'
 
-            for (var i = 0; i < currentInv.length; i++) {
-                let deliveryDateKey = Object.keys(currentInv[i]).find(
-                    (key) => currentInv[i][key] === selectedDate
-                )
-                let deliveryDateInvKey = deliveryDateKey + '_inventory'
+    //         for (var i = 0; i < currentInv.length; i++) {
+    //             let deliveryDateKey = Object.keys(currentInv[i]).find(
+    //                 (key) => currentInv[i][key] === selectedDate
+    //             )
+    //             let deliveryDateInvKey = deliveryDateKey + '_inventory'
 
-                let recordsToQueryKey = recordsToQuery.findIndex(
-                    (object) => object.code === currentInv[i].id
-                )
+    //             let recordsToQueryKey = recordsToQuery.findIndex(
+    //                 (object) => object.code === currentInv[i].id
+    //             )
 
-                // // MARK: If date is missing, need to mark it as unavailable as well (test with a Turkey item)
-                let minimumInventory =
-                    recordsToQuery[recordsToQueryKey].quantity - 1
+    //             // // MARK: If date is missing, need to mark it as unavailable as well (test with a Turkey item)
+    //             let minimumInventory =
+    //                 recordsToQuery[recordsToQueryKey].quantity - 1
 
-                if (
-                    currentInv[i][deliveryDateInvKey] <= minimumInventory ||
-                    !deliveryDateKey
-                ) {
-                    let li = document.createElement('li')
-                    li.innerText = currentInv[i].product_name
-                    unavailableItemsList.appendChild(li)
-                }
-            }
+    //             if (
+    //                 currentInv[i][deliveryDateInvKey] <= minimumInventory ||
+    //                 !deliveryDateKey
+    //             ) {
+    //                 let li = document.createElement('li')
+    //                 li.innerText = currentInv[i].product_name
+    //                 unavailableItemsList.appendChild(li)
+    //             }
+    //         }
 
-            if (unavailableItemsList.innerHTML != '') {
-                let originalDate = new Date(date)
-                let originalDateFormatted = formatDate(originalDate, 'yymmdd')
-                gtag('event', 'sold_out_items_msg', {
-                    event_category: 'items_unavailable',
-                    event_label: unavailableItemsList.childNodes.length,
-                    value: 1,
-                })
-                gtag('event', 'sold_out_items_msg', {
-                    event_category: 'original_date',
-                    event_label: originalDateFormatted,
-                    value: 1,
-                })
+    //         if (unavailableItemsList.innerHTML != '') {
+    //             let originalDate = new Date(date)
+    //             let originalDateFormatted = formatDate(originalDate, 'yymmdd')
+    //             gtag('event', 'sold_out_items_msg', {
+    //                 event_category: 'items_unavailable',
+    //                 event_label: unavailableItemsList.childNodes.length,
+    //                 value: 1,
+    //             })
+    //             gtag('event', 'sold_out_items_msg', {
+    //                 event_category: 'original_date',
+    //                 event_label: originalDateFormatted,
+    //                 value: 1,
+    //             })
 
-                gtag('event', 'items_missing_modal', {
-                    event_category: 'warning',
-                    event_label: 'Items not available found in response',
-                })
+    //             gtag('event', 'items_missing_modal', {
+    //                 event_category: 'warning',
+    //                 event_label: 'Items not available found in response',
+    //             })
                 
-                console.log('original_date', originalDateFormatted)
+    //             console.log('original_date', originalDateFormatted)
                 
 
-                if (document.querySelector('.date_switch_modal')) {
-                    document.querySelector('.date_switch_modal').style.display =
-                        'none'
-                }
-                document.querySelector(
-                    '.clear_cart_modal_review'
-                ).style.display = 'flex'
+    //             if (document.querySelector('.date_switch_modal')) {
+    //                 document.querySelector('.date_switch_modal').style.display =
+    //                     'none'
+    //             }
+    //             document.querySelector(
+    //                 '.clear_cart_modal_review'
+    //             ).style.display = 'flex'
 
-                continueShoppingOnClearCart = document.querySelector(
-                    '#continue_to_clear_review'
-                )
-                continueShoppingOnClearCart.addEventListener(
-                    'click',
-                    function () {
-                        removeItemsNotAvailableReviewOrder()
-                    }
-                )
-            } else if (
-                button_id == 'continue_checkout' ||
-                button_id == 'continue_checkout_mobile'
-            ) {
-                gtag('event', 'review_order_check', {
-                    event_category: 'check',
-                    event_label: 'Review order Airtable response',
-                    value: 1,
-                })
-                console.log('proceeding to checkout')
-                window.location.assign(`https://${FC.settings.storedomain}/checkout`)
-            } else {
-                gtag('event', 'review_order_check', {
-                    event_category: 'check',
-                    event_label: 'Review order Airtable response',
-                    value: 1,
-                })
-            }
-        })
-        .catch((error) => {
-            console.log('Error', error)
-            gtag('event', 'review_order_error', {
-                event_category: 'error',
-                event_label: 'Review order Airtable script failed',
-            })
-            // MARK: Disable redirect to checkout if Airtable fails
-            window.location.assign(`https://${FC.settings.storedomain}/checkout`)
-        })
+    //             continueShoppingOnClearCart = document.querySelector(
+    //                 '#continue_to_clear_review'
+    //             )
+    //             continueShoppingOnClearCart.addEventListener(
+    //                 'click',
+    //                 function () {
+    //                     removeItemsNotAvailableReviewOrder()
+    //                 }
+    //             )
+    //         } else if (
+    //             button_id == 'continue_checkout' ||
+    //             button_id == 'continue_checkout_mobile'
+    //         ) {
+    //             gtag('event', 'review_order_check', {
+    //                 event_category: 'check',
+    //                 event_label: 'Review order Airtable response',
+    //                 value: 1,
+    //             })
+    //             console.log('proceeding to checkout')
+    //             window.location.assign(`https://${FC.settings.storedomain}/checkout`)
+    //         } else {
+    //             gtag('event', 'review_order_check', {
+    //                 event_category: 'check',
+    //                 event_label: 'Review order Airtable response',
+    //                 value: 1,
+    //             })
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.log('Error', error)
+    //         gtag('event', 'review_order_error', {
+    //             event_category: 'error',
+    //             event_label: 'Review order Airtable script failed',
+    //         })
+    //         // MARK: Disable redirect to checkout if Airtable fails
+    //         window.location.assign(`https://${FC.settings.storedomain}/checkout`)
+    //     })
 }
 
 function checkInv(url) {
