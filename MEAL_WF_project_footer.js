@@ -1,7 +1,3 @@
-if (window.location.pathname.match(/vendor/)) {
-    setProductCountdown()
-}
-
 // Checking Inventory
 const datePickerButtonArray = document.querySelectorAll(
     '.delivery-date-picker-link'
@@ -364,8 +360,7 @@ function checkRegionProject() {
                 window.location.pathname.startsWith('/vendor/')
             ) {
                 // Update date button value
-                document.querySelectorAll('#current_date')[0].innerText = shortDate
-                document.querySelectorAll('#current_date')[1].innerText = shortDate
+                document.querySelector('#current_date').innerText = shortDate
     
                 // Mark first date as active
                 //$(".delivery-date-btn").first().addClass("active");
@@ -411,8 +406,7 @@ function checkRegionProject() {
                 window.location.pathname.startsWith('/vendor/')
             ) {
                 // Update date button value
-                document.querySelectorAll('#current_date')[0].innerText = shortDate
-                document.querySelectorAll('#current_date')[1].innerText = shortDate
+                document.querySelector('#current_date').innerText = shortDate
             } else {
                 // Update date button value
                 document.querySelector('.current_date').innerText = shortDate
@@ -455,8 +449,7 @@ function dateChangeProject() {
         window.location.pathname.startsWith('/vendor/')
     ) {
         // Update date button value
-        document.querySelectorAll('#current_date')[0].innerText = shortDate
-        document.querySelectorAll('#current_date')[1].innerText = shortDate
+        document.querySelector('#current_date').innerText = shortDate
     } else {
         // Update date button value
         currentDateDiv = document.querySelector('.current_date')
@@ -1191,19 +1184,6 @@ if (
                 let productDeadlines = new Date(
                     collectionItem.querySelector('.product-deadline').innerText
                 )
-                let urgencyPillbox = collectionItem.querySelector('.urgency')
-
-                if (urgencyPillbox) {
-                    if (productDeadlines != 'Invalid Date' && urgencyPillbox) {
-                        //item.querySelector('.product-countdown').innerText = '23:49:02'
-                        setProductDeadline(collectionItem)
-                        console.log('setting deadline')
-                    } else {
-                        collectionItem.querySelector('.urgency').style.display =
-                            'none'
-                        console.log('ignoring deadline')
-                    }
-                }
             }
 
             inventory = ''
@@ -1340,184 +1320,6 @@ if (
             } else if (dayAvailable == 'false') {
                 $(collectionItem).hide()
             }
-        }
-    }
-}
-
-function checkDeliveryType() {
-   // Dropshipping check no longer needed
-}
-
-function setDeadline(deadlineDate) {
-    var deadline = deadlineDate // format - '2022/12/21 23:59';
-
-    function pad(num, size) {
-        var s = '0' + num
-        return s.substr(s.length - size)
-    }
-
-    // fixes "Date.parse(date)" on safari
-    function parseDate(date) {
-        const parsed = Date.parse(date)
-        if (!isNaN(parsed)) return parsed
-        return Date.parse(date.replace(/-/g, '/').replace(/[a-z]+/gi, ' '))
-    }
-
-    function getTimeRemaining(endtime) {
-        let total = parseDate(endtime) - Date.parse(new Date())
-        let seconds = Math.floor((total / 1000) % 60)
-        let minutes = Math.floor((total / 1000 / 60) % 60)
-        let hours = Math.floor((total / (1000 * 60 * 60)) % 24)
-        let days = Math.floor(total / (1000 * 60 * 60 * 24))
-
-        return { total, days, hours, minutes, seconds }
-    }
-
-    function clock(id, endtime) {
-        let days = document.getElementById(id + '-days')
-        let hours = document.getElementById(id + '-hours')
-        let minutes = document.getElementById(id + '-minutes')
-        let seconds = document.getElementById(id + '-seconds')
-
-        var timeinterval = setInterval(function () {
-            var time = getTimeRemaining(endtime)
-
-            if (time.total <= 0) {
-                clearInterval(timeinterval)
-            } else {
-                days.innerHTML = pad(time.days, 2)
-                hours.innerHTML = pad(time.hours, 2)
-                minutes.innerHTML = pad(time.minutes, 2)
-                seconds.innerHTML = pad(time.seconds, 2)
-            }
-        }, 1000)
-    }
-
-    clock('js-clock', deadline)
-}
-
-function setProductDeadline(itemElement) {
-    let storedRegion = localStorage.getItem('region')
-    let item = itemElement
-    // Assuming it's midnight for now
-    //let productDeadline = new Date( item.querySelector('.product-deadline').innerText)
-    let productDeadline = new Date()
-    productDeadline.setHours(0, 0, 0, 0)
-    productDeadline.setDate(productDeadline.getDate() + 1)
-
-    let deadline = new Date(productDeadline)
-    let urgencyPillbox = ''
-    if (storedRegion == 'Bay Area') {
-        urgencyPillbox = item.querySelectorAll('.urgency')[0]
-    } else if (storedRegion == 'Nationwide') {
-        urgencyPillbox = item.querySelectorAll('.urgency')[1]
-    } else if (storedRegion == 'Los Angeles') {
-        urgencyPillbox = item.querySelectorAll('.urgency')[2]
-    }
-
-    console.log('urgencyPillox:', urgencyPillbox)
-    deadline.setDate(deadline.getDate()) // + parseInt(1));
-    console.log(deadline)
-
-    function pad(num, size) {
-        var s = '0' + num
-        return s.substr(s.length - size)
-    }
-
-    // fixes "Date.parse(date)" on safari
-    function parseDate(date) {
-        const parsed = Date.parse(date)
-        if (!isNaN(parsed)) return parsed
-        return Date.parse(date.replace(/-/g, '/').replace(/[a-z]+/gi, ' '))
-    }
-
-    function getTimeRemaining(endtime) {
-        let total = parseDate(endtime) - Date.parse(new Date())
-        let seconds = Math.floor((total / 1000) % 60)
-        let minutes = Math.floor((total / 1000 / 60) % 60)
-        let hours = Math.floor((total / (1000 * 60 * 60)) % 24)
-        let days = Math.floor(total / (1000 * 60 * 60 * 24))
-
-        return { total, days, hours, minutes, seconds }
-    }
-
-    function clock(endtime) {
-        var timeinterval = setInterval(function () {
-            var time = getTimeRemaining(endtime)
-
-            if (time.total <= 0) {
-                clearInterval(timeinterval)
-                item.querySelector('.urgency').style.display = 'none'
-            } else {
-                item.querySelector('.urgency').style.display = 'flex'
-
-                if (storedRegion == 'Bay Area') {
-                    item.querySelectorAll(
-                        '.product-countdown'
-                    )[0].innerText = `${pad(time.hours, 2)}:${pad(
-                        time.minutes,
-                        2
-                    )}:${pad(time.seconds, 2)}`
-                } else if (storedRegion == 'Nationwide') {
-                    item.querySelectorAll(
-                        '.product-countdown'
-                    )[1].innerText = `${pad(time.hours, 2)}:${pad(
-                        time.minutes,
-                        2
-                    )}:${pad(time.seconds, 2)}`
-                } else if (storedRegion == 'Los Angeles') {
-                    item.querySelectorAll(
-                        '.product-countdown'
-                    )[2].innerText = `${pad(time.hours, 2)}:${pad(
-                        time.minutes,
-                        2
-                    )}:${pad(time.seconds, 2)}`
-                }
-            }
-        }, 1000)
-    }
-
-    if (urgencyPillbox) {
-        clock(deadline)
-    }
-}
-
-function setProductCountdown() {
-    let storedRegion = localStorage.getItem('region')
-    let itemsList = document.querySelectorAll('.products-item')
-
-    for (const item of itemsList) {
-        let productCountdown = ''
-        if (
-            storedRegion == 'Bay Area' &&
-            item.querySelector('#product-countdown-ba')
-        ) {
-            productCountdown = item.querySelector(
-                '#product-countdown-ba'
-            ).innerText
-        } else if (
-            storedRegion == 'Los Angeles' &&
-            item.querySelector('#product-countdown-la')
-        ) {
-            productCountdown = item.querySelector(
-                '#product-countdown-la'
-            ).innerText
-        } else if (
-            storedRegion == 'Nationwide' &&
-            item.querySelector('#product-countdown-na')
-        ) {
-            productCountdown = item.querySelector(
-                '#product-countdown-na'
-            ).innerText
-        }
-
-        if (productCountdown != '') {
-            setProductDeadline(item)
-            console.log('setting deadline')
-        } else {
-            console.log('ignoring deadline')
-            item.querySelectorAll('.urgency')[0].style.display = 'none'
-            item.querySelectorAll('.urgency')[1].style.display = 'none'
         }
     }
 }
