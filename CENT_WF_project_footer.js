@@ -872,6 +872,7 @@ function canShipOnDeliveryDay() {
 
 function canShipOnDeliveryDayReview(button_id) {
     console.log('checkout button id: ', button_id)
+    checkDateProject()
     date = localStorage.getItem('date')
 
     if (
