@@ -247,7 +247,12 @@ function checkRegionProject() {
                 console.log('date: ', date)
     
                 // Update date button value
-                document.querySelector('.current_date').innerText = shortDate
+                let currentDateDiv = document.querySelectorAll('.current_date')
+                
+                for (const dateDiv of currentDateDiv) {
+                    dateDiv.innerText = shortDate
+                    console.log('dateDiv:', dateDiv)
+                }
     
                 // Mark first date as active
                 $('.delivery-date-btn').first().addClass('active')
@@ -263,7 +268,12 @@ function checkRegionProject() {
                 $('.products-item-date-unavailable-value').text(date)
     
                 // Update date button value
-                document.querySelector('.current_date').innerText = shortDate
+                let currentDateDiv = document.querySelectorAll('.current_date')
+                
+                for (const dateDiv of currentDateDiv) {
+                    dateDiv.innerText = shortDate
+                    console.log('dateDiv:', dateDiv)
+                }
     
                 // Mark selected date as active
                 const deliveryDateButtons =
@@ -360,7 +370,12 @@ function checkRegionProject() {
                 window.location.pathname.startsWith('/vendor/')
             ) {
                 // Update date button value
-                document.querySelector('#current_date').innerText = shortDate
+                let currentDateDiv = document.querySelectorAll('.current_date')
+                
+                for (const dateDiv of currentDateDiv) {
+                    dateDiv.innerText = shortDate
+                    console.log('dateDiv:', dateDiv)
+                }
     
                 // Mark first date as active
                 //$(".delivery-date-btn").first().addClass("active");
@@ -385,7 +400,12 @@ function checkRegionProject() {
                 }
             } else {
                 // Update date button value
-                document.querySelector('.current_date').innerText = shortDate
+                let currentDateDiv = document.querySelectorAll('.current_date')
+                
+                for (const dateDiv of currentDateDiv) {
+                    dateDiv.innerText = shortDate
+                    console.log('dateDiv:', dateDiv)
+                }
     
                 // Mark first date as active
                 $('.delivery-date-btn').first().addClass('active')
@@ -406,10 +426,20 @@ function checkRegionProject() {
                 window.location.pathname.startsWith('/vendor/')
             ) {
                 // Update date button value
-                document.querySelector('#current_date').innerText = shortDate
+                let currentDateDiv = document.querySelectorAll('.current_date')
+                
+                for (const dateDiv of currentDateDiv) {
+                    dateDiv.innerText = shortDate
+                    console.log('dateDiv:', dateDiv)
+                }
             } else {
                 // Update date button value
-                document.querySelector('.current_date').innerText = shortDate
+                let currentDateDiv = document.querySelectorAll('.current_date')
+                
+                for (const dateDiv of currentDateDiv) {
+                    dateDiv.innerText = shortDate
+                    console.log('dateDiv:', dateDiv)
+                }
             }
     
             // Mark selected date as active
@@ -441,20 +471,23 @@ function dateChangeProject() {
     $('.products-item-day-unavailable-value').text(day)
     $('.products-item-date-unavailable-value').text(date)
 
-    // Update date button
-    let currentDateDiv = ''
+    // Update date button value
+    let currentDateDiv = document.querySelectorAll('.current_date')
 
     if (
         window.location.pathname.startsWith('/product/') ||
         window.location.pathname.startsWith('/vendor/')
-    ) {
-        // Update date button value
-        document.querySelector('#current_date').innerText = shortDate
+    ) {         
+        for (const dateDiv of currentDateDiv) {
+            dateDiv.innerText = shortDate
+            console.log('dateDiv:', dateDiv)
+        }
     } else {
-        // Update date button value
-        currentDateDiv = document.querySelector('.current_date')
         if (currentDateDiv) {
-            document.querySelector('.current_date').innerText = shortDate
+            for (const dateDiv of currentDateDiv) {
+                dateDiv.innerText = shortDate
+                console.log('dateDiv:', dateDiv)
+            }
         } else {
             console.log('it doesnt exist!')
         }
