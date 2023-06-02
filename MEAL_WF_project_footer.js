@@ -768,9 +768,13 @@ switchDateClose?.addEventListener('click', function () {
 })
 
 const clearCartButton = document.querySelector('#clear_cart_button')
-clearCartButton.addEventListener('click', function () {
-    removeItemsNotAvailable()
-})
+if (window.location.pathname == '/') {
+    
+} else {
+    clearCartButton.addEventListener('click', function () {
+        removeItemsNotAvailable()
+    })
+}
 
 // MARK: Fix for meals page
 if (window.location.pathname.match(/review-order/)) {
