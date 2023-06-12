@@ -789,17 +789,16 @@ let continueCheckoutButtonMobile
 let handleCheckoutListener
 
 if (window.location.pathname.match(/review-order/)) {
-    console.log('review order page - adding event listener')
     handleCheckoutListener = (e) =>
         canShipOnDeliveryDayReview(e.currentTarget.id)
 
     continueCheckoutButton = document.querySelector('#continue_checkout')
-    continueCheckoutButton.href = 'https://secure.localemeals.com/checkout'
+    continueCheckoutButton.href = '#'
     continueCheckoutButton.addEventListener('click', handleCheckoutListener)
     continueCheckoutButtonMobile = document.querySelector(
         '#continue_checkout_mobile'
     )
-    continueCheckoutButtonMobile.href = 'https://secure.localemeals.com/checkout'
+    continueCheckoutButtonMobile.href = '#'
     continueCheckoutButtonMobile.addEventListener(
         'click',
         handleCheckoutListener
@@ -1173,6 +1172,7 @@ function removeItemsNotAvailableReviewOrder() {
                                     //removeDuplicates()
                                     addSubtotal()
                                     updateProgressBar()
+                                    disableCheckoutButton()
                                     console.log('updated progress bar')
                                 }
                             })
@@ -1358,5 +1358,48 @@ if (
                 $(collectionItem).hide()
             }
         }
+    }
+}
+
+function disableCheckoutButton() {
+    let checkoutBtn = document.querySelector('#continue_checkout')
+    let checkoutBtnMob = document.querySelector('#continue_checkout_mobile')
+    const cartItems = FC.json.items
+    let itemsInCart = 0
+
+    for (var i = 0; i < FC.json.items.length; i++) {
+        const current = cartItems[i]
+        
+        
+
+        if (
+            current.name !== 'Tip' &&
+            current.name !== 'Small Order Fee' &&
+            current.name !== 'Gift Box'
+        ) {
+            itemsInCart += current.quantity
+            console.log('itemsInCart: ', itemsInCart)
+        }
+    }
+
+    if (itemsInCart <= 2) {
+        checkoutBtn.classList.add('inactive')
+        checkoutBtn.href = '#'
+        checkoutBtnMob.classList.add('inactive')
+        checkoutBtnMob.href = '#'
+        continueCheckoutButton.removeEventListener(
+            'click',
+            handleCheckoutListener
+        )
+    } else {
+        // Add Event listener calling canShipOnDeliveryDay('checkout')
+        console.log('3 or more items in cart')
+        continueCheckoutButton.addEventListener('click', handleCheckoutListener)
+        continueCheckoutButton.classList.remove('inactive')
+
+        checkoutBtn.classList.remove("inactive");
+        checkoutBtn.href = "https://secure.localemeals.com/checkout";
+        checkoutBtnMob.classList.remove("inactive");
+        checkoutBtnMob.href = "https://secure.localemeals.com/checkout";
     }
 }
