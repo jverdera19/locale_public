@@ -212,7 +212,7 @@ function checkRegionProject() {
     } else if (
         window.location.pathname.match(/bay-area\/review-order/)
     ) {
-        currentRegion = 'Bay Area'
+        currentRegion = 'Bay Area Meals'
     } else {
         currentRegion = document.querySelector('.hidden-locale').innerText
         console.log('current region:', currentRegion)
