@@ -12,7 +12,7 @@ FC.onLoad = function () {
 function updateCheckoutLinks() {
     const origin = window.location.origin
 
-    if (window.location.pathname.match(/review-order/)) {
+    if (window.location.pathname.startsWith('/review')) {
         return
     }
     let cartContinueButtons = document.querySelectorAll(
@@ -40,7 +40,7 @@ var FC = FC || {}
 
 FC.onLoad = function () {
     FC.client.on('ready.done', () => {
-        if (window.location.pathname.match(/review-order/)) {
+        if (window.location.pathname.startsWith('/review')) {
             createCartItems()
             removeDuplicates()
             canShipOnDeliveryDayReview()
