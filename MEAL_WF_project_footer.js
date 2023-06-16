@@ -873,6 +873,7 @@ function revertSelectedDate() {
 
 function canShipOnDeliveryDay() {
     console.log('INFO: Starting Delivery Day Check')
+    createCartItems()
     const cartItems = FC.json.items
     const lowerCaseDay = day.toLowerCase()
 
@@ -945,9 +946,10 @@ function submitGroupOrder() {
             
 
             // Clear cart
-            // FC.json.items.forEach((item) => {
-            //     FC.removeItem(item.id)
-            // })
+            FC.session.reset();
+            setTimeout(() => {
+                createCartItems()
+            }, '500')            
         })
         .catch((error) => {
             console.log('Error', error)
