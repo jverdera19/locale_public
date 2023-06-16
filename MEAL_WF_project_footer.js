@@ -1202,7 +1202,7 @@ if (
     !window.location.pathname.match(/all-vendors/) &&
     !window.location.pathname.startsWith('/product') &&
     !window.location.pathname.startsWith('/vendor') &&
-    !window.location.pathname.startsWith('/group-order') &&
+    !window.location.pathname.startsWith('/group-order')
 ) {
     console.log('starting Jetboost script;')
     window.JetboostListUpdated = function (collectionList) {
