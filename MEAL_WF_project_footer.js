@@ -213,80 +213,79 @@ function checkRegionProject() {
         currentRegion = document.querySelector('.hidden-locale').innerText
         console.log('current region:', currentRegion)
     }
-    if (
-        window.location.pathname.startsWith('/review')) {
-            if (storedRegion != currentRegion) {
-                let iSODate = new Date(baDeliveryDate)
-                let shortDate = iSODate.toLocaleString('en-us', {
-                    weekday: 'short',
-                    month: 'numeric',
-                    day: '2-digit',
-                })
-                let longDate = formatDate(iSODate, 'long')
-                let date = formatDate(iSODate, 'inventoryDate')
-                let day = iSODate.toLocaleString('en-us', { weekday: 'long' })
-    
-                let gaDateFormatted = formatDate(iSODate, 'yymmdd')
-    
-                gtag('event', 'date_reset', {
-                    event_category: 'new_date',
-                    event_label: gaDateFormatted,
-                    value: 1,
-                })
-    
-                localStorage.setItem('date', date)
-                localStorage.setItem('shortDate', shortDate)
-                localStorage.setItem('longDate', longDate)
-                localStorage.setItem('day', day)
-                localStorage.setItem('region', currentRegion)
-                console.log('date_reset completed')
-                console.log('date: ', date)
-    
-                // Update date button value
-                let currentDateDiv = document.querySelectorAll('.current_date')
-                
-                for (const dateDiv of currentDateDiv) {
-                    dateDiv.innerText = shortDate
-                    console.log('dateDiv:', dateDiv)
-                }
-    
-                // Mark first date as active
-                $('.delivery-date-btn').first().addClass('active')
-            } else if (storedRegion == currentRegion) {
-                date = localStorage.getItem('date')
-                shortDate = localStorage.getItem('shortDate')
-                longDate = localStorage.getItem('longDate')
-                day = localStorage.getItem('day')
-    
-                console.log('date: ', date, 'day:', day)
-    
-                $('.products-item-day-unavailable-value').text(day)
-                $('.products-item-date-unavailable-value').text(date)
-    
-                // Update date button value
-                let currentDateDiv = document.querySelectorAll('.current_date')
-                
-                for (const dateDiv of currentDateDiv) {
-                    dateDiv.innerText = shortDate
-                    console.log('dateDiv:', dateDiv)
-                }
-    
-                // Mark selected date as active
-                const deliveryDateButtons =
-                    document.querySelectorAll('.delivery-date-btn')
-                for (const button of deliveryDateButtons) {
-                    let dateText = button.firstChild.innerText
-                    let dateTextFormatted = new Date(dateText + ', 2023')
-                    let goodDate = formatDate(dateTextFormatted)
-                    console.log('goodDate:', goodDate)
-    
-                    // Select active button of stored date
-                    if (goodDate == localStorage.getItem('date')) {
-                        $('.delivery-date-btn').removeClass('active')
-                        button.classList.add('active')
-                    }
+    if (window.location.pathname.startsWith('/review')) {
+        if (storedRegion != currentRegion) {
+            let iSODate = new Date(baDeliveryDate)
+            let shortDate = iSODate.toLocaleString('en-us', {
+                weekday: 'short',
+                month: 'numeric',
+                day: '2-digit',
+            })
+            let longDate = formatDate(iSODate, 'long')
+            let date = formatDate(iSODate, 'inventoryDate')
+            let day = iSODate.toLocaleString('en-us', { weekday: 'long' })
+
+            let gaDateFormatted = formatDate(iSODate, 'yymmdd')
+
+            gtag('event', 'date_reset', {
+                event_category: 'new_date',
+                event_label: gaDateFormatted,
+                value: 1,
+            })
+
+            localStorage.setItem('date', date)
+            localStorage.setItem('shortDate', shortDate)
+            localStorage.setItem('longDate', longDate)
+            localStorage.setItem('day', day)
+            localStorage.setItem('region', currentRegion)
+            console.log('date_reset completed')
+            console.log('date: ', date)
+
+            // Update date button value
+            let currentDateDiv = document.querySelectorAll('.current_date')
+
+            for (const dateDiv of currentDateDiv) {
+                dateDiv.innerText = shortDate
+                console.log('dateDiv:', dateDiv)
+            }
+
+            // Mark first date as active
+            $('.delivery-date-btn').first().addClass('active')
+        } else if (storedRegion == currentRegion) {
+            date = localStorage.getItem('date')
+            shortDate = localStorage.getItem('shortDate')
+            longDate = localStorage.getItem('longDate')
+            day = localStorage.getItem('day')
+
+            console.log('date: ', date, 'day:', day)
+
+            $('.products-item-day-unavailable-value').text(day)
+            $('.products-item-date-unavailable-value').text(date)
+
+            // Update date button value
+            let currentDateDiv = document.querySelectorAll('.current_date')
+
+            for (const dateDiv of currentDateDiv) {
+                dateDiv.innerText = shortDate
+                console.log('dateDiv:', dateDiv)
+            }
+
+            // Mark selected date as active
+            const deliveryDateButtons =
+                document.querySelectorAll('.delivery-date-btn')
+            for (const button of deliveryDateButtons) {
+                let dateText = button.firstChild.innerText
+                let dateTextFormatted = new Date(dateText + ', 2023')
+                let goodDate = formatDate(dateTextFormatted)
+                console.log('goodDate:', goodDate)
+
+                // Select active button of stored date
+                if (goodDate == localStorage.getItem('date')) {
+                    $('.delivery-date-btn').removeClass('active')
+                    button.classList.add('active')
                 }
             }
+        }
     } else {
         if (storedRegion != currentRegion) {
             let iSODate = ''
@@ -296,17 +295,17 @@ function checkRegionProject() {
             ) {
                 let hiddenDatesList =
                     hiddenDatesContainer.querySelectorAll('.hidden-date')
-    
+
                 for (const hiddenDate of hiddenDatesList) {
                     var innerText = hiddenDate.innerText
                     if (innerText) {
                         let dateTextFormatted = new Date(innerText)
                         let goodDate = formatDate(dateTextFormatted)
-    
+
                         dates.push(goodDate)
                     }
                 }
-    
+
                 // MARK: Make this pick first Saturday dynamicly
                 iSODate = new Date(baDeliveryDate)
                 console.warn('testing new date', baDeliveryDate)
@@ -316,34 +315,34 @@ function checkRegionProject() {
             ) {
                 let hiddenDatesList =
                     hiddenDatesContainer.querySelectorAll('.hidden-date')
-    
+
                 for (const hiddenDate of hiddenDatesList) {
                     var innerText = hiddenDate.innerText
                     if (innerText) {
                         let dateTextFormatted = new Date(innerText)
                         let goodDate = formatDate(dateTextFormatted)
-    
+
                         dates.push(goodDate)
                     }
                 }
-    
+
                 iSODate = new Date(dates[0])
             } else {
                 let hiddenDatesList = document.querySelectorAll('.hidden-date')
-    
+
                 for (const hiddenDate of hiddenDatesList) {
                     var innerText = hiddenDate.innerText
                     if (innerText) {
                         let dateTextFormatted = new Date(innerText)
                         let goodDate = formatDate(dateTextFormatted)
-    
+
                         dates.push(goodDate)
                     }
                 }
-    
+
                 iSODate = new Date(dates[0])
             }
-    
+
             let shortDate = iSODate.toLocaleString('en-us', {
                 weekday: 'short',
                 month: 'numeric',
@@ -352,27 +351,27 @@ function checkRegionProject() {
             let longDate = formatDate(iSODate, 'long')
             let date = formatDate(iSODate, 'inventoryDate')
             let day = iSODate.toLocaleString('en-us', { weekday: 'long' })
-    
+
             console.log('date: ', date, 'day:', day)
-    
+
             localStorage.setItem('date', date)
             localStorage.setItem('shortDate', shortDate)
             localStorage.setItem('longDate', longDate)
             localStorage.setItem('day', day)
             localStorage.setItem('region', currentRegion)
-    
+
             if (
                 window.location.pathname.startsWith('/product/') ||
                 window.location.pathname.startsWith('/vendor/')
             ) {
                 // Update date button value
                 let currentDateDiv = document.querySelectorAll('.current_date')
-                
+
                 for (const dateDiv of currentDateDiv) {
                     dateDiv.innerText = shortDate
                     console.log('dateDiv:', dateDiv)
                 }
-    
+
                 // Mark first date as active
                 //$(".delivery-date-btn").first().addClass("active");
                 // Mark selected date as active
@@ -387,7 +386,7 @@ function checkRegionProject() {
                         dateTextFormatted = new Date(dateText + ', 2023')
                     }
                     let goodDate = formatDate(dateTextFormatted)
-    
+
                     // Select active button of stored date
                     if (goodDate == localStorage.getItem('date')) {
                         $('.delivery-date-btn').removeClass('active')
@@ -397,12 +396,12 @@ function checkRegionProject() {
             } else {
                 // Update date button value
                 let currentDateDiv = document.querySelectorAll('.current_date')
-                
+
                 for (const dateDiv of currentDateDiv) {
                     dateDiv.innerText = shortDate
                     console.log('dateDiv:', dateDiv)
                 }
-    
+
                 // Mark first date as active
                 $('.delivery-date-btn').first().addClass('active')
             }
@@ -411,19 +410,19 @@ function checkRegionProject() {
             shortDate = localStorage.getItem('shortDate')
             longDate = localStorage.getItem('longDate')
             day = localStorage.getItem('day')
-    
+
             console.log('date: ', date, 'day:', day)
-    
+
             $('.products-item-day-unavailable-value').text(day)
             $('.products-item-date-unavailable-value').text(date)
-    
+
             if (
                 window.location.pathname.startsWith('/product/') ||
                 window.location.pathname.startsWith('/vendor/')
             ) {
                 // Update date button value
                 let currentDateDiv = document.querySelectorAll('.current_date')
-                
+
                 for (const dateDiv of currentDateDiv) {
                     dateDiv.innerText = shortDate
                     console.log('dateDiv:', dateDiv)
@@ -431,13 +430,13 @@ function checkRegionProject() {
             } else {
                 // Update date button value
                 let currentDateDiv = document.querySelectorAll('.current_date')
-                
+
                 for (const dateDiv of currentDateDiv) {
                     dateDiv.innerText = shortDate
                     console.log('dateDiv:', dateDiv)
                 }
             }
-    
+
             // Mark selected date as active
             const deliveryDateButtons =
                 document.querySelectorAll('.delivery-date-btn')
@@ -445,7 +444,7 @@ function checkRegionProject() {
                 let dateText = button.firstChild.innerText
                 let dateTextFormatted = new Date(dateText + ', 2023')
                 let goodDate = formatDate(dateTextFormatted)
-    
+
                 // Select active button of stored date
                 if (goodDate == localStorage.getItem('date')) {
                     $('.delivery-date-btn').removeClass('active')
@@ -454,8 +453,6 @@ function checkRegionProject() {
             }
         }
     }
-
-
 }
 
 function dateChangeProject() {
@@ -473,7 +470,7 @@ function dateChangeProject() {
     if (
         window.location.pathname.startsWith('/product/') ||
         window.location.pathname.startsWith('/vendor/')
-    ) {         
+    ) {
         for (const dateDiv of currentDateDiv) {
             dateDiv.innerText = shortDate
             console.log('dateDiv:', dateDiv)
@@ -1204,7 +1201,8 @@ function removeItemsNotAvailableReviewOrder() {
 if (
     !window.location.pathname.match(/all-vendors/) &&
     !window.location.pathname.startsWith('/product') &&
-    !window.location.pathname.startsWith('/vendor')
+    !window.location.pathname.startsWith('/vendor') &&
+    !window.location.pathname.startsWith('/group-order') &&
 ) {
     console.log('starting Jetboost script;')
     window.JetboostListUpdated = function (collectionList) {
