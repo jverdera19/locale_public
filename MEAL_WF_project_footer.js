@@ -789,13 +789,8 @@ function handleGroupSubmit(event) {
     // prevent default
     event.preventDefault()
     console.log('submitting group order')
-    let employeeName = document.querySelector('[data-name="Name"]').value
-    let employeeEmail = document.querySelector('[data-name="Email"]').value
 
-    console.log(employeeName)
-    console.log(employeeEmail)
-
-    postOrder(employeeName, employeeEmail)
+    submitGroupOrder()
 
 }
 
@@ -930,11 +925,10 @@ function submitGroupOrder() {
     let employeeEmail = document.querySelector('[data-name="Email"]').value
     let employeeName = document.querySelector('[data-name="Name"]').value
 
-    // postOrder('https://inventory-checker-one.vercel.app/api/grouporder')
-    postOrder('http://127.0.0.1:3000/api/groupOrder')
+    postOrder('https://inventory-checker-one.vercel.app/api/groupOrder')
         .then((e) => {
             result = e
-            console.log('result: ', result)
+            console.log('result response: ', result)
 
             // Log transaction in Google Analytics
             // gtag('event', 'sold_out_items_msg', {
@@ -944,6 +938,10 @@ function submitGroupOrder() {
             // })
 
             // Display success message
+            let form = document.querySelector('#email-form');
+            form.style.display = 'none';
+            let success = document.querySelector(".success-message-2.w-form-done")
+            success.style.display = 'flex'
             
 
             // Clear cart
