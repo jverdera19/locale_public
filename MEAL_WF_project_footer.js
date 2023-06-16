@@ -151,9 +151,7 @@ function checkDateProject() {
                 dates.push(goodDate)
             }
         }
-    } else if (
-        window.location.pathname.match(/review-order/)
-    ) {
+    } else if (window.location.pathname.startsWith('/review')) {
         $('.delivery-date-btn .date-numbers').each(function () {
             if ($(this).text()) {
                 var innerText = $(this).text()
@@ -209,16 +207,14 @@ function checkRegionProject() {
     ) {
         currentRegion =
             hiddenDatesContainer.querySelector('.hidden-locale').innerText
-    } else if (
-        window.location.pathname.match(/bay-area\/review-order/)
-    ) {
+    } else if (window.location.pathname.startsWith('/review')) {
         currentRegion = 'Bay Area Meals'
     } else {
         currentRegion = document.querySelector('.hidden-locale').innerText
         console.log('current region:', currentRegion)
     }
     if (
-        window.location.pathname.match(/bay-area\/review-order/) ) {
+        window.location.pathname.startsWith('/review')) {
             if (storedRegion != currentRegion) {
                 let iSODate = new Date(baDeliveryDate)
                 let shortDate = iSODate.toLocaleString('en-us', {
@@ -494,7 +490,7 @@ function dateChangeProject() {
     }
 
     // Check items not delivered on new date
-    if (window.location.pathname.match(/review-order/)) {
+    if (window.location.pathname.startsWith('/review')) {
         console.log('INFO: Starting FC check')
         var FC = FC || {}
 
@@ -649,7 +645,7 @@ function dateChangeProject() {
                     $(this).find('.products-item-day-unavailable').show()
                 }
             }
-        } else if (window.location.pathname.match(/review-order/)) {
+        } else if (window.location.pathname.startsWith('/review')) {
             if (dayAvailable == 'true') {
                 if (inventory > '0') {
                     $(this).css('display', 'flex')
@@ -769,7 +765,6 @@ switchDateClose?.addEventListener('click', function () {
 
 const clearCartButton = document.querySelector('#clear_cart_button')
 if (window.location.pathname == '/') {
-    
 } else {
     clearCartButton.addEventListener('click', function () {
         removeItemsNotAvailable()
@@ -777,18 +772,41 @@ if (window.location.pathname == '/') {
 }
 
 // MARK: Fix for meals page
-if (window.location.pathname.match(/review-order/)) {
-    let continueShoppingOnClearCart = document.querySelectorAll('.next-button-4')[0]
+if (window.location.pathname.startsWith('/review')) {
+    let continueShoppingOnClearCart =
+        document.querySelectorAll('.next-button-4')[0]
     continueShoppingOnClearCart.addEventListener('click', function () {
         revertSelectedDate()
     })
+}
+
+let submitGroupOrderButton
+
+if (window.location.pathname.startsWith('/review-group')) {
+    submitGroupOrderButton = document.querySelector('input.close-button.padding.w-button')
+
+    submitGroupOrderButton.addEventListener('click', handleGroupSubmit)
+}
+
+function handleGroupSubmit(event) {
+    // prevent default
+    event.preventDefault()
+    console.log('submitting group order')
+    let employeeName = document.querySelector('[data-name="Name"]').value
+    let employeeEmail = document.querySelector('[data-name="Email"]').value
+
+    console.log(employeeName)
+    console.log(employeeEmail)
+
+    postOrder(employeeName, employeeEmail)
+
 }
 
 let continueCheckoutButton
 let continueCheckoutButtonMobile
 let handleCheckoutListener
 
-if (window.location.pathname.match(/review-order/)) {
+if (window.location.pathname.startsWith('/review')) {
     handleCheckoutListener = (e) =>
         canShipOnDeliveryDayReview(e.currentTarget.id)
 
@@ -903,123 +921,102 @@ function canShipOnDeliveryDay() {
 
 function canShipOnDeliveryDayReview(button_id) {
     console.log('checkout button id: ', button_id)
-    // MARK: Disabled inventory check
-    // date = localStorage.getItem('date')
+}
 
-    // if (
-    //     button_id == 'continue_checkout' ||
-    //     button_id == 'continue_checkout_mobile'
-    // ) {
-    //     setTimeout(() => {
-    //         continueCheckoutButton.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
-    //         continueCheckoutButtonMobile.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
-    //     }, '200')
-    // }
-    // const cartItems = FC.json.items
-    // const lowerCaseDay = day.toLowerCase()
+function submitGroupOrder() {
+    setTimeout(() => {
+        continueCheckoutButton.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
+        continueCheckoutButtonMobile.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
+    }, '200')
 
-    // let unavailableItemsList = document.querySelector('#clear_cart_list_review')
-    // unavailableItemsList.innerHTML = ''
+    const cartItems = FC.json.items
+    let employeeEmail = document.querySelector('[data-name="Email"]').value
+    let employeeName = document.querySelector('[data-name="Name"]').value
 
-    // checkInv('https://inventory-checker-one.vercel.app/api/inventorymeals')
-    //     .then((e) => {
-    //         currentInv = e.result.products
-    //         console.log('currentInv: ', currentInv)
+    // postOrder('https://inventory-checker-one.vercel.app/api/grouporder')
+    postOrder('http://127.0.0.1:3000/api/groupOrder')
+        .then((e) => {
+            result = e
+            console.log('result: ', result)
 
-    //         let iSODate = new Date(date)
-    //         let selectedDate = formatDate(iSODate, 'yymmdd') + 'T00:00:00.000Z'
+            // Log transaction in Google Analytics
+            // gtag('event', 'sold_out_items_msg', {
+            //     event_category: 'items_unavailable',
+            //     event_label: unavailableItemsList.childNodes.length,
+            //     value: 1,
+            // })
 
-    //         for (var i = 0; i < currentInv.length; i++) {
-    //             let deliveryDateKey = Object.keys(currentInv[i]).find(
-    //                 (key) => currentInv[i][key] === selectedDate
-    //             )
-    //             let deliveryDateInvKey = deliveryDateKey + '_inventory'
+            // Display success message
+            
 
-    //             let recordsToQueryKey = recordsToQuery.findIndex(
-    //                 (object) => object.code === currentInv[i].id
-    //             )
+            // Clear cart
+            // FC.json.items.forEach((item) => {
+            //     FC.removeItem(item.id)
+            // })
+        })
+        .catch((error) => {
+            console.log('Error', error)
+            // gtag('event', 'group_review_order_error', {
+            //     event_category: 'error',
+            //     event_label: 'Group review order Airtable script failed',
+            // })
 
-    //             // // MARK: If date is missing, need to mark it as unavailable as well (test with a Turkey item)
-    //             let minimumInventory =
-    //                 recordsToQuery[recordsToQueryKey].quantity - 1
+            // Ask user to try again
+        })
+}
 
-    //             if (
-    //                 currentInv[i][deliveryDateInvKey] <= minimumInventory ||
-    //                 !deliveryDateKey
-    //             ) {
-    //                 let li = document.createElement('li')
-    //                 li.innerText = currentInv[i].product_name
-    //                 unavailableItemsList.appendChild(li)
-    //             }
-    //         }
+function postOrder(url) {
+    const cartItems = FC.json.items
+    let employeeEmail = document.querySelector('[data-name="Email"]').value
+    let employeeName = document.querySelector('[data-name="Name"]').value
 
-    //         if (unavailableItemsList.innerHTML != '') {
-    //             let originalDate = new Date(date)
-    //             let originalDateFormatted = formatDate(originalDate, 'yymmdd')
-    //             gtag('event', 'sold_out_items_msg', {
-    //                 event_category: 'items_unavailable',
-    //                 event_label: unavailableItemsList.childNodes.length,
-    //                 value: 1,
-    //             })
-    //             gtag('event', 'sold_out_items_msg', {
-    //                 event_category: 'original_date',
-    //                 event_label: originalDateFormatted,
-    //                 value: 1,
-    //             })
+    // Out of Stock items array
+    recordsToQuery = []
+    
 
-    //             gtag('event', 'items_missing_modal', {
-    //                 event_category: 'warning',
-    //                 event_label: 'Items not available found in response',
-    //             })
-                
-    //             console.log('original_date', originalDateFormatted)
-                
+    for (var i = 0; i < FC.json.items.length; i++) {
+        var current = cartItems[i]
 
-    //             if (document.querySelector('.date_switch_modal')) {
-    //                 document.querySelector('.date_switch_modal').style.display =
-    //                     'none'
-    //             }
-    //             document.querySelector(
-    //                 '.clear_cart_modal_review'
-    //             ).style.display = 'flex'
+        if (
+            current.name !== 'Tip' &&
+            current.name !== 'Small Order Fee' &&
+            current.name !== 'Gift Box'
+        ) {
+            let obj = {
+                // Pass all the details of the item
+                name: current.name,
+                employeeName: employeeName,
+                quantity: current.quantity,
+                code: current.code,
+                transaction: FC.json.transaction_id,
+                email: employeeEmail
+            }
+            recordsToQuery.push(obj)
+        }
+    }
 
-    //             continueShoppingOnClearCart = document.querySelector(
-    //                 '#continue_to_clear_review'
-    //             )
-    //             continueShoppingOnClearCart.addEventListener(
-    //                 'click',
-    //                 function () {
-    //                     removeItemsNotAvailableReviewOrder()
-    //                 }
-    //             )
-    //         } else if (
-    //             button_id == 'continue_checkout' ||
-    //             button_id == 'continue_checkout_mobile'
-    //         ) {
-    //             gtag('event', 'review_order_check', {
-    //                 event_category: 'check',
-    //                 event_label: 'Review order Airtable response',
-    //                 value: 1,
-    //             })
-    //             console.log('proceeding to checkout')
-    //             window.location.assign(`https://${FC.settings.storedomain}/checkout`)
-    //         } else {
-    //             gtag('event', 'review_order_check', {
-    //                 event_category: 'check',
-    //                 event_label: 'Review order Airtable response',
-    //                 value: 1,
-    //             })
-    //         }
-    //     })
-    //     .catch((error) => {
-    //         console.log('Error', error)
-    //         gtag('event', 'review_order_error', {
-    //             event_category: 'error',
-    //             event_label: 'Review order Airtable script failed',
-    //         })
-    //         // MARK: Disable redirect to checkout if Airtable fails
-    //         window.location.assign(`https://${FC.settings.storedomain}/checkout`)
-    //     })
+    console.log('recordsToQuery', recordsToQuery)
+
+    var cartItemsJSON = JSON.stringify(recordsToQuery)
+    console.log('cartItemsJSON', cartItemsJSON)
+
+    var myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow',
+        credentials: 'same-origin',
+        body: cartItemsJSON,
+    }
+
+    return fetch(url, requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+            return result
+        })
+        .catch((error) => console.log('error', error))
 }
 
 function checkInv(url) {
@@ -1101,7 +1098,7 @@ function removeItemsNotAvailable() {
                     .done(function (dataJSON) {
                         FC.cart.updateItemQuantity()
                         console.log('items deleted:', current.name)
-                        if (window.location.pathname.match(/review-order/)) {
+                        if (window.location.pathname.startsWith('/review')) {
                             console.log('clearing items in review page')
                             addLoadingIcon(reviewItemContainer)
                             createCartItems()
@@ -1131,7 +1128,7 @@ function removeItemsNotAvailableReviewOrder() {
 
         for (var j = 0; j < FC.json.items.length; j++) {
             // MARK: Log number of items after removing sold out products
-             
+
             const current = cartItems[j]
 
             if (
@@ -1142,7 +1139,6 @@ function removeItemsNotAvailableReviewOrder() {
                 let recordsToQueryKey = recordsToQuery.findIndex(
                     (object) => object.code === current.code
                 )
-                
 
                 let minimumInventory =
                     recordsToQuery[recordsToQueryKey].quantity - 1
@@ -1163,8 +1159,8 @@ function removeItemsNotAvailableReviewOrder() {
                             .done(function (dataJSON) {
                                 FC.cart.updateItemQuantity()
                                 if (
-                                    window.location.pathname.match(
-                                        /review-order/
+                                    window.location.pathname.startsWith(
+                                        '/review'
                                     )
                                 ) {
                                     addLoadingIcon(reviewItemContainer)
@@ -1369,8 +1365,6 @@ function disableCheckoutButton() {
 
     for (var i = 0; i < FC.json.items.length; i++) {
         const current = cartItems[i]
-        
-        
 
         if (
             current.name !== 'Tip' &&
@@ -1397,9 +1391,9 @@ function disableCheckoutButton() {
         continueCheckoutButton.addEventListener('click', handleCheckoutListener)
         continueCheckoutButton.classList.remove('inactive')
 
-        checkoutBtn.classList.remove("inactive");
-        checkoutBtn.href = "https://secure.localemeals.com/checkout";
-        checkoutBtnMob.classList.remove("inactive");
-        checkoutBtnMob.href = "https://secure.localemeals.com/checkout";
+        checkoutBtn.classList.remove('inactive')
+        checkoutBtn.href = 'https://secure.localemeals.com/checkout'
+        checkoutBtnMob.classList.remove('inactive')
+        checkoutBtnMob.href = 'https://secure.localemeals.com/checkout'
     }
 }
