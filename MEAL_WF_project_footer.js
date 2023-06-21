@@ -623,7 +623,8 @@ function dateChangeProject() {
                                 addToCartHref + '&quantity_max=' + inventory
                             )
                     } else {
-                        $(this).find('.products-item-out-of-stock').show()
+                        // Hide sold out products
+                        $(this).hide()
                     }
                 } else if (dayAvailable == 'false') {
                     $(this).find('.products-item-day-unavailable').show()
@@ -636,7 +637,8 @@ function dateChangeProject() {
                         $('input[name="quantity"]').attr('max', inventory)
                         $('input[name="quantity_max"]').val(inventory)
                     } else {
-                        $(this).find('.products-item-out-of-stock').show()
+                        // Hide sold out products
+                        $(this).hide()
                     }
                 } else if (dayAvailable == 'false') {
                     $(this).find('.products-item-day-unavailable').show()
@@ -666,17 +668,8 @@ function dateChangeProject() {
                             addToCartHref + '&quantity_max=' + inventory
                         )
                 } else {
-                    if (
-                        window.location.pathname.match(/all-vendors/) ||
-                        window.location.pathname.match(/find/) ||
-                        window.location.pathname.match(/product/) ||
-                        window.location.pathname.match(/12-days/) ||
-                        window.location.pathname.match(/christmas/)
-                    ) {
-                        $(this).find('.products-item-out-of-stock').show()
-                    } else {
-                        $(this).hide()
-                    }
+                    // Hide sold out products
+                    $(this).hide()
                 }
             } else if (dayAvailable == 'false') {
                 if (
@@ -780,7 +773,9 @@ if (window.location.pathname.startsWith('/review')) {
 let submitGroupOrderButton
 
 if (window.location.pathname.startsWith('/review-group')) {
-    submitGroupOrderButton = document.querySelector('input.close-button.padding.w-button')
+    submitGroupOrderButton = document.querySelector(
+        'input.close-button.padding.w-button'
+    )
 
     submitGroupOrderButton.addEventListener('click', handleGroupSubmit)
 }
@@ -791,7 +786,6 @@ function handleGroupSubmit(event) {
     console.log('submitting group order')
 
     submitGroupOrder()
-
 }
 
 let continueCheckoutButton
@@ -938,17 +932,18 @@ function submitGroupOrder() {
             // })
 
             // Display success message
-            let form = document.querySelector('#email-form');
-            form.style.display = 'none';
-            let success = document.querySelector(".success-message-2.w-form-done")
+            let form = document.querySelector('#email-form')
+            form.style.display = 'none'
+            let success = document.querySelector(
+                '.success-message-2.w-form-done'
+            )
             success.style.display = 'flex'
-            
 
             // Clear cart
-            FC.session.reset();
+            FC.session.reset()
             setTimeout(() => {
                 createCartItems()
-            }, '500')            
+            }, '500')
         })
         .catch((error) => {
             console.log('Error', error)
@@ -968,7 +963,6 @@ function postOrder(url) {
 
     // Out of Stock items array
     recordsToQuery = []
-    
 
     for (var i = 0; i < FC.json.items.length; i++) {
         var current = cartItems[i]
@@ -985,7 +979,7 @@ function postOrder(url) {
                 quantity: current.quantity,
                 code: current.code,
                 transaction: FC.json.transaction_id,
-                email: employeeEmail
+                email: employeeEmail,
             }
             recordsToQuery.push(obj)
         }
@@ -1334,18 +1328,9 @@ if (
                             addToCartHref + '&quantity_max=' + inventory
                         )
                 } else {
-                    if (
-                        !window.location.pathname.match(/find/) &&
-                        !window.location.pathname.match(/all-products/)
-                    ) {
-                        console.log('Item sold out - hiding it')
-                        $(collectionItem).hide()
-                    } else {
-                        $(collectionItem)
-                            .find('.products-item-out-of-stock')
-                            .show()
-                        console.log('Item sold out - showing message')
-                    }
+                    // Hide items that are sold out
+                    console.log('Item sold out - hiding it')
+                    $(collectionItem).hide()
                 }
             } else if (dayAvailable == 'false') {
                 $(collectionItem).hide()
