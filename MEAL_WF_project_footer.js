@@ -785,6 +785,16 @@ function handleGroupSubmit(event) {
     event.preventDefault()
     console.log('submitting group order')
 
+    let employeeEmail = document.querySelector('[data-name="Email"]').value
+    let employeeName = document.querySelector('[data-name="Name"]').value
+
+    // Prompt user to enter email and name
+    if (employeeEmail == '' || employeeName == '') {
+        alert('Please enter your name and email')
+        return
+    }
+    
+
     submitGroupOrder()
 }
 
@@ -911,13 +921,17 @@ function canShipOnDeliveryDayReview(button_id) {
 
 function submitGroupOrder() {
     setTimeout(() => {
-        continueCheckoutButton.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
-        continueCheckoutButtonMobile.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading Checkout...`
+        document.querySelector('.close-button.padding.w-button').value = 'Processing order...'       
     }, '200')
 
     const cartItems = FC.json.items
     let employeeEmail = document.querySelector('[data-name="Email"]').value
     let employeeName = document.querySelector('[data-name="Name"]').value
+
+    let vendor = FC.json.items[0].options[0].value
+    console.log('vendor: ', vendor)
+
+    
 
     postOrder('https://inventory-checker-one.vercel.app/api/groupOrder')
         .then((e) => {
@@ -966,6 +980,7 @@ function postOrder(url) {
 
     for (var i = 0; i < FC.json.items.length; i++) {
         var current = cartItems[i]
+        let vendor = current.options[0].value
 
         if (
             current.name !== 'Tip' &&
@@ -975,6 +990,7 @@ function postOrder(url) {
             let obj = {
                 // Pass all the details of the item
                 name: current.name,
+                vendor: vendor,
                 employeeName: employeeName,
                 quantity: current.quantity,
                 code: current.code,
