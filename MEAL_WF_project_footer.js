@@ -785,6 +785,13 @@ function handleGroupSubmit(event) {
     event.preventDefault()
     console.log('submitting group order')
 
+    const form = document.getElementById('email-form');
+    let input = document.createElement("input");
+	input.setAttribute("type", "hidden");
+	input.setAttribute("name", "cart-items");
+	input.setAttribute("value", JSON.stringify(fcCartItems));
+	form.appendChild(input);
+
     let employeeEmail = document.querySelector('[data-name="Email"]').value
     let employeeName = document.querySelector('[data-name="Name"]').value
 
@@ -794,7 +801,6 @@ function handleGroupSubmit(event) {
         return
     }
     
-
     submitGroupOrder()
 }
 
@@ -947,11 +953,12 @@ function submitGroupOrder() {
 
             // Display success message
             let form = document.querySelector('#email-form')
-            form.style.display = 'none'
-            let success = document.querySelector(
-                '.success-message-2.w-form-done'
-            )
-            success.style.display = 'flex'
+            form.requestSubmit()
+            // form.style.display = 'none'
+            // let success = document.querySelector(
+            //     '.success-message-2.w-form-done'
+            // )
+            // success.style.display = 'flex'
 
             // Clear cart
             FC.session.reset()
@@ -961,6 +968,8 @@ function submitGroupOrder() {
         })
         .catch((error) => {
             console.log('Error', error)
+            let form = document.querySelector('#email-form')
+            form.requestSubmit()
             // gtag('event', 'group_review_order_error', {
             //     event_category: 'error',
             //     event_label: 'Group review order Airtable script failed',
@@ -1110,6 +1119,7 @@ function removeItemsNotAvailable() {
                             createCartItems()
                             //removeDuplicates()
                             updateProgressBar()
+                            updateFormItems()
                         }
                     })
             }
@@ -1174,6 +1184,7 @@ function removeItemsNotAvailableReviewOrder() {
                                     //removeDuplicates()
                                     addSubtotal()
                                     updateProgressBar()
+                                    updateFormItems()
                                     disableCheckoutButton()
                                     console.log('updated progress bar')
                                 }
