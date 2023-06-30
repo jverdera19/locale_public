@@ -1002,6 +1002,7 @@ function postOrder(url) {
                 vendor: vendor,
                 employeeName: employeeName,
                 quantity: current.quantity,
+                price: current.price_each,
                 code: current.code,
                 transaction: FC.json.transaction_id,
                 email: employeeEmail,
